@@ -237,8 +237,10 @@ function sortPlayers(sort) {
 function renderGrid() {
   const count = state.filtered.length;
   els.resultCount.textContent = `${count} joueur${count > 1 ? "s" : ""}${state.filters.playableOnly ? " jouable" + (count > 1 ? "s" : "") : ""}`;
-  els.playableToggle.textContent = state.filters.playableOnly ? "Jouables" : "Tous";
-  els.playableToggle.setAttribute("aria-pressed", String(state.filters.playableOnly));
+  const showingAll = !state.filters.playableOnly;
+  els.playableToggle.innerHTML = `<span>Tous</span><span class="toggle-track" aria-hidden="true"><span class="toggle-thumb"></span></span>`;
+  els.playableToggle.setAttribute("aria-pressed", String(showingAll));
+  els.playableToggle.setAttribute("aria-label", showingAll ? "Afficher seulement les joueurs jouables" : "Afficher tous les joueurs");
 
   if (!count) {
     els.playerGrid.innerHTML = "";
@@ -351,7 +353,7 @@ function renderStats(stats) {
       const iconKey = key === "block" ? "block" : key;
       return `
         <div class="stat-line">
-          <img src="/assets/stats/${escapeAttr(iconKey)}.png" alt="" />
+          <img src="${escapeAttr(assetPath(`assets/stats/${iconKey}.png`))}" alt="" />
           <span>${escapeHtml(labels.stats[key])}</span>
           <strong>${formatNumber(stats?.[statKey] || 0)}</strong>
         </div>
