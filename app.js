@@ -45,6 +45,15 @@ const labels = {
   },
 };
 
+const awakeningTiers = {
+  4: { label: "ADVANCED PLAYER", slug: "advanced" },
+  5: { label: "ADVANCED PLAYER+", slug: "advanced-plus" },
+  6: { label: "TOP PLAYER", slug: "top" },
+  7: { label: "TOP PLAYER+", slug: "top-plus" },
+  8: { label: "LEGENDARY PLAYER", slug: "legendary" },
+  9: { label: "LEGENDARY PLAYER+", slug: "legendary-plus" },
+};
+
 const els = {
   dbMeta: document.querySelector("#dbMeta"),
   searchInput: document.querySelector("#searchInput"),
@@ -366,20 +375,156 @@ function renderSkills(skills) {
   if (!skills.length) {
     return `<p class="empty-line">Aucune technique ou capacité.</p>`;
   }
-  return skills.map(renderSkill).join("");
+  const awakeningPassives = [];
+  const levelPassives = [];
+  const moves = [];
+
+  skills.forEach((skill, index) => {
+    if (skill.kind === "move") {
+      moves.push({ skill, index });
+      return;
+    }
+    if (isAwakeningPassive(skill)) {
+      awakeningPassives.push({ skill, index });
+      return;
+    }
+    levelPassives.push({ skill, index });
+  });
+
+  awakeningPassives.sort((a, b) => currentAwakeningCode(a.skill) - currentAwakeningCode(b.skill) || a.index - b.index);
+  levelPassives.sort((a, b) => firstPlayerUnlockLevel(a.skill) - firstPlayerUnlockLevel(b.skill) || a.index - b.index);
+  moves.sort((a, b) => firstPlayerUnlockLevel(a.skill) - firstPlayerUnlockLevel(b.skill) || a.index - b.index);
+
+  return [
+    ...awakeningPassives.map(({ skill }) => renderAwakeningPassiveCard(skill)),
+    ...levelPassives.map(({ skill }) => renderSkill(skill)),
+    ...moves.map(({ skill }) => renderSkill(skill)),
+  ].join("");
 }
 
 function renderSkill(skill) {
-  const icon = skill.kind === "move" ? renderMoveTypeIcon(skill.type?.code) : `<span class="passive-mark">P</span>`;
-  const kindLabel = skill.kind === "move" ? "Technique" : "Passif";
+  if (skill.kind === "move") {
+    return renderMoveSkillCard(skill);
+  }
+  return renderPassiveSimpleCard(skill);
+}
 
+function isAwakeningPassive(skill) {
+  return skill.kind === "passive" && (skill.levels || []).some((level) => (level.unlock_awakening_code || []).length);
+}
+
+function firstPlayerUnlockLevel(skill) {
+  const levels = (skill.levels || [])
+    .flatMap((level) => level.unlock_player_level || [])
+    .map(Number)
+    .filter((level) => Number.isFinite(level) && level > 0);
+  if (levels.length) {
+    return Math.min(...levels);
+  }
+  const fallback = Number(skill.unlock_level);
+  return Number.isFinite(fallback) && fallback > 0 ? fallback : Number.MAX_SAFE_INTEGER;
+}
+
+function awakeningTierInfo(code) {
+  return awakeningTiers[code] || { label: `EVEIL ${formatNumber(code)}`, slug: "unknown" };
+}
+
+function awakeningCodeForLevel(level) {
+  return Number((level.unlock_awakening_code || [0])[0] || 0);
+}
+
+function currentAwakeningCode(skill) {
+  const maxLevel = Number(skill.current_level || 0);
+  const eligible = (skill.levels || [])
+    .filter((level) => (level.unlock_awakening_code || []).length)
+    .filter((level) => !maxLevel || Number(level.level || 0) <= maxLevel)
+    .sort((a, b) => Number(b.level || 0) - Number(a.level || 0));
+  return eligible.length ? awakeningCodeForLevel(eligible[0]) : 0;
+}
+
+function modalSkillLevels(skill) {
+  if (!isAwakeningPassive(skill)) {
+    return (skill.levels || []).map((level) => ({ level, tier: null, awakeningCode: 0 }));
+  }
+  return (skill.levels || [])
+    .filter((level) => (level.unlock_awakening_code || []).length)
+    .map((level) => {
+      const awakeningCode = awakeningCodeForLevel(level);
+      return {
+        level,
+        awakeningCode,
+        tier: awakeningTierInfo(awakeningCode),
+      };
+    })
+    .sort((a, b) => b.awakeningCode - a.awakeningCode || b.level.level - a.level.level);
+}
+
+function renderMoveSkillCard(skill) {
   return `
-    <button class="skill-card skill-${escapeAttr(skill.kind)}" type="button" data-skill-id="${escapeAttr(skill.id)}">
+    <button class="skill-card skill-move technique-card" type="button" data-skill-id="${escapeAttr(skill.id)}">
       <span class="skill-level">Lv.${escapeHtml(skill.current_level || "-")}</span>
-      ${icon}
+      <span class="skill-frame">
+        <span class="skill-title-line">
+          <span class="skill-element-icon">${renderElementIcon(skill.element?.code)}</span>
+          <strong>${escapeHtml(skill.name)}</strong>
+        </span>
+        <span class="skill-info-line">
+          <span class="skill-type-badge">${renderMoveTypeIcon(skill.type?.code)}</span>
+          <span class="skill-tp">
+            <span><strong>TP</strong> ${formatNumber(skill.tp_cost || 0)}</span>
+            <span class="skill-green-bar"><span></span></span>
+          </span>
+          <span class="skill-power">
+            <img src="${escapeAttr(assetPath("assets/skill-card/power-white.png"))}" alt="" />
+            <strong>${formatNumber(skill.power || 0)}</strong>
+          </span>
+        </span>
+      </span>
+    </button>
+  `;
+}
+
+function renderAwakeningPassiveCard(skill) {
+  return `
+    <button class="skill-card skill-passive awakening-passive-card" type="button" data-skill-id="${escapeAttr(skill.id)}">
+      <span class="skill-level">Lv.${escapeHtml(skill.current_level || "-")}</span>
+      <span class="passive-mark">P</span>
       <span class="skill-name">
         <strong>${escapeHtml(skill.name)}</strong>
-        <small>${escapeHtml(kindLabel)}${skill.unlock_level ? ` - déblocage Lv.${escapeHtml(skill.unlock_level)}` : ""}</small>
+      </span>
+    </button>
+  `;
+}
+
+function renderPassiveSimpleCard(skill) {
+  return `
+    <button class="skill-card skill-passive" type="button" data-skill-id="${escapeAttr(skill.id)}">
+      <span class="skill-level">Lv.${escapeHtml(skill.current_level || "-")}</span>
+      <span class="passive-mark">P</span>
+      <span class="skill-name">
+        <strong>${escapeHtml(skill.name)}</strong>
+        <small>${skill.unlock_level ? `Deblocage Lv.${escapeHtml(skill.unlock_level)}` : "Passif"}</small>
+      </span>
+    </button>
+  `;
+}
+
+function renderPassiveSkillCard(skill) {
+  return `
+    <button class="skill-card skill-passive" type="button" data-skill-id="${escapeAttr(skill.id)}">
+      <span class="skill-level">Lv.${escapeHtml(skill.current_level || "-")}</span>
+      <span class="skill-frame passive-frame">
+        <span class="skill-title-line">
+          <span class="skill-element-icon passive-element-icon"><span class="passive-mark">P</span></span>
+          <strong>${escapeHtml(skill.name)}</strong>
+        </span>
+        <span class="skill-info-line passive-info-line">
+          <span class="skill-type-badge passive-type-badge"><span class="passive-mark">P</span></span>
+          <span class="skill-passive-summary">
+            <span>${escapeHtml(skill.unlock_level ? `Déblocage Lv.${formatNumber(skill.unlock_level)}` : "Déblocage spécial")}</span>
+            <strong>${escapeHtml(skill.total_power_bonus ? `Bonus ${formatNumber(skill.total_power_bonus)}` : "Passif")}</strong>
+          </span>
+        </span>
       </span>
     </button>
   `;
@@ -393,11 +538,15 @@ function openSkillModal(player, skillId) {
 
   const icon = skill.kind === "move" ? renderMoveTypeIcon(skill.type?.code) : `<span class="passive-mark">P</span>`;
   const kindLabel = skill.kind === "move" ? "Technique" : "Passif";
-  const levels = skill.levels
-    .map((level) => `
-      <li>
-        <strong>Lv.${escapeHtml(level.level)}</strong>
-        <span>${escapeHtml(level.description || "")}</span>
+  const levels = modalSkillLevels(skill)
+    .map((row) => `
+      <li class="${row.tier ? "awakening-level-detail" : ""}">
+        <strong>Lv.${escapeHtml(row.level.level)}</strong>
+        <span>
+          ${row.tier ? `<b class="awakening-tier awakening-tier-${escapeAttr(row.tier.slug)}">${escapeHtml(row.tier.label)}</b>` : ""}
+          ${skill.kind === "passive" && !row.tier ? `<em>${escapeHtml(passiveUnlockText(row.level))}</em>` : ""}
+          <span class="skill-level-description">${escapeHtml(row.level.description || "")}</span>
+        </span>
       </li>
     `)
     .join("");
@@ -425,6 +574,19 @@ function closeSkillModal() {
   els.skillModal.hidden = true;
   els.skillModalBody.innerHTML = "";
   document.body.classList.remove("modal-open");
+}
+
+function passiveUnlockText(level) {
+  const playerLevels = (level.unlock_player_level || []).map(formatNumber);
+  const awakeningLevels = (level.unlock_awakening_code || []).map(formatNumber);
+  const parts = [];
+  if (playerLevels.length) {
+    parts.push(`Joueur Lv.${playerLevels.join("/")}`);
+  }
+  if (awakeningLevels.length) {
+    parts.push(`Éveil ${awakeningLevels.join("/")}`);
+  }
+  return parts.length ? `${parts.join(" + ")} - ` : "";
 }
 
 function renderModel(player) {
@@ -503,7 +665,7 @@ function renderPositionBadge(position, options = {}) {
 
 function renderMoveTypeIcon(type) {
   const safe = ["shot", "dribble", "block", "save"].includes(type) ? type : "shot";
-  return `<img class="move-type-icon" src="${assetPath(`assets/move-types/${escapeAttr(safe)}.png`)}" alt="" />`;
+  return `<img class="move-type-icon" src="${assetPath(`assets/skill-card/move-${escapeAttr(safe)}.png`)}" alt="" />`;
 }
 
 function renderStars(count) {
