@@ -29,6 +29,16 @@ body {
     #0b4db8;
 }
 
+body.is-booting .app-shell {
+  opacity: 0;
+  pointer-events: none;
+}
+
+body.is-ready .app-shell {
+  opacity: 1;
+  transition: opacity 120ms ease-out;
+}
+
 button,
 input,
 select {
@@ -50,6 +60,35 @@ select {
   gap: 16px;
   max-width: 1640px;
   margin: 0 auto 12px;
+}
+
+.mode-tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(185, 221, 255, 0.82);
+  border-radius: 999px;
+  box-shadow: 0 8px 20px rgba(10, 31, 73, 0.1);
+}
+
+.mode-tab {
+  min-height: 34px;
+  padding: 7px 14px;
+  color: #0a3f98;
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.mode-tab.is-active {
+  color: #fff;
+  background: linear-gradient(180deg, #1fb0ed, #1269e8);
+  box-shadow: 0 4px 10px rgba(18, 105, 232, 0.28);
 }
 
 .eyebrow {
@@ -93,6 +132,14 @@ h1 {
   border: 1px solid rgba(185, 221, 255, 0.82);
   border-radius: 8px;
   box-shadow: 0 8px 24px rgba(10, 31, 73, 0.08);
+}
+
+body[data-mode="coaches"] .filters {
+  grid-template-columns: minmax(230px, 1fr) minmax(140px, 180px);
+}
+
+body[data-mode="coaches"] .player-filter {
+  display: none;
 }
 
 label {
@@ -783,10 +830,19 @@ button.album-card {
   box-shadow: 0 7px 16px rgba(7, 58, 154, 0.18);
 }
 
+.skill-card.is-locked {
+  opacity: 0.48;
+  filter: grayscale(0.75);
+}
+
+.skill-card.is-locked:hover {
+  opacity: 0.68;
+}
+
 .skill-card.skill-move {
   position: relative;
   display: block;
-  min-height: 76px;
+  min-height: 86px;
   padding: 16px 0 0 18px;
   overflow: visible;
   background: transparent;
@@ -891,6 +947,22 @@ button.album-card {
   line-height: 1;
   text-shadow: 0 1px 2px rgba(8, 28, 73, 0.85);
   white-space: nowrap;
+}
+
+.awakening-tier-normal {
+  background: linear-gradient(90deg, #18aa13, #34e018);
+}
+
+.awakening-tier-normal-plus {
+  background: linear-gradient(90deg, #18aa13, #34e018);
+}
+
+.awakening-tier-growing {
+  background: linear-gradient(90deg, #2386e8, #1bc5e8);
+}
+
+.awakening-tier-growing-plus {
+  background: linear-gradient(90deg, #1269e8, #11b5d8);
 }
 
 .awakening-tier-advanced {
@@ -1047,6 +1119,17 @@ button.album-card {
   font-weight: 950;
   line-height: 0.9;
   text-shadow: 0 2px 0 rgba(112, 69, 17, 0.45);
+}
+
+.locked-note {
+  display: block;
+  padding: 2px 10px 4px 42px;
+  color: #17396f;
+  background: rgba(255, 255, 255, 0.82);
+  border-top: 1px solid rgba(23, 57, 111, 0.22);
+  font-size: 11px;
+  font-weight: 950;
+  text-transform: uppercase;
 }
 
 .passive-frame,
@@ -1300,6 +1383,456 @@ body.modal-open {
   font-weight: 900;
 }
 
+.simulator-panel {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  color: var(--ink);
+  background: rgba(247, 251, 255, 0.96);
+  border-bottom: 1px solid var(--line);
+}
+
+.simulator-main-controls {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(220px, 1fr);
+  gap: 9px;
+}
+
+.sim-level-control {
+  display: grid;
+  grid-template-columns: 78px minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+}
+
+.sim-level-control input[type="number"] {
+  text-align: center;
+  font-weight: 950;
+}
+
+.sim-level-control input[type="range"] {
+  padding-inline: 0;
+}
+
+.equipment-controls {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(86px, 1fr));
+  gap: 8px;
+}
+
+.equipment-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 28px;
+}
+
+.equipment-label img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.equipment-control select {
+  min-height: 36px;
+  padding-block: 6px;
+  font-weight: 850;
+}
+
+.simulator-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.equipment-config-button {
+  min-height: 38px;
+  padding: 8px 14px;
+  color: #ffffff;
+  background: linear-gradient(180deg, #228ee8, #0860cf);
+  border: 2px solid #0a3e92;
+  border-radius: 8px;
+  box-shadow: inset 0 -4px 0 rgba(9, 45, 111, 0.28);
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.skill-modal.is-equipment-modal .skill-modal-window {
+  width: min(980px, 100%);
+}
+
+.equipment-modal-head {
+  grid-template-columns: 54px minmax(0, 1fr);
+}
+
+.equipment-modal-icon {
+  display: grid;
+  place-items: center;
+}
+
+.equipment-modal-body {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  background: #e8f4ff;
+}
+
+.equipment-position-row {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  overflow: hidden;
+  border: 2px solid rgba(15, 58, 126, 0.22);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.equipment-position-title {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 4px;
+  min-height: 96px;
+  padding: 8px;
+  color: #ffffff;
+  font-weight: 950;
+  text-shadow: 0 2px 2px rgba(20, 42, 82, 0.45);
+}
+
+.equipment-position-title small {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 12px;
+}
+
+.equipment-position-fw .equipment-position-title {
+  background: linear-gradient(180deg, #d84636, #aa231e);
+}
+
+.equipment-position-mf .equipment-position-title {
+  background: linear-gradient(180deg, #d3af39, #a48418);
+}
+
+.equipment-position-df .equipment-position-title {
+  background: linear-gradient(180deg, #3188d1, #1764ad);
+}
+
+.equipment-position-gk .equipment-position-title {
+  background: linear-gradient(180deg, #28a9b0, #147c8f);
+}
+
+.equipment-position-slots {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(88px, 1fr));
+  gap: 8px;
+  padding: 9px;
+}
+
+.equipment-modal-slot {
+  display: grid;
+  gap: 5px;
+  justify-items: center;
+  min-width: 0;
+  padding: 7px 6px;
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(23, 57, 111, 0.18);
+  border-radius: 7px;
+}
+
+.equipment-modal-picture {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 48px;
+}
+
+.equipment-modal-picture img {
+  max-width: 54px;
+  max-height: 48px;
+  object-fit: contain;
+}
+
+.equipment-modal-name {
+  max-width: 100%;
+  overflow: hidden;
+  color: #15366d;
+  font-size: 12px;
+  font-weight: 900;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.equipment-modal-slot select {
+  width: 100%;
+  min-height: 32px;
+  padding-block: 4px;
+  font-weight: 850;
+}
+
+.awakening-picker {
+  position: relative;
+}
+
+.awakening-picker-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 40px;
+  padding: 7px 10px;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 7px;
+  font-style: italic;
+  font-weight: 950;
+  text-align: left;
+  text-shadow: 0 1px 2px rgba(8, 28, 73, 0.85);
+  cursor: pointer;
+}
+
+.awakening-picker-button::after {
+  margin-left: auto;
+  content: "▾";
+  font-size: 14px;
+  font-style: normal;
+}
+
+.awakening-picker-chip,
+.awakening-choice-chip {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 0 100%);
+  box-shadow: 0 1px 2px rgba(8, 28, 73, 0.25);
+}
+
+.awakening-menu {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 4px);
+  left: 0;
+  display: grid;
+  gap: 4px;
+  width: min(100%, 320px);
+  max-height: 280px;
+  overflow: auto;
+  padding: 6px;
+  background: rgba(247, 251, 255, 0.98);
+  border: 1px solid #8ebcec;
+  border-radius: 8px;
+  box-shadow: 0 14px 32px rgba(5, 26, 76, 0.24);
+}
+
+.awakening-menu[hidden] {
+  display: none;
+}
+
+.awakening-choice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 5px 8px;
+  color: #102247;
+  background: #ffffff;
+  border: 1px solid #d4e1f1;
+  border-radius: 7px;
+  font-size: 12px;
+  font-style: italic;
+  font-weight: 950;
+  text-align: left;
+  cursor: pointer;
+}
+
+.awakening-choice:hover,
+.awakening-choice.is-selected {
+  border-color: #1269e8;
+  box-shadow: 0 0 0 2px rgba(18, 105, 232, 0.12);
+}
+
+.simulator-view {
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.simulator-label {
+  background: #20a4e8;
+}
+
+.awakening-ribbon-normal,
+.awakening-ribbon-normal-plus {
+  background: linear-gradient(90deg, #18aa13, #34e018);
+}
+
+.awakening-ribbon-growing,
+.awakening-ribbon-growing-plus {
+  background: linear-gradient(90deg, #2386e8, #1bc5e8);
+}
+
+.awakening-ribbon-advanced {
+  background: linear-gradient(90deg, #6821cf, #9d32ff);
+}
+
+.awakening-ribbon-advanced-plus {
+  background: linear-gradient(90deg, #7c20dd, #5b19b8);
+}
+
+.awakening-ribbon-top {
+  background: linear-gradient(90deg, #f3d717, #ffe953);
+}
+
+.awakening-ribbon-top-plus {
+  background: linear-gradient(90deg, #c98204, #f3b00c);
+}
+
+.awakening-ribbon-legendary {
+  background: linear-gradient(90deg, #ff7d00, #ff3d00);
+}
+
+.awakening-ribbon-legendary-plus {
+  background: linear-gradient(90deg, #ffb13b, #ff57c7, #35cfff, #21d29c);
+}
+
+.coach-code,
+.coach-level-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 21px;
+  padding: 2px 7px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(134, 189, 232, 0.8);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+.coach-level-pill {
+  color: #fff;
+  background: #1269e8;
+  border-color: #0b4db8;
+}
+
+.coach-view {
+  grid-template-columns: minmax(360px, 500px) minmax(400px, 1fr);
+}
+
+.coach-label {
+  background: #2db86d;
+}
+
+.coach-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.coach-info-card {
+  display: grid;
+  gap: 2px;
+  padding: 9px 10px;
+  color: #102247;
+  background: rgba(255, 255, 255, 0.92);
+  border: 2px solid rgba(11, 63, 158, 0.45);
+  border-radius: 8px;
+}
+
+.coach-info-card span {
+  color: #65718a;
+  font-size: 11px;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.coach-info-card strong {
+  font-size: 20px;
+  line-height: 1.1;
+}
+
+.coach-passive-panel {
+  margin-bottom: 12px;
+}
+
+.coach-passive-card {
+  min-height: 74px;
+}
+
+.coach-progress {
+  color: #102247;
+  background: rgba(247, 251, 255, 0.94);
+  border: 2px solid rgba(11, 63, 158, 0.4);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.coach-progress h3 {
+  margin: 0;
+  padding: 8px 11px;
+  color: #fff;
+  background: linear-gradient(90deg, #1269e8, #1db7e8);
+  font-size: 16px;
+  line-height: 1;
+}
+
+.coach-progress-list {
+  display: grid;
+  gap: 1px;
+  max-height: 260px;
+  overflow: auto;
+  padding: 8px;
+}
+
+.coach-progress-row {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  min-height: 34px;
+  padding: 5px 7px;
+  background: #fff;
+  border: 1px solid #d4e1f1;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.coach-progress-row strong {
+  color: #073a9a;
+}
+
+.coach-materials {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  min-width: 84px;
+  color: #65718a;
+}
+
+.coach-material {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  white-space: nowrap;
+}
+
+.coach-material img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.coach-model {
+  align-items: end;
+}
+
+.coach-model .fullbody {
+  max-height: 78%;
+  object-fit: contain;
+}
+
+.coach-ribbon {
+  background: linear-gradient(90deg, rgba(37, 184, 111, 0.9), rgba(29, 183, 232, 0.9));
+}
+
 .empty-state,
 .empty-line {
   color: var(--muted);
@@ -1335,6 +1868,18 @@ body.modal-open {
     grid-template-columns: 390px minmax(0, 1fr);
   }
 
+  .simulator-main-controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .equipment-controls {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .equipment-position-slots {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .player-side h2 {
     font-size: 38px;
   }
@@ -1356,6 +1901,19 @@ body.modal-open {
 
   .game-view {
     grid-template-columns: 1fr;
+  }
+
+  .simulator-main-controls,
+  .equipment-controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .equipment-position-row {
+    grid-template-columns: 86px minmax(0, 1fr);
+  }
+
+  .equipment-position-slots {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .player-side {
@@ -1394,7 +1952,12 @@ body.modal-open {
   }
 
   .filters,
-  .player-grid {
+  .player-grid,
+  .simulator-main-controls,
+  .equipment-controls,
+  .equipment-position-row,
+  .equipment-position-slots,
+  .sim-level-control {
     grid-template-columns: 1fr;
   }
 

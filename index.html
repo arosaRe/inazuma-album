@@ -6,12 +6,28 @@
     <title>Inazuma Eleven Cross - Album</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body>
+  <body class="is-booting">
+    <script>
+      (() => {
+        try {
+          const saved = JSON.parse(localStorage.getItem("inazuma-album-state-v2") || "null");
+          if (saved && ["players", "simulator"].includes(saved.mode)) {
+            document.body.dataset.mode = saved.mode;
+          }
+        } catch {
+          // The app will fall back to its default state.
+        }
+      })();
+    </script>
     <main class="app-shell">
       <header class="topbar">
         <div>
-          <p class="eyebrow">Album joueurs</p>
+          <p class="eyebrow" id="sectionEyebrow">Album joueurs</p>
           <h1>Inazuma Eleven Cross</h1>
+        </div>
+        <div class="mode-tabs" role="tablist" aria-label="Sections de l'album">
+          <button class="mode-tab is-active" type="button" data-mode="players">Joueurs</button>
+          <button class="mode-tab" type="button" data-mode="simulator">Simulateur</button>
         </div>
         <div class="db-meta" id="dbMeta">Chargement...</div>
       </header>
@@ -21,23 +37,23 @@
           <span>Recherche</span>
           <input id="searchInput" type="search" autocomplete="off" placeholder="Nom, équipe, technique..." />
         </label>
-        <label>
+        <label class="player-filter">
           <span>Équipe</span>
           <select id="teamFilter"></select>
         </label>
-        <label>
+        <label class="player-filter">
           <span>Poste</span>
           <select id="positionFilter"></select>
         </label>
-        <label>
+        <label class="player-filter">
           <span>Élément</span>
           <select id="elementFilter"></select>
         </label>
-        <label>
+        <label class="player-filter">
           <span>Style</span>
           <select id="styleFilter"></select>
         </label>
-        <label>
+        <label class="player-filter">
           <span>Saison</span>
           <select id="seasonFilter"></select>
         </label>
@@ -56,7 +72,7 @@
           <div class="album-head">
             <div>
               <strong id="resultCount">0 joueur</strong>
-              <span>Lv.300 / éveil max / équipement Lv.1</span>
+              <span id="albumSubhead">Lv.300 / éveil max / équipement Lv.1</span>
             </div>
             <button id="playableToggle" class="toggle-button" type="button" aria-pressed="false">
               <span>Tous</span>
