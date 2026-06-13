@@ -24,8 +24,9 @@ body {
   min-width: 320px;
   color: var(--ink);
   background:
-    linear-gradient(135deg, rgba(18, 105, 232, 0.16), rgba(37, 184, 111, 0.08) 42%, rgba(255, 211, 55, 0.12)),
-    #edf5ff;
+    radial-gradient(circle at 12% 8%, rgba(35, 193, 239, 0.5), transparent 26%),
+    linear-gradient(135deg, rgba(9, 74, 182, 0.96), rgba(7, 58, 154, 0.92) 48%, rgba(17, 152, 210, 0.9)),
+    #0b4db8;
 }
 
 button,
@@ -37,6 +38,9 @@ select {
 .app-shell {
   min-height: 100vh;
   padding: 16px;
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.055) 0 34px, rgba(255, 255, 255, 0.02) 34px 68px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0));
 }
 
 .topbar {
@@ -50,7 +54,7 @@ select {
 
 .eyebrow {
   margin: 0 0 3px;
-  color: var(--blue-deep);
+  color: #cdefff;
   font-size: 12px;
   font-weight: 900;
   text-transform: uppercase;
@@ -65,12 +69,14 @@ p {
 
 h1 {
   margin-bottom: 0;
+  color: #fff;
   font-size: 34px;
   line-height: 1;
+  text-shadow: 0 2px 5px rgba(5, 26, 76, 0.38);
 }
 
 .db-meta {
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.86);
   font-size: 14px;
   font-weight: 700;
   text-align: right;
@@ -78,13 +84,13 @@ h1 {
 
 .filters {
   display: grid;
-  grid-template-columns: minmax(230px, 2fr) repeat(7, minmax(110px, 1fr));
+  grid-template-columns: minmax(230px, 2fr) repeat(6, minmax(110px, 1fr));
   gap: 9px;
   max-width: 1640px;
   margin: 0 auto 12px;
   padding: 10px;
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(212, 225, 241, 0.95);
+  background: rgba(239, 248, 255, 0.94);
+  border: 1px solid rgba(185, 221, 255, 0.82);
   border-radius: 8px;
   box-shadow: 0 8px 24px rgba(10, 31, 73, 0.08);
 }
@@ -139,7 +145,7 @@ summary:focus-visible {
   position: sticky;
   top: 12px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.94);
+  background: #ffffff;
 }
 
 .album-head {
@@ -148,7 +154,9 @@ summary:focus-visible {
   justify-content: space-between;
   gap: 8px;
   padding: 11px 12px;
+  color: var(--ink);
   border-bottom: 1px solid var(--line);
+  background: #ffffff;
 }
 
 .album-head div {
@@ -169,9 +177,9 @@ summary:focus-visible {
   gap: 8px;
   min-height: 34px;
   min-width: 82px;
-  color: var(--blue-deep);
-  background: #eaf3ff;
-  border: 1px solid #bfd6f4;
+  color: #073a9a;
+  background: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.86);
   border-radius: 999px;
   padding: 4px 5px 4px 11px;
   font-size: 12px;
@@ -180,9 +188,10 @@ summary:focus-visible {
 }
 
 .toggle-button[aria-pressed="true"] {
-  color: #fff;
-  background: var(--blue);
-  border-color: var(--blue-deep);
+  color: #073a9a;
+  background: #ffd337;
+  border-color: #fff2a6;
+  box-shadow: 0 3px 10px rgba(5, 26, 76, 0.28);
 }
 
 .toggle-track {
@@ -223,19 +232,25 @@ summary:focus-visible {
   max-height: calc(100vh - 200px);
   overflow: auto;
   padding: 10px;
+  background: #ffffff;
 }
 
-.album-card {
+button.album-card {
+  appearance: none;
+  position: relative;
   display: grid;
-  grid-template-columns: 58px minmax(0, 1fr);
-  gap: 9px;
+  grid-template-columns: 50px minmax(0, 1fr);
+  gap: 7px;
   width: 100%;
-  min-height: 92px;
+  min-height: 84px;
   text-align: left;
-  background: var(--surface);
-  border: 1px solid var(--line);
+  background-color: #dff3ff;
+  background-image: linear-gradient(180deg, #f8fdff 0%, #d8f0ff 100%);
+  background-clip: padding-box;
+  border: 1px solid #86bde8;
   border-radius: 8px;
-  padding: 8px;
+  padding: 6px;
+  overflow: hidden;
   cursor: pointer;
 }
 
@@ -245,11 +260,23 @@ summary:focus-visible {
   box-shadow: 0 8px 18px rgba(18, 105, 232, 0.14);
 }
 
+.album-card.is-npc {
+  background-color: #dff3ff;
+  background-image: linear-gradient(180deg, #f8fdff 0%, #d8f0ff 100%);
+  border-color: #86bde8;
+}
+
+.album-card.is-npc.is-active,
+.album-card.is-npc:hover {
+  border-color: var(--blue);
+  box-shadow: 0 8px 18px rgba(18, 105, 232, 0.14);
+}
+
 .portrait-frame {
   display: grid;
   place-items: center;
-  width: 58px;
-  height: 68px;
+  width: 50px;
+  height: 60px;
   align-self: center;
   overflow: hidden;
   color: #fff;
@@ -268,9 +295,9 @@ summary:focus-visible {
 
 .album-card-body {
   display: grid;
-  grid-template-rows: 18px 16px 26px;
+  grid-template-rows: 22px 26px;
   align-content: center;
-  gap: 3px;
+  gap: 4px;
   min-width: 0;
 }
 
@@ -279,7 +306,16 @@ summary:focus-visible {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  line-height: 18px;
+  line-height: 21px;
+  padding-bottom: 1px;
+}
+
+.album-card-title-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 5px;
+  align-items: center;
+  min-width: 0;
 }
 
 .skill-name strong {
@@ -290,10 +326,28 @@ summary:focus-visible {
   color: var(--muted);
   font-size: 12px;
   font-weight: 700;
-  line-height: 16px;
+  line-height: 20px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.album-card-team.team-logo {
+  display: inline-grid;
+  width: 18px;
+  height: 20px;
+  flex: 0 0 18px;
+  place-items: center start;
+  overflow: visible;
+}
+
+.team-logo img {
+  display: block;
+  width: auto;
+  max-width: 18px;
+  height: auto;
+  max-height: 20px;
+  object-fit: contain;
 }
 
 .mini-meta,
@@ -306,11 +360,14 @@ summary:focus-visible {
 }
 
 .mini-meta {
-  display: grid;
-  grid-template-columns: 60px minmax(0, 1fr) auto;
-  gap: 4px;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 3px;
   align-items: center;
+  justify-content: flex-start;
   margin-top: 0;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .card-badges,
@@ -320,14 +377,15 @@ summary:focus-visible {
 }
 
 .card-badges {
-  gap: 4px;
+  gap: 3px;
+  flex: 0 0 auto;
 }
 
 .card-stars {
   justify-content: start;
-  width: 43px;
+  width: 42px;
   min-width: 0;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .detail {
@@ -443,9 +501,9 @@ summary:focus-visible {
   height: 43px;
   overflow: hidden;
   color: #fff;
-  background: #0c4eb8;
-  border: 2px solid rgba(255, 255, 255, 0.55);
-  border-radius: 8px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
   font-size: 12px;
   font-weight: 950;
 }
@@ -456,12 +514,14 @@ summary:focus-visible {
   object-fit: contain;
 }
 
-.tag-play_style {
-  background: #d74633;
-}
-
-.tag-season {
-  background: #ffd337;
+.tag-chip > span {
+  display: inline-grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  background: #0c4eb8;
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  border-radius: 8px;
 }
 
 .element-badge,
@@ -477,10 +537,10 @@ summary:focus-visible {
 .element-badge {
   width: 48px;
   height: 48px;
-  padding: 4px;
-  background: #00b5d8;
-  border: 2px solid #0a2e71;
-  border-radius: 8px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
 }
 
 .element-icon {
@@ -488,6 +548,9 @@ summary:focus-visible {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  background: #1daeea;
+  border: 2px solid #0a3f98;
+  border-radius: 4px;
 }
 
 .element-initial {
@@ -501,30 +564,30 @@ summary:focus-visible {
 }
 
 .position-badge {
+  min-width: 0;
+  padding: 0;
+  color: #fff;
+  border: 0;
+  border-radius: 0;
+  font-size: 0;
+  line-height: 1;
+  text-shadow: none;
+}
+
+.position-badge img {
+  display: block;
+  width: 72px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.position-unknown {
   min-width: 56px;
   padding: 4px 10px;
-  color: #fff;
+  background: #0b4db8;
   border: 2px solid #0a2e71;
   border-radius: 8px;
-  font-size: 22px;
-  line-height: 1;
-  text-shadow: 0 2px 0 rgba(12, 45, 104, 0.5);
-}
-
-.position-fw {
-  background: #e63d2e;
-}
-
-.position-mf {
-  background: #25b86f;
-}
-
-.position-df {
-  background: #1388cf;
-}
-
-.position-gk {
-  background: #0b4db8;
+  font-size: 18px;
 }
 
 .stars {
@@ -540,22 +603,24 @@ summary:focus-visible {
 }
 
 .mini-meta .element-icon {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
+  border-width: 1px;
+  border-radius: 3px;
 }
 
 .mini-meta .position-badge {
-  min-width: 34px;
   min-height: 23px;
-  padding: 3px 6px;
-  border-width: 1px;
-  border-radius: 6px;
-  font-size: 11px;
+}
+
+.mini-meta .position-badge img {
+  width: 31px;
+  height: 20px;
 }
 
 .mini-meta .stars img {
-  width: 14px;
-  height: 14px;
+  width: 11px;
+  height: 11px;
 }
 
 .mini-meta .stars {
@@ -573,10 +638,11 @@ summary:focus-visible {
   color: #6b4200;
   background: #ffe4a3;
   border: 1px solid #f2c76d;
-  border-radius: 6px;
-  padding: 2px 6px;
+  border-radius: 999px;
+  padding: 1px 6px;
   font-size: 10px;
   font-weight: 950;
+  box-shadow: 0 2px 4px rgba(92, 58, 0, 0.14);
 }
 
 .character-info-grid {

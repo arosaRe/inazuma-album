@@ -9,7 +9,6 @@ const state = {
     element: "all",
     style: "all",
     season: "all",
-    tag: "all",
     sort: "name_asc",
     playableOnly: true,
   },
@@ -62,7 +61,6 @@ const els = {
   elementFilter: document.querySelector("#elementFilter"),
   styleFilter: document.querySelector("#styleFilter"),
   seasonFilter: document.querySelector("#seasonFilter"),
-  tagFilter: document.querySelector("#tagFilter"),
   sortSelect: document.querySelector("#sortSelect"),
   playableToggle: document.querySelector("#playableToggle"),
   resultCount: document.querySelector("#resultCount"),
@@ -123,7 +121,6 @@ function bindEvents() {
     ["element", els.elementFilter],
     ["style", els.styleFilter],
     ["season", els.seasonFilter],
-    ["tag", els.tagFilter],
   ]) {
     element.addEventListener("change", (event) => {
       state.filters[key] = event.target.value;
@@ -155,12 +152,7 @@ function bindEvents() {
 }
 
 function hydrateFilters() {
-  setOptions(els.teamFilter, "Toutes", uniqueTagValues("team"));
-  setOptions(els.positionFilter, "Tous", uniqueValues(state.players.map((player) => player.position?.code).filter(Boolean)), (value) => `${value} - ${labels.positions[value] || value}`);
-  setOptions(els.elementFilter, "Tous", uniqueValues(state.players.map((player) => player.element?.code).filter(Boolean)), (value) => labels.elements[value] || value);
-  setOptions(els.styleFilter, "Tous", uniqueTagValues("play_style"));
-  setOptions(els.seasonFilter, "Toutes", uniqueTagValues("season"));
-  setOptions(els.tagFilter, "Tous", uniqueValues(state.players.flatMap((player) => player.tags.map(tagLabel))));
+  syncFilterOptions();
 }
 
 function setOptions(select, allLabel, values, labeler = (value) => value) {
@@ -170,9 +162,85 @@ function setOptions(select, allLabel, values, labeler = (value) => value) {
   ].join("");
 }
 
-function uniqueTagValues(kind) {
+function syncFilterOptions() {
+  let changed = false;
+  for (let index = 0; index < 4; index += 1) {
+    const passChanged = updateFilterOptionsPass();
+    changed = changed || passChanged;
+    if (!passChanged) {
+      break;
+    }
+  }
+  return changed;
+}
+
+function updateFilterOptionsPass() {
+  let changed = false;
+  const specs = [
+    {
+      key: "team",
+      element: els.teamFilter,
+      allLabel: "Toutes",
+      values: (players) => uniqueTagValues(players, "team"),
+    },
+    {
+      key: "position",
+      element: els.positionFilter,
+      allLabel: "Tous",
+      values: (players) => uniqueValues(players.map((player) => player.position?.code).filter(Boolean)),
+      labeler: (value) => `${value} - ${labels.positions[value] || value}`,
+    },
+    {
+      key: "element",
+      element: els.elementFilter,
+      allLabel: "Tous",
+      values: (players) => uniqueValues(players.map((player) => player.element?.code).filter(Boolean)),
+      labeler: (value) => labels.elements[value] || value,
+    },
+    {
+      key: "style",
+      element: els.styleFilter,
+      allLabel: "Tous",
+      values: (players) => uniqueTagValues(players, "play_style"),
+    },
+    {
+      key: "season",
+      element: els.seasonFilter,
+      allLabel: "Toutes",
+      values: (players) => uniqueTagValues(players, "season"),
+    },
+  ];
+
+  for (const spec of specs) {
+    const values = spec.values(playersForFilterOptions(spec.key));
+    if (state.filters[spec.key] !== "all" && !values.includes(state.filters[spec.key])) {
+      state.filters[spec.key] = "all";
+      changed = true;
+    }
+    setOptions(spec.element, spec.allLabel, values, spec.labeler);
+    spec.element.value = state.filters[spec.key];
+  }
+
+  return changed;
+}
+
+function playersForFilterOptions(excludedKey) {
+  const filters = state.filters;
+  return state.players.filter((player) => {
+    const matchesQuery = !filters.query || searchableText(player).includes(filters.query);
+    const matchesTeam = excludedKey === "team" || filters.team === "all" || hasTag(player, "team", filters.team);
+    const matchesPosition = excludedKey === "position" || filters.position === "all" || player.position?.code === filters.position;
+    const matchesElement = excludedKey === "element" || filters.element === "all" || player.element?.code === filters.element;
+    const matchesStyle = excludedKey === "style" || filters.style === "all" || hasTag(player, "play_style", filters.style);
+    const matchesSeason = excludedKey === "season" || filters.season === "all" || hasTag(player, "season", filters.season);
+    const matchesPlayable = !filters.playableOnly || player.playable;
+    return matchesPlayable && matchesQuery && matchesTeam && matchesPosition && matchesElement && matchesStyle && matchesSeason;
+  });
+}
+
+function uniqueTagValues(players, kind) {
   return uniqueValues(
-    state.players
+    players
       .flatMap((player) => player.tags.filter((tag) => tag.kind === kind).map(tagLabel))
       .filter(Boolean),
   );
@@ -183,19 +251,18 @@ function uniqueValues(values) {
 }
 
 function applyFilters() {
+  syncFilterOptions();
   const filters = state.filters;
   state.filtered = state.players
     .filter((player) => {
-      const tags = player.tags.map(tagLabel);
       const matchesQuery = !filters.query || searchableText(player).includes(filters.query);
       const matchesTeam = filters.team === "all" || hasTag(player, "team", filters.team);
       const matchesPosition = filters.position === "all" || player.position?.code === filters.position;
       const matchesElement = filters.element === "all" || player.element?.code === filters.element;
       const matchesStyle = filters.style === "all" || hasTag(player, "play_style", filters.style);
       const matchesSeason = filters.season === "all" || hasTag(player, "season", filters.season);
-      const matchesTag = filters.tag === "all" || tags.includes(filters.tag);
       const matchesPlayable = !filters.playableOnly || player.playable;
-      return matchesPlayable && matchesQuery && matchesTeam && matchesPosition && matchesElement && matchesStyle && matchesSeason && matchesTag;
+      return matchesPlayable && matchesQuery && matchesTeam && matchesPosition && matchesElement && matchesStyle && matchesSeason;
     })
     .sort(sortPlayers(filters.sort));
 
@@ -259,22 +326,25 @@ function renderGrid() {
   els.playerGrid.innerHTML = state.filtered
     .map((player) => {
       const active = player.id === state.selectedId ? " is-active" : "";
+      const npcClass = player.playable ? "" : " is-npc";
       const portrait = imageUrl(player, "portrait") || imageUrl(player, "fullbody");
       return `
-        <button class="album-card${active}" type="button" data-id="${escapeAttr(player.id)}">
+        <button class="album-card${active}${npcClass}" type="button" data-id="${escapeAttr(player.id)}">
           <span class="portrait-frame">
             ${portrait ? `<img src="${escapeAttr(portrait)}" alt="" />` : `<span>${escapeHtml(initials(displayName(player)))}</span>`}
           </span>
           <span class="album-card-body">
-            <strong>${escapeHtml(displayName(player))}</strong>
-            <span class="album-card-team">${escapeHtml(teamLabel(player) || player.position?.fr || "")}</span>
+            <span class="album-card-title-row">
+              <strong>${escapeHtml(displayName(player))}</strong>
+              ${player.playable ? "" : `<span class="non-playable-badge">NPC</span>`}
+            </span>
             <span class="mini-meta">
+              ${renderTeamLogo(player)}
               <span class="card-badges">
                 ${renderElementIcon(player.element?.code)}
                 ${renderPositionBadge(player.position, { compact: true })}
               </span>
               <span class="card-stars">${renderStars(player.rarity?.stars)}</span>
-              ${player.playable ? "" : `<span class="non-playable-badge">NPC</span>`}
             </span>
           </span>
         </button>
@@ -659,8 +729,16 @@ function renderElementIcon(code) {
 
 function renderPositionBadge(position, options = {}) {
   const code = position?.code || "?";
-  const label = options.compact ? code : `${code} ${position?.fr || labels.positions[code] || ""}`;
-  return `<span class="position-badge position-${escapeAttr(code.toLowerCase())}">${escapeHtml(label)}</span>`;
+  const safe = ["FW", "MF", "DF", "GK"].includes(code) ? code.toLowerCase() : null;
+  const label = `${code} ${position?.fr || labels.positions[code] || ""}`.trim();
+  if (safe) {
+    return `
+      <span class="position-badge position-${escapeAttr(safe)}${options.compact ? " is-compact" : ""}" title="${escapeAttr(label)}">
+        <img src="${assetPath(`assets/positions/${escapeAttr(safe)}.png`)}" alt="${escapeAttr(code)}" />
+      </span>
+    `;
+  }
+  return `<span class="position-badge position-unknown">${escapeHtml(options.compact ? code : label)}</span>`;
 }
 
 function renderMoveTypeIcon(type) {
@@ -673,7 +751,7 @@ function renderStars(count) {
   if (!total) {
     return `<span class="stars">?</span>`;
   }
-  return `<span class="stars">${Array.from({ length: total }, () => `<img src="${assetPath("assets/ui/star.svg")}" alt="" />`).join("")}</span>`;
+  return `<span class="stars">${Array.from({ length: total }, () => `<img src="${assetPath("assets/ui/star.png")}" alt="" />`).join("")}</span>`;
 }
 
 function imageUrl(player, kind) {
@@ -692,7 +770,24 @@ function displayName(player) {
 }
 
 function teamLabel(player) {
-  return tagLabel(player.tags.find((tag) => tag.kind === "team"));
+  return tagLabel(teamTag(player));
+}
+
+function teamTag(player) {
+  return player.tags.find((tag) => tag.kind === "team");
+}
+
+function renderTeamLogo(player) {
+  const tag = teamTag(player);
+  const label = tagLabel(tag) || player.position?.fr || "";
+  if (tag?.icon) {
+    return `
+      <span class="album-card-team team-logo" title="${escapeAttr(label)}">
+        <img src="${escapeAttr(assetPath(tag.icon))}" alt="${escapeAttr(label)}" />
+      </span>
+    `;
+  }
+  return `<span class="album-card-team">${escapeHtml(label)}</span>`;
 }
 
 function tagLabel(tag) {
