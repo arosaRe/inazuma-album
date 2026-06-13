@@ -370,57 +370,19 @@ function renderSkills(skills) {
 }
 
 function renderSkill(skill) {
-  const levelLabel = `Lv.${escapeHtml(skill.current_level || "-")}`;
+  const icon = skill.kind === "move" ? renderMoveTypeIcon(skill.type?.code) : `<span class="passive-mark">P</span>`;
+  const kindLabel = skill.kind === "move" ? "Technique" : "Passif";
 
   return `
     <button class="skill-card skill-${escapeAttr(skill.kind)}" type="button" data-skill-id="${escapeAttr(skill.id)}">
-      <span class="skill-level">${levelLabel}</span>
-      <span class="skill-window">
-        <span class="skill-title-row">
-          ${renderSkillTitleIcon(skill)}
-          <strong>${escapeHtml(skill.name)}</strong>
-        </span>
-        ${skill.kind === "move" ? renderMoveSkillBottom(skill) : renderPassiveSkillBottom(skill)}
+      <span class="skill-level">Lv.${escapeHtml(skill.current_level || "-")}</span>
+      ${icon}
+      <span class="skill-name">
+        <strong>${escapeHtml(skill.name)}</strong>
+        <small>${escapeHtml(kindLabel)}${skill.unlock_level ? ` - déblocage Lv.${escapeHtml(skill.unlock_level)}` : ""}</small>
       </span>
     </button>
   `;
-}
-
-function renderMoveSkillBottom(skill) {
-  return `
-    <span class="skill-bottom-row">
-      <span class="skill-type-disc">${renderMoveTypeIcon(skill.type?.code)}</span>
-      <span class="skill-tp-panel">
-        <span><strong>TP</strong> ${formatNumber(skill.tp_cost || 0)}</span>
-        <span class="skill-tp-bar"><span></span></span>
-      </span>
-      <span class="skill-power-panel">
-        <img src="${escapeAttr(assetPath("assets/stats/kick.png"))}" alt="" />
-        <strong>${formatNumber(skill.power || 0)}</strong>
-      </span>
-    </span>
-  `;
-}
-
-function renderPassiveSkillBottom(skill) {
-  const unlock = skill.unlock_level ? `Déblocage Lv.${formatNumber(skill.unlock_level)}` : "Déblocage spécial";
-  const bonus = skill.total_power_bonus ? `Bonus ${formatNumber(skill.total_power_bonus)}` : "Passif";
-  return `
-    <span class="skill-bottom-row passive-bottom-row">
-      <span class="skill-type-disc passive-disc"><span class="passive-mark">P</span></span>
-      <span class="skill-passive-info">
-        <span>${escapeHtml(unlock)}</span>
-        <strong>${escapeHtml(bonus)}</strong>
-      </span>
-    </span>
-  `;
-}
-
-function renderSkillTitleIcon(skill) {
-  if (skill.kind === "move") {
-    return `<span class="skill-title-icon">${renderElementIcon(skill.element?.code)}</span>`;
-  }
-  return `<span class="skill-title-icon passive-title-icon"><span class="passive-mark">P</span></span>`;
 }
 
 function openSkillModal(player, skillId) {
@@ -435,10 +397,7 @@ function openSkillModal(player, skillId) {
     .map((level) => `
       <li>
         <strong>Lv.${escapeHtml(level.level)}</strong>
-        <span>
-          ${skill.kind === "passive" ? `<em>${escapeHtml(passiveUnlockText(level))}</em>` : ""}
-          ${escapeHtml(level.description || "")}
-        </span>
+        <span>${escapeHtml(level.description || "")}</span>
       </li>
     `)
     .join("");
@@ -466,19 +425,6 @@ function closeSkillModal() {
   els.skillModal.hidden = true;
   els.skillModalBody.innerHTML = "";
   document.body.classList.remove("modal-open");
-}
-
-function passiveUnlockText(level) {
-  const playerLevels = (level.unlock_player_level || []).map(formatNumber);
-  const awakeningLevels = (level.unlock_awakening_code || []).map(formatNumber);
-  const parts = [];
-  if (playerLevels.length) {
-    parts.push(`Joueur Lv.${playerLevels.join("/")}`);
-  }
-  if (awakeningLevels.length) {
-    parts.push(`Éveil ${awakeningLevels.join("/")}`);
-  }
-  return parts.length ? `${parts.join(" + ")} - ` : "";
 }
 
 function renderModel(player) {
