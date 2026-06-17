@@ -1,0 +1,98 @@
+{
+  "ui": {
+    "listWhite": {
+      "path": "assets/ui/Bg_List_White.png",
+      "unityName": "Bg_List_White",
+      "source": "unity_export_named/single_0328/images/__data-1302/Bg_List_White.png",
+      "usage": "Fond des petites cartes de joueurs et PNJ"
+    },
+    "listBlue": {
+      "path": "assets/ui/Bg_List.png",
+      "unityName": "Bg_List",
+      "source": "unity_export_named/single_0328/images/__data-1302/Sprite/Bg_List.png",
+      "usage": "Fond de liste bleu disponible pour variantes"
+    },
+    "portraitBase": {
+      "path": "assets/ui/Img_ChatCharaBase.png",
+      "unityName": "Img_ChatCharaBase",
+      "source": "unity_export_named/single_0328/images/__data-1302/Sprite/Img_ChatCharaBase.png",
+      "usage": "Base bleue derriere les portraits des cartes"
+    },
+    "buttonBlue": {
+      "path": "assets/ui/Btn_LargeBG_Blue.png",
+      "unityName": "Btn_LargeBG_Blue",
+      "source": "unity_export_named/single_0328/images/__data-1302/Btn_LargeBG_Blue_2.png",
+      "usage": "Boutons bleus de detail"
+    },
+    "buttonWhite": {
+      "path": "assets/ui/Btn_LargeBG_White.png",
+      "unityName": "Btn_LargeBG_White",
+      "source": "unity_export_named/single_0328/images/__data-1302/Sprite/Btn_LargeBG_White.png",
+      "usage": "Boutons blancs disponibles pour actions secondaires"
+    },
+    "star": {
+      "path": "assets/ui/Icon_GradeStar.png",
+      "unityName": "Icon_GradeStar",
+      "source": "unity_export_named/single_0328/images/__data-1302/Icon_GradeStar.png",
+      "usage": "Etoiles de rarete"
+    }
+  },
+  "players": {
+    "elementFrame": {
+      "path": "assets/elements/Frm_Element_White.png",
+      "unityName": "Frm_Element_White",
+      "source": "unity_export_named/single_0328/images/__data-1302/Sprite/Frm_Element_White.png",
+      "usage": "Cadre blanc des icones d'element"
+    }
+  },
+  "skillCards": {
+    "power": {
+      "path": "assets/skill-card/Icon_SkillPower.png",
+      "unityName": "Icon_SkillPower",
+      "source": "unity_export_named/single_0328/images/__data-1302/Texture2D/Icon_SkillPower.png",
+      "usage": "Icone de puissance des techniques"
+    }
+  },
+  "coaches": {
+    "detailBackground": {
+      "path": "assets/coaches/formation/Bg_DirectorDetail.png",
+      "unityName": "Bg_DirectorDetail",
+      "source": "unity_export_auto/single_0293/images/__data-1263/-3947638592338551062.png",
+      "usage": "Fond principal des fiches entraineurs"
+    },
+    "textWindow": {
+      "path": "assets/coaches/formation/Frm_TextWindow.png",
+      "unityName": "Frm_TextWindow",
+      "source": "unity_export_named/single_0328/images/__data-1302/Frm_TextWindow.png",
+      "usage": "Bandeaux de titre des blocs entraineurs"
+    },
+    "formationCourt": {
+      "path": "assets/coaches/formation/Img_Court.png",
+      "unityName": "Img_Court",
+      "source": "unity_export_named/single_0328/images/__data-1302/Sprite/Img_Court.png",
+      "usage": "Terrain des formations entraineurs"
+    },
+    "formationSlots": {
+      "fw": {
+        "path": "assets/coaches/positions/Img_FWBase.png",
+        "unityName": "Img_FWBase",
+        "source": "unity_export_named/single_0293/images/__data-1263/Sprite/Img_FWBase.png"
+      },
+      "mf": {
+        "path": "assets/coaches/positions/Img_MFBase.png",
+        "unityName": "Img_MFBase",
+        "source": "unity_export_named/single_0293/images/__data-1263/Sprite/Img_MFBase.png"
+      },
+      "df": {
+        "path": "assets/coaches/positions/Img_DFBase.png",
+        "unityName": "Img_DFBase",
+        "source": "unity_export_named/single_0293/images/__data-1263/Sprite/Img_DFBase.png"
+      },
+      "gk": {
+        "path": "assets/coaches/positions/Img_GKBase.png",
+        "unityName": "Img_GKBase",
+        "source": "unity_export_named/single_0293/images/__data-1263/Sprite/Img_GKBase.png"
+      }
+    }
+  }
+}

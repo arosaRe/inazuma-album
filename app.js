@@ -7,6 +7,8 @@ const state = {
   coaches: [],
   filteredCoaches: [],
   selectedCoachId: null,
+  formations: {},
+  formationConditions: {},
   filters: {
     query: "",
     team: "all",
@@ -27,6 +29,11 @@ const state = {
     awakeningCode: 9,
     equipmentLevels: {},
     equipmentLevelsByPosition: {},
+  },
+  teamBuilder: {
+    selectedSlot: 0,
+    coachId: null,
+    slots: [],
   },
   account: {
     user: null,
@@ -71,6 +78,182 @@ const labels = {
   },
 };
 
+const coachEffectIconBases = {
+  "キック加減算": "PassiveEffectIcon_AddKick",
+  "キャッチ加減算": "PassiveEffectIcon_AddCatch",
+  "クリティカル確率加減算": "PassiveEffectIcon_AddCriticalProbability",
+  "クリティカル率加減算": "PassiveEffectIcon_AddCriticalProbability",
+  "クリティカル発生率加減算": "PassiveEffectIcon_AddCriticalProbability",
+  "シュートチェイン確率加減算": "PassiveEffectIcon_AddShootChainProbability",
+  "スピード加減算": "PassiveEffectIcon_AddSpeed",
+  "テクニック加減算": "PassiveEffectIcon_AddTechnique",
+  "ファウル確率加減算": "PassiveEffectIcon_AddFoulProbability",
+  "ファール率加減算": "PassiveEffectIcon_AddFoulProbability",
+  "ブロック加減算": "PassiveEffectIcon_AddBlock",
+  "全パラメータ加減算": "PassiveEffectIcon_AddAllParameters",
+  "技威力加減算": "PassiveEffectIcon_AddMovePower",
+  "技射程加減算": "PassiveEffectIcon_AddMoveRange",
+  "最大TP加減算": "PassiveEffectIcon_AddMaxTP",
+  "TP加減算": "PassiveEffectIcon_AddCurrentTP",
+  "消費TP加減算": "PassiveEffectIcon_AddTPCost",
+};
+
+const uiAssets = {
+  elements: {
+    fire: "assets/elements/Icon_Element_Fire.png",
+    wood: "assets/elements/Icon_Element_Forest.png",
+    wind: "assets/elements/Icon_Element_Wind.png",
+    mountain: "assets/elements/Icon_Element_Mountain.png",
+  },
+  positions: {
+    FW: "assets/positions/Icon_Position_FW.png",
+    MF: "assets/positions/Icon_Position_MF.png",
+    DF: "assets/positions/Icon_Position_DF.png",
+    GK: "assets/positions/Icon_Position_GK.png",
+  },
+  coachFormationSlots: {
+    fw: "assets/coaches/positions/Img_FWBase.png",
+    mf: "assets/coaches/positions/Img_MFBase.png",
+    df: "assets/coaches/positions/Img_DFBase.png",
+    gk: "assets/coaches/positions/Img_GKBase.png",
+  },
+  skillCards: {
+    power: "assets/skill-card/Icon_SkillPower.png",
+    moveTypes: {
+      shot: "assets/skill-card/Icon_MoveSkill_Shoot.png",
+      dribble: "assets/skill-card/Icon_MoveSkill_Dribble.png",
+      block: "assets/skill-card/Icon_MoveSkill_Block.png",
+      save: "assets/skill-card/Icon_MoveSkill_Catch.png",
+      catch: "assets/skill-card/Icon_MoveSkill_Catch.png",
+      none: "assets/skill-card/Icon_MoveSkill_None.png",
+    },
+  },
+  ui: {
+    star: "assets/ui/Icon_GradeStar.png",
+  },
+};
+
+const tagIconFallbacks = {
+  team: createAssetLookup({
+    Raimon: "assets/tags/Icon_Tag_Team_Raimon.png",
+    "雷門": "assets/tags/Icon_Tag_Team_Raimon.png",
+    "Anciens de Raimon": "assets/tags/Icon_Tag_Team_RaimonVeterans.png",
+    "Raimon Veterans": "assets/tags/Icon_Tag_Team_RaimonVeterans.png",
+    "Royal Academy": "assets/tags/Icon_Tag_Team_Teikoku.png",
+    Teikoku: "assets/tags/Icon_Tag_Team_Teikoku.png",
+    "帝国": "assets/tags/Icon_Tag_Team_Teikoku.png",
+    "Inazuma Japon": "assets/tags/Icon_Tag_Team_InazumaJapan.png",
+    "Inazuma Japan": "assets/tags/Icon_Tag_Team_InazumaJapan.png",
+    "イナズマジャパン": "assets/tags/Icon_Tag_Team_InazumaJapan.png",
+    "Équipe du Japon 2026": "assets/tags/Icon_Tag_Team_JapanNationalTeam2026.png",
+    "Japan National Team 2026": "assets/tags/Icon_Tag_Team_JapanNationalTeam2026.png",
+    "Inazuma KFC": "assets/tags/Icon_Tag_Team_InazumaKidsFC.png",
+    "稲妻KFC": "assets/tags/Icon_Tag_Team_InazumaKidsFC.png",
+    "稲妻ＫＦＣ": "assets/tags/Icon_Tag_Team_InazumaKidsFC.png",
+    "Jeunes Inazuma": "assets/tags/Icon_Tag_Team_YoungInazuma.png",
+    "Young Inazuma": "assets/tags/Icon_Tag_Team_YoungInazuma.png",
+    Kirkwood: "assets/tags/Icon_Tag_Team_Kirkwood.png",
+    "木戸川清修": "assets/tags/Icon_Tag_Team_Kirkwood.png",
+    "Secret Service": "assets/tags/Icon_Tag_Team_SecretService.png",
+    "Sengoku Igajima": "assets/tags/Icon_Tag_Team_Shuriken.png",
+    Shuriken: "assets/tags/Icon_Tag_Team_Shuriken.png",
+    "戦国伊賀": "assets/tags/Icon_Tag_Team_Shuriken.png",
+    Zeus: "assets/tags/Icon_Tag_Team_Zeus.png",
+    "世宇子": "assets/tags/Icon_Tag_Team_Zeus.png",
+    Wild: "assets/tags/Icon_Tag_Team_Wild.png",
+    "野生": "assets/tags/Icon_Tag_Team_Wild.png",
+    Otaku: "assets/tags/Icon_Tag_Team_Otaku.png",
+    "秋葉名戸": "assets/tags/Icon_Tag_Team_Otaku.png",
+    Occulte: "assets/tags/Icon_Tag_Team_Occult.png",
+    Occult: "assets/tags/Icon_Tag_Team_Occult.png",
+    "尾刈斗": "assets/tags/Icon_Tag_Team_Occult.png",
+    "Tempête des Gémeaux": "assets/tags/Icon_Tag_Team_GeminiStorm.png",
+    "Gemini Storm": "assets/tags/Icon_Tag_Team_GeminiStorm.png",
+    "ジェミニストーム": "assets/tags/Icon_Tag_Team_GeminiStorm.png",
+    Epsilon: "assets/tags/Icon_Tag_Team_Epsilon.png",
+    "イプシロン": "assets/tags/Icon_Tag_Team_Epsilon.png",
+    "The Genesis": "assets/tags/Icon_Tag_Team_Genesis.png",
+    Genesis: "assets/tags/Icon_Tag_Team_Genesis.png",
+    "ザ・ジェネシス": "assets/tags/Icon_Tag_Team_Genesis.png",
+    Chaos: "assets/tags/Icon_Tag_Team_Chaos.png",
+    "カオス": "assets/tags/Icon_Tag_Team_Chaos.png",
+    "Little Gigantes": "assets/tags/Icon_Tag_Team_LittleGigant.png",
+    "Little Gigant": "assets/tags/Icon_Tag_Team_LittleGigant.png",
+    "リトルギガント": "assets/tags/Icon_Tag_Team_LittleGigant.png",
+    "Mikage Sennou": "assets/tags/Icon_Tag_Team_Brainwashing.png",
+    Brainwashing: "assets/tags/Icon_Tag_Team_Brainwashing.png",
+    "御影専農": "assets/tags/Icon_Tag_Team_Brainwashing.png",
+    "日本代表２０２６": "assets/tags/Icon_Tag_Team_JapanNationalTeam2026.png",
+    "雷門ＯＢ": "assets/tags/Icon_Tag_Team_RaimonVeterans.png",
+    "ヤングイナズマ": "assets/tags/Icon_Tag_Team_YoungInazuma.png",
+    "ＳＰフィクサーズ": "assets/tags/Icon_Tag_Team_SecretService.png",
+    "Diamond Dust": "assets/tags/Icon_TeamEmblem_DiamondDust.png",
+    "Diamond Dust Chaos": "assets/tags/Icon_TeamEmblem_DiamondDust.png",
+    DiamondDust: "assets/tags/Icon_TeamEmblem_DiamondDust.png",
+    "ダイヤモンドダスト": "assets/tags/Icon_TeamEmblem_DiamondDust.png",
+    "ダイヤモンドダスト カオス": "assets/tags/Icon_TeamEmblem_DiamondDust.png",
+    Pirate: "assets/tags/Icon_TeamEmblem_Pirate.png",
+    "Pirates Cove": "assets/tags/Icon_TeamEmblem_Pirate.png",
+    "Pirates Cove Japanese Resistance": "assets/tags/Icon_TeamEmblem_Pirate.png",
+    "海賊": "assets/tags/Icon_TeamEmblem_Pirate.png",
+    "海王学園": "assets/tags/Icon_TeamEmblem_Pirate.png",
+    Ramen: "assets/tags/Icon_TeamEmblem_Ramen.png",
+    "ラーメン義勇団": "assets/tags/Icon_TeamEmblem_Ramen.png",
+    "ラーメン": "assets/tags/Icon_TeamEmblem_Ramen.png",
+  }),
+  style: createAssetLookup({
+    "Meneur de jeu": "assets/tags/Icon_Tag_Ability_Playmaker.png",
+    Playmaker: "assets/tags/Icon_Tag_Ability_Playmaker.png",
+    "プレイメイカー": "assets/tags/Icon_Tag_Ability_Playmaker.png",
+    Buteur: "assets/tags/Icon_Tag_Ability_Striker.png",
+    Striker: "assets/tags/Icon_Tag_Ability_Striker.png",
+    "ストライカー": "assets/tags/Icon_Tag_Ability_Striker.png",
+    Gardien: "assets/tags/Icon_Tag_Ability_Keeper.png",
+    Keeper: "assets/tags/Icon_Tag_Ability_Keeper.png",
+    "キーパー": "assets/tags/Icon_Tag_Ability_Keeper.png",
+    "Milieu défensif": "assets/tags/Icon_Tag_Ability_Defensivehalf.png",
+    "Defensive Half": "assets/tags/Icon_Tag_Ability_Defensivehalf.png",
+    "ディフェンシブハーフ": "assets/tags/Icon_Tag_Ability_Defensivehalf.png",
+    Stoppeur: "assets/tags/Icon_Tag_Ability_Stopper.png",
+    Stopper: "assets/tags/Icon_Tag_Ability_Stopper.png",
+    "ストッパー": "assets/tags/Icon_Tag_Ability_Stopper.png",
+    "Second attaquant": "assets/tags/Icon_Tag_Ability_SecondTop.png",
+    "Second Top": "assets/tags/Icon_Tag_Ability_SecondTop.png",
+    "セカンドトップ": "assets/tags/Icon_Tag_Ability_SecondTop.png",
+    "Latéral": "assets/tags/Icon_Tag_Ability_SideBack.png",
+    Sideback: "assets/tags/Icon_Tag_Ability_SideBack.png",
+    "サイドバック": "assets/tags/Icon_Tag_Ability_SideBack.png",
+    "Tireur longue distance": "assets/tags/Icon_Tag_Ability_Longshooter.png",
+    "Long Shooter": "assets/tags/Icon_Tag_Ability_Longshooter.png",
+    "ロングシューター": "assets/tags/Icon_Tag_Ability_Longshooter.png",
+    "Bloqueur de tir": "assets/tags/Icon_Tag_Ability_Shootblocker.png",
+    "Shoot Blocker": "assets/tags/Icon_Tag_Ability_Shootblocker.png",
+    "シュートブロッカー": "assets/tags/Icon_Tag_Ability_Shootblocker.png",
+    Buffer: "assets/tags/Icon_Tag_Ability_Buffer.png",
+  }),
+  season: createAssetLookup({
+    Cross: "assets/tags/Icon_Tag_Title_Cross.png",
+    "Saison 1": "assets/tags/Icon_Tag_Title_InaEle1.png",
+    "Inazuma Eleven 1": "assets/tags/Icon_Tag_Title_InaEle1.png",
+    "イナズマイレブン1": "assets/tags/Icon_Tag_Title_InaEle1.png",
+    "Saison 2": "assets/tags/Icon_Tag_Title_InaEle2.png",
+    "Inazuma Eleven 2": "assets/tags/Icon_Tag_Title_InaEle2.png",
+    "イナズマイレブン2": "assets/tags/Icon_Tag_Title_InaEle2.png",
+    "Saison 3": "assets/tags/Icon_Tag_Title_InaEle3.png",
+    "Inazuma Eleven 3": "assets/tags/Icon_Tag_Title_InaEle3.png",
+    "イナズマイレブン3": "assets/tags/Icon_Tag_Title_InaEle3.png",
+  }),
+};
+
+const statIconFiles = {
+  tp: "Icon_Status_TP",
+  kick: "Icon_Status_Kick",
+  technique: "Icon_Status_Technic",
+  block: "Icon_Status_Block",
+  catch: "Icon_Status_Catch",
+  speed: "Icon_Status_Speed",
+};
+
 const awakeningTiers = {
   0: { label: "NORMAL PLAYER", slug: "normal" },
   1: { label: "NORMAL PLAYER+", slug: "normal-plus" },
@@ -83,14 +266,33 @@ const awakeningTiers = {
   8: { label: "LEGENDARY PLAYER", slug: "legendary" },
   9: { label: "LEGENDARY PLAYER+", slug: "legendary-plus" },
 };
-const SKILL_POWER_WEIGHT = 0.67310925;
 const STAT_KEYS = ["kick", "technique", "block", "catch", "speed"];
+const TOTAL_POWER_STAT_COEFFICIENTS = {
+  kick: 10000,
+  technique: 8000,
+  block: 9000,
+  catch: 7000,
+};
+const PASSIVE_EFFECT_TOTAL_POWER_COEFFICIENTS = {
+  "\u30ad\u30c3\u30af\u52a0\u6e1b\u7b97": TOTAL_POWER_STAT_COEFFICIENTS.kick,
+  "\u30c6\u30af\u30cb\u30c3\u30af\u52a0\u6e1b\u7b97": TOTAL_POWER_STAT_COEFFICIENTS.technique,
+  "\u30d6\u30ed\u30c3\u30af\u52a0\u6e1b\u7b97": TOTAL_POWER_STAT_COEFFICIENTS.block,
+  "\u30ad\u30e3\u30c3\u30c1\u52a0\u6e1b\u7b97": TOTAL_POWER_STAT_COEFFICIENTS.catch,
+};
+const MOVE_POWER_EFFECT_TYPE = "\u6280\u5a01\u529b\u52a0\u6e1b\u7b97";
+const MOVE_CRITICAL_EFFECT_TYPE = "\u30af\u30ea\u30c6\u30a3\u30ab\u30eb\u78ba\u7387\u52a0\u6e1b\u7b97";
+const MOVE_RANGE_EFFECT_TYPE = "\u6280\u5c04\u7a0b\u52a0\u6e1b\u7b97";
+const ALL_MAIN_STATS_EFFECT_TYPE = "\u5168\u30d1\u30e9\u30e1\u30fc\u30bf\u52a0\u6e1b\u7b97";
+const MOVE_POWER_EFFECT_TOTAL_POWER_MULTIPLIER = 10;
+const MOVE_CRITICAL_EFFECT_TOTAL_POWER_DIVISOR = 10;
+const MOVE_RANGE_EFFECT_TOTAL_POWER_MULTIPLIER = 6;
 const DEFAULT_EQUIPMENT_LEVEL = 1;
 const MAIN_COLLECTION_SLOT_COUNT = 5;
 const STORAGE_KEY = "inazuma-album-state-v2";
 const LANGUAGE_STORAGE_KEY = "inazuma-album-language";
-const AVAILABLE_MODES = ["players", "simulator", "collection", "publicProfile"];
+const AVAILABLE_MODES = ["players", "coaches", "simulator", "team", "collection", "publicProfile"];
 const API_BASE_URL = String(window.INAZUMA_CONFIG?.apiBaseUrl || "http://localhost:4000").replace(/\/+$/, "");
+const TEAM_SIZE = 5;
 const EQUIPMENT_POSITIONS = ["FW", "MF", "DF", "GK"];
 const EQUIPMENT_SCREEN_ORDER = [1, 2, 3, 5, 6, 4];
 const EQUIPMENT_SLOT_LABELS = {
@@ -129,19 +331,28 @@ const els = {
   authModalClose: document.querySelector("#authModalClose"),
 };
 
+const assetSelects = new Map();
+
 init();
 
 async function init() {
   bindEvents();
   try {
-    const db = await loadAlbumDatabase();
+    const [db, coachDb, formationDb] = await Promise.all([
+      loadAlbumDatabase(),
+      loadCoachDatabase().catch(() => ({ coaches: [] })),
+      loadFormationDatabase().catch(() => ({ formations: {}, conditions: {} })),
+    ]);
     state.players = db.players || [];
     state.statTables = db.stat_tables || {};
-    state.coaches = [];
+    state.coaches = coachDb.coaches || [];
+    state.formations = formationDb.formations || {};
+    state.formationConditions = formationDb.conditions || {};
     state.selectedId = state.players.find((player) => player.playable)?.id || state.players[0]?.id || null;
-    state.selectedCoachId = null;
+    state.selectedCoachId = state.coaches.find((coach) => !coach.enemy_only)?.id || state.coaches[0]?.id || null;
     restoreSavedState();
-    els.dbMeta.textContent = `${db.playable_count || 0} joueurs jouables / ${db.count || state.players.length} total - MAJ ${db.updated_at || "inconnue"}`;
+    ensureTeamBuilderDefaults();
+    els.dbMeta.textContent = `${db.playable_count || 0} joueurs jouables / ${state.coaches.filter((coach) => !coach.enemy_only).length} entraîneurs - MAJ ${db.updated_at || "inconnue"}`;
     await bootstrapAccount();
     const publicUsername = publicProfileUsernameFromUrl();
     if (publicUsername) {
@@ -203,12 +414,35 @@ async function loadCoachDatabase() {
   throw lastError || new Error("Base entraîneurs introuvable");
 }
 
+async function loadFormationDatabase() {
+  const endpoints = ["data/formations.json", "api/formations"];
+  let lastError = null;
+
+  for (const endpoint of endpoints) {
+    try {
+      const response = await fetch(endpoint, { cache: "no-store" });
+      const db = await response.json();
+      if (!response.ok) {
+        throw new Error(db.error || "Erreur API");
+      }
+      return db;
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  throw lastError || new Error("Base formations introuvable");
+}
+
 function restoreSavedState() {
   const saved = readSavedState();
   if (!saved) {
     return;
   }
 
+  if (AVAILABLE_MODES.includes(saved.mode)) {
+    state.mode = saved.mode;
+  }
   if (saved.filters && typeof saved.filters === "object") {
     state.filters = {
       ...state.filters,
@@ -234,6 +468,15 @@ function restoreSavedState() {
     state.simulator.awakeningCode = Number.isFinite(Number(state.simulator.awakeningCode)) ? Number(state.simulator.awakeningCode) : 9;
     state.simulator.equipmentLevels = normalizeSavedEquipmentLevels(state.simulator.equipmentLevels);
     state.simulator.equipmentLevelsByPosition = normalizeSavedEquipmentByPosition(state.simulator.equipmentLevelsByPosition);
+  }
+  if (saved.teamBuilder && typeof saved.teamBuilder === "object") {
+    state.teamBuilder = {
+      ...state.teamBuilder,
+      ...pickObject(saved.teamBuilder, ["selectedSlot", "coachId", "slots"]),
+    };
+    state.teamBuilder.selectedSlot = clampNumber(state.teamBuilder.selectedSlot, 0, TEAM_SIZE - 1);
+    state.teamBuilder.coachId = state.teamBuilder.coachId == null ? null : String(state.teamBuilder.coachId);
+    state.teamBuilder.slots = normalizeSavedTeamSlots(state.teamBuilder.slots);
   }
 
   if (saved.selectedId != null && state.players.some((player) => String(player.id) === String(saved.selectedId))) {
@@ -263,6 +506,7 @@ function saveState() {
         filters: state.filters,
         coachFilters: state.coachFilters,
         simulator: state.simulator,
+        teamBuilder: state.teamBuilder,
       }),
     );
   } catch {
@@ -286,6 +530,41 @@ function normalizeSavedEquipmentByPosition(levelsByPosition) {
     return {};
   }
   return Object.fromEntries(EQUIPMENT_POSITIONS.map((position) => [position, normalizeSavedEquipmentLevels(levelsByPosition[position])]));
+}
+
+function normalizeSavedTeamSlots(slots) {
+  const safeSlots = Array.isArray(slots) ? slots : [];
+  return Array.from({ length: TEAM_SIZE }, (_, index) => {
+    const slot = safeSlots[index] && typeof safeSlots[index] === "object" ? safeSlots[index] : {};
+    return {
+      playerId: slot.playerId == null ? null : String(slot.playerId),
+      level: clampNumber(slot.level ?? 300, 1, 300),
+      awakeningCode: Number.isFinite(Number(slot.awakeningCode)) ? Number(slot.awakeningCode) : 9,
+    };
+  });
+}
+
+function ensureTeamBuilderDefaults() {
+  state.teamBuilder ||= {};
+  state.teamBuilder.selectedSlot = clampNumber(state.teamBuilder.selectedSlot ?? 0, 0, TEAM_SIZE - 1);
+  state.teamBuilder.coachId =
+    state.coaches.some((coach) => String(coach.id) === String(state.teamBuilder.coachId))
+      ? String(state.teamBuilder.coachId)
+      : String(state.selectedCoachId || state.coaches.find((coach) => !coach.enemy_only)?.id || state.coaches[0]?.id || "");
+
+  const playablePlayers = state.players.filter((player) => player.playable);
+  const sourceSlots = normalizeSavedTeamSlots(state.teamBuilder.slots);
+  state.teamBuilder.slots = sourceSlots.map((slot, index) => {
+    const player = state.players.find((item) => String(item.id) === String(slot.playerId));
+    const fallback = playablePlayers[index] || playablePlayers[0] || state.players[index] || state.players[0];
+    const playerId = player?.id || fallback?.id || null;
+    const finalPlayer = state.players.find((item) => String(item.id) === String(playerId));
+    return {
+      playerId: playerId == null ? null : String(playerId),
+      level: clampNumber(slot.level, 1, 300),
+      awakeningCode: finalPlayer ? normalizeAwakeningCodeForPlayer(finalPlayer, slot.awakeningCode) : slot.awakeningCode,
+    };
+  });
 }
 
 function bindEvents() {
@@ -354,11 +633,19 @@ function bindEvents() {
     }
   });
   document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeAssetSelects();
+    }
     if (event.key === "Escape" && !els.skillModal.hidden) {
       closeSkillModal();
     }
     if (event.key === "Escape" && els.authModal && !els.authModal.hidden) {
       closeAuthModal();
+    }
+  });
+  document.addEventListener("click", (event) => {
+    if (!event.target.closest(".asset-select")) {
+      closeAssetSelects();
     }
   });
 }
@@ -859,6 +1146,7 @@ async function handleLogout() {
   applyCurrentFilters();
 }
 
+
 function setMode(mode) {
   state.mode = AVAILABLE_MODES.includes(mode) ? mode : "players";
   document.body.dataset.mode = state.mode;
@@ -872,7 +1160,7 @@ function setMode(mode) {
     els.sectionEyebrow.textContent = "Profil public";
     els.searchInput.placeholder = "Profil public";
     els.searchInput.value = "";
-    els.albumSubhead.textContent = state.publicProfileUsername ? `/${state.publicProfileUsername}` : "Profil partage";
+    els.albumSubhead.textContent = state.publicProfileUsername ? "/" + state.publicProfileUsername : "Profil partagé";
     setSortOptions([["name_asc", "Nom"]]);
     els.sortSelect.value = "name_asc";
   } else if (state.mode === "collection") {
@@ -880,11 +1168,11 @@ function setMode(mode) {
     els.sectionEyebrow.textContent = "Ma collection";
     els.searchInput.placeholder = "Ajouter un joueur jouable...";
     els.searchInput.value = state.filters.query;
-    els.albumSubhead.textContent = "Gestion du profil, des 5 principaux et des equipements";
+    els.albumSubhead.textContent = "Gestion du profil, des 5 principaux et des équipements";
     setSortOptions([
       ["name_asc", "Nom"],
       ["power_desc", "Puissance"],
-      ["rarity_desc", "Etoiles"],
+      ["rarity_desc", "Étoiles"],
     ]);
     els.sortSelect.value = state.filters.sort;
   } else if (state.mode === "coaches") {
@@ -903,6 +1191,18 @@ function setMode(mode) {
     els.searchInput.placeholder = "Choisir un joueur, équipe, technique...";
     els.searchInput.value = state.filters.query;
     els.albumSubhead.textContent = "Stats selon niveau / éveil / équipements";
+    setSortOptions([
+      ["name_asc", "Nom"],
+      ["power_desc", "Puissance"],
+      ["rarity_desc", "Étoiles"],
+    ]);
+    els.sortSelect.value = state.filters.sort;
+  } else if (state.mode === "team") {
+    ensureTeamBuilderDefaults();
+    els.sectionEyebrow.textContent = "Build équipe";
+    els.searchInput.placeholder = "Choisir les 5 joueurs...";
+    els.searchInput.value = state.filters.query;
+    els.albumSubhead.textContent = "Clique un slot puis un joueur";
     setSortOptions([
       ["name_asc", "Nom"],
       ["power_desc", "Puissance"],
@@ -945,6 +1245,7 @@ function applyCurrentFilters() {
 }
 
 function hydrateFilters() {
+  setupAssetSelects();
   syncFilterOptions();
 }
 
@@ -953,6 +1254,124 @@ function setOptions(select, allLabel, values, labeler = (value) => value) {
     `<option value="all">${escapeHtml(allLabel)}</option>`,
     ...values.map((value) => `<option value="${escapeAttr(value)}">${escapeHtml(labeler(value))}</option>`),
   ].join("");
+}
+
+function setupAssetSelects() {
+  [
+    { key: "team", element: els.teamFilter, tagKind: "team" },
+    { key: "position", element: els.positionFilter },
+    { key: "element", element: els.elementFilter },
+    { key: "style", element: els.styleFilter, tagKind: "play_style" },
+    { key: "season", element: els.seasonFilter, tagKind: "season" },
+  ].forEach((config) => {
+    const select = config.element;
+    if (!select || assetSelects.has(select)) {
+      return;
+    }
+
+    select.classList.add("native-asset-select");
+    const shell = document.createElement("div");
+    shell.className = "asset-select";
+    shell.dataset.filterKey = config.key;
+    shell.innerHTML = `
+      <button class="asset-select-button" type="button" aria-haspopup="listbox" aria-expanded="false">
+        <span class="asset-select-current"></span>
+        <span class="asset-select-arrow" aria-hidden="true">▾</span>
+      </button>
+      <div class="asset-select-menu" role="listbox" hidden></div>
+    `;
+
+    select.insertAdjacentElement("afterend", shell);
+    const button = shell.querySelector(".asset-select-button");
+    const menu = shell.querySelector(".asset-select-menu");
+    button.addEventListener("click", () => toggleAssetSelect(select));
+    menu.addEventListener("click", (event) => {
+      const option = event.target.closest("[data-asset-option]");
+      if (!option) {
+        return;
+      }
+      select.value = option.dataset.value;
+      select.dispatchEvent(new Event("change", { bubbles: true }));
+      closeAssetSelects();
+    });
+
+    assetSelects.set(select, { ...config, shell, button, menu });
+  });
+}
+
+function refreshAssetSelect(select) {
+  const control = assetSelects.get(select);
+  if (!control) {
+    return;
+  }
+  const options = [...select.options];
+  const selected = select.selectedOptions[0] || options[0] || null;
+  control.shell.classList.toggle("is-disabled", select.disabled);
+  control.button.disabled = select.disabled;
+  control.button.querySelector(".asset-select-current").innerHTML = selected
+    ? renderAssetSelectOption(control, selected.value, selected.textContent, true)
+    : "";
+  control.menu.innerHTML = options
+    .map((option) => {
+      const selectedClass = option.value === select.value ? " is-selected" : "";
+      return `
+        <button class="asset-select-option${selectedClass}" type="button" role="option" data-asset-option data-value="${escapeAttr(option.value)}" aria-selected="${option.value === select.value ? "true" : "false"}">
+          ${renderAssetSelectOption(control, option.value, option.textContent)}
+        </button>
+      `;
+    })
+    .join("");
+}
+
+function renderAssetSelectOption(control, value, label, compact = false) {
+  const icon = filterOptionIcon(control, value);
+  const iconHtml = icon
+    ? `<span class="asset-select-icon"><img src="${escapeAttr(icon)}" alt="" /></span>`
+    : `<span class="asset-select-icon is-empty" aria-hidden="true"></span>`;
+  return `
+    ${iconHtml}
+    <span class="asset-select-label${compact ? " is-current" : ""}">${escapeHtml(label)}</span>
+  `;
+}
+
+function toggleAssetSelect(select) {
+  const control = assetSelects.get(select);
+  if (!control || control.button.disabled) {
+    return;
+  }
+  const open = control.menu.hidden;
+  closeAssetSelects();
+  control.menu.hidden = !open;
+  control.shell.classList.toggle("is-open", open);
+  control.button.setAttribute("aria-expanded", String(open));
+}
+
+function closeAssetSelects() {
+  assetSelects.forEach((control) => {
+    control.menu.hidden = true;
+    control.shell.classList.remove("is-open");
+    control.button.setAttribute("aria-expanded", "false");
+  });
+}
+
+function filterOptionIcon(control, value) {
+  if (!value || value === "all") {
+    return "";
+  }
+  if (control.key === "position") {
+    return uiAssets.positions[value] ? assetPath(uiAssets.positions[value]) : "";
+  }
+  if (control.key === "element") {
+    return uiAssets.elements[value] ? assetPath(uiAssets.elements[value]) : "";
+  }
+  const tag = tagByLabel(value, control.tagKind);
+  return tagIconPath(tag || value, control.tagKind);
+}
+
+function tagByLabel(value, kind) {
+  return state.players
+    .flatMap((player) => player.tags || [])
+    .find((tag) => (!kind || tag.kind === kind) && tagLabel(tag) === value);
 }
 
 function syncFilterOptions() {
@@ -1012,6 +1431,7 @@ function updateFilterOptionsPass() {
     }
     setOptions(spec.element, spec.allLabel, values, spec.labeler);
     spec.element.value = state.filters[spec.key];
+    refreshAssetSelect(spec.element);
   }
 
   return changed;
@@ -1053,9 +1473,6 @@ function maxBy(items, key) {
 }
 
 function applyFilters() {
-  if (state.mode === "collection") {
-    state.filters.playableOnly = true;
-  }
   syncFilterOptions();
   const filters = state.filters;
   state.filtered = state.players
@@ -1156,7 +1573,6 @@ function renderCoachGrid() {
               ${coach.enemy_only ? `<span class="non-playable-badge">ADV</span>` : ""}
             </span>
             <span class="mini-meta coach-mini-meta">
-              <span class="coach-code">No.${escapeHtml(coach.id)}</span>
               <span class="coach-level-pill">Lv.${escapeHtml(coach.level || 10)}</span>
             </span>
           </span>
@@ -1181,115 +1597,250 @@ function renderCoachDetail() {
     els.playerDetail.innerHTML = els.emptyTemplate.innerHTML.replaceAll("joueur", "entraîneur");
     return;
   }
+  const formation = getCoachFormation(coach);
 
   els.playerDetail.innerHTML = `
-    <section class="game-view coach-view">
-      <div class="bolt bolt-one"></div>
-      <div class="bolt bolt-two"></div>
-
-      <div class="player-side coach-side">
-        <div class="screen-label coach-label">Détail entraîneur</div>
-        <p class="card-title">Formation ${escapeHtml(coach.formation_code || "-")}</p>
-        <h2>${escapeHtml(displayName(coach))}</h2>
-
-        <div class="coach-info-grid">
-          <div class="coach-info-card">
-            <span>Code</span>
-            <strong>${escapeHtml(coach.id)}</strong>
-          </div>
-          <div class="coach-info-card">
-            <span>Niveau</span>
-            <strong>Lv.${escapeHtml(coach.level || 10)}</strong>
-          </div>
-          <div class="coach-info-card">
-            <span>Bonus global</span>
-            <strong>${formatNumber(coach.total_power)}</strong>
-          </div>
-          <div class="coach-info-card">
-            <span>Type</span>
-            <strong>${coach.enemy_only ? "Adverse" : "Disponible"}</strong>
-          </div>
+    <section class="coach-detail-view">
+      <div class="coach-backdrop">${renderModel(coach)}</div>
+      <header class="coach-game-head">
+        <div>
+          <p>${escapeHtml(coach.enemy_only ? "Entraîneur adverse" : "Entraîneur")}</p>
+          <h2>${escapeHtml(displayName(coach))}</h2>
+          <strong>Lv.${escapeHtml(coach.level || 10)}</strong>
         </div>
-
-        <div class="skills-panel coach-passive-panel">
-          ${renderCoachPassive(coach.passive)}
-        </div>
-
-        <div class="coach-progress">
-          <h3>Progression</h3>
-          ${renderCoachProgress(coach)}
-        </div>
-      </div>
-
-      <div class="model-side coach-model-side">
-        <div class="model-art coach-model">
-          ${renderModel(coach)}
-        </div>
-        <div class="power-readout">
+        <div class="coach-total">
           <span>Bonus équipe</span>
           <strong>${formatNumber(coach.total_power)}</strong>
         </div>
-        <div class="level-readout">Lv.${escapeHtml(coach.level || 10)}</div>
-        <div class="awakening-ribbon coach-ribbon">ENTRAÎNEUR</div>
-      </div>
+      </header>
+
+      <article class="coach-game-card">
+        <div class="coach-card-tab">
+          <strong>${escapeHtml(formation?.name || `Formation ${coach.formation_code || "-"}`)}</strong>
+          <span>Information formation</span>
+        </div>
+
+        <div class="coach-formation-row">
+          ${renderFormationPitch(formation)}
+          ${renderFormationRequirements(formation)}
+        </div>
+
+        ${renderCoachSkillSection("Actif - formation", "Formation passive", formation?.passive, { details: false })}
+        ${renderCoachSkillSection("Passif entraîneur", "Coach passive", coach.passive)}
+      </article>
+
     </section>
   `;
 
-  els.playerDetail.querySelectorAll(".skill-card").forEach((button) => {
+  els.playerDetail.querySelectorAll("[data-coach-skill-id]").forEach((button) => {
     button.addEventListener("click", () => {
-      openSkillModal(coach, button.dataset.skillId);
+      openCoachSkillModal(coach, button.dataset.coachSkillId);
     });
   });
 }
 
-function renderCoachPassive(passive) {
-  if (!passive) {
-    return `<p class="empty-line">Aucun passif entraîneur.</p>`;
-  }
-  return `
-    <button class="skill-card skill-passive coach-passive-card" type="button" data-skill-id="${escapeAttr(passive.id)}">
-      <span class="skill-level">Lv.${escapeHtml(passive.current_level || "-")}</span>
-      <span class="passive-mark">P</span>
-      <span class="skill-name">
-        <strong>${escapeHtml(passive.name)}</strong>
-        <small>Déblocage entraîneur Lv.${escapeHtml(passive.unlock_level || 1)}</small>
-      </span>
-    </button>
-  `;
+function getCoachFormation(coach) {
+  return state.formations?.[String(coach?.formation_code || "")] || null;
 }
 
-function renderCoachProgress(coach) {
-  const passiveLevels = new Map((coach.passive?.levels || []).map((level) => [Number(level.unlock_coach_level?.[0] || level.level), level]));
+function renderFormationPitch(formation) {
+  const slots = formation?.slots || [];
+  if (!slots.length) {
+    return `<div class="formation-pitch is-empty">Formation inconnue</div>`;
+  }
   return `
-    <div class="coach-progress-list">
-      ${Array.from({ length: coach.level || 10 }, (_, index) => {
-        const level = index + 1;
-        const passiveLevel = passiveLevels.get(level);
-        const materialStep = (coach.materials || []).find((step) => Number(step.from_level) === level);
-        return `
-          <div class="coach-progress-row">
-            <strong>Lv.${level}</strong>
-            <span>${passiveLevel ? `Passif Lv.${escapeHtml(passiveLevel.level)}` : "Passif -"}</span>
-            <span class="coach-materials">${renderCoachMaterials(materialStep)}</span>
-          </div>
-        `;
-      }).join("")}
+    <div class="formation-pitch" aria-label="Placement formation">
+      ${slots.map(renderFormationSlot).join("")}
     </div>
   `;
 }
 
-function renderCoachMaterials(step) {
-  if (!step?.items?.length) {
-    return "Max";
+function renderFormationSlot(slot) {
+  const left = formationSlotLeft(slot.x);
+  const top = formationSlotTop(slot.y);
+  const pos = String(slot.position || "").toLowerCase();
+  const condition = slot.condition_type_jp ? " has-condition" : "";
+  const slotAsset = formationPositionSlotAsset(pos);
+  const assetClass = slotAsset ? " has-slot-asset" : "";
+  const assetStyle = slotAsset ? `;--slot-image:url('${escapeAttr(assetPath(slotAsset))}')` : "";
+  const positionIcon = slotAsset ? "" : formationSlotPositionIcon(pos, slot.position || "");
+  return `
+    <span class="formation-slot formation-slot-${escapeAttr(pos)}${condition}${assetClass}" style="left:${left}%;top:${top}%${assetStyle}">
+      <strong>${escapeHtml(slot.number)}</strong>
+      ${positionIcon ? `<em>${positionIcon}</em>` : ""}
+    </span>
+  `;
+}
+
+function formationSlotLeft(value) {
+  return Math.min(92, Math.max(8, ((Number(value || 0) + 1) / 2) * 100));
+}
+
+function formationSlotTop(value) {
+  const y = Number(value || 0);
+  return Math.min(94, Math.max(8, 91.3 - y * 92.2));
+}
+
+function formationPositionSlotAsset(pos) {
+  return uiAssets.coachFormationSlots[pos] || "";
+}
+
+function formationSlotPositionIcon(pos, label) {
+  const code = String(pos || "").toUpperCase();
+  const icon = uiAssets.positions[code];
+  if (icon) {
+    return `<img src="${escapeAttr(assetPath(icon))}" alt="${escapeAttr(label)}" />`;
   }
-  return step.items
-    .map((item) => `
-      <span class="coach-material" title="${escapeAttr(item.name)}">
-        ${item.icon ? `<img src="${escapeAttr(assetPath(item.icon))}" alt="" />` : ""}
-        <span>x${formatNumber(item.amount)}</span>
-      </span>
-    `)
-    .join("");
+  return escapeHtml(label);
+}
+
+function renderFormationRequirements(formation) {
+  const requirements = (formation?.slots || []).filter((slot) => slot.condition_type_jp || slot.condition_value_jp);
+  const rows = Array.from({ length: 5 }, (_, index) =>
+    requirements[index] ? renderFormationRequirement(requirements[index]) : `<div class="formation-requirement is-empty" aria-hidden="true"></div>`,
+  ).join("");
+  return `
+    <aside class="formation-requirements">
+      <h3>Conditions</h3>
+      <div class="formation-requirement-list">${rows}</div>
+    </aside>
+  `;
+}
+
+function renderFormationRequirement(slot) {
+  const label = formatFormationCondition(slot);
+  const visual = renderFormationConditionVisual(slot);
+  const wide = visual.includes("is-multi") ? " has-wide-condition" : "";
+  return `
+    <div class="formation-requirement${wide}" title="${escapeAttr(label)}">
+      <strong>${escapeHtml(slot.number)}</strong>
+      <span>${visual}</span>
+    </div>
+  `;
+}
+
+function renderFormationConditionVisual(slot) {
+  if (slot.condition_type_jp === "本職ポジション") {
+    const code = slot.condition_value_jp || slot.position || "";
+    return renderPositionBadge({ code, fr: labels.positions[code] || code }, { compact: true });
+  }
+  if (slot.condition_type_jp === "タグ") {
+    const tags = String(slot.condition_value_jp || "")
+      .split(/[、,]/)
+      .map((value) => tagFromJp(value.trim()))
+      .filter(Boolean);
+    const icons = tags
+      .map((tag) => {
+        const icon = tagIconPath(tag, "team");
+        return icon ? `<img src="${escapeAttr(icon)}" alt="" title="${escapeAttr(tagLabel(tag))}" />` : "";
+      })
+      .filter(Boolean);
+    if (icons.length) {
+      return `<span class="formation-condition-token tag-chip${icons.length > 1 ? " is-multi" : ""}" title="${escapeAttr(tags.map(tagLabel).join(" / "))}">${icons.join("")}</span>`;
+    }
+  }
+  if (slot.condition_type_jp === "属性") {
+    const code = elementCodeFromJp(slot.condition_value_jp);
+    if (code) {
+      return `<span class="formation-condition-token element-token">${renderElementIcon(code)}</span>`;
+    }
+  }
+  return `<span class="formation-condition-text">${escapeHtml(formatFormationCondition(slot))}</span>`;
+}
+
+function renderCoachPositionSlotAsset(code, options = {}) {
+  const label = String(code || "").trim().toUpperCase();
+  const asset = formationPositionSlotAsset(label.toLowerCase());
+  const title = labels.positions[label] ? `${label} - ${labels.positions[label]}` : label;
+  if (!asset) {
+    return renderPositionBadge({ code: label, fr: labels.positions[label] || label }, { compact: Boolean(options.compact) });
+  }
+  return `
+    <span class="coach-position-slot-asset${options.compact ? " is-compact" : ""}" title="${escapeAttr(title)}">
+      <img src="${escapeAttr(assetPath(asset))}" alt="${escapeAttr(label)}" />
+    </span>
+  `;
+}
+
+function formatFormationCondition(slot) {
+  if (slot.condition_type_jp === "本職ポジション") {
+    return slot.condition_value_jp || slot.position || "-";
+  }
+  if (slot.condition_type_jp === "タグ") {
+    return String(slot.condition_value_jp || "")
+      .split(/[、,]/)
+      .map((value) => translateKnownTag(value.trim()))
+      .filter(Boolean)
+      .join(" / ");
+  }
+  if (slot.condition_type_jp === "属性") {
+    return translateElementJp(slot.condition_value_jp);
+  }
+  return slot.condition_value_jp || slot.condition_type_jp || "-";
+}
+
+function renderCoachSkillSection(title, subtitle, skill, options = {}) {
+  if (!skill || !(skill.levels || []).length) {
+    return "";
+  }
+  const currentLevel = currentSkillLevel(skill);
+  const description = describeSkillLevel(currentLevel) || skill.current_description || "";
+  const summary = currentLevel?.summary || skill.current_summary || null;
+  const detailButton = options.details === false
+    ? ""
+    : `<button class="coach-detail-button" type="button" data-coach-skill-id="${escapeAttr(skill.id)}">Détails</button>`;
+  return `
+    <section class="coach-effect-section">
+      <div class="coach-effect-title">
+        <strong>${escapeHtml(title)}</strong>
+        <span>${escapeHtml(subtitle)}</span>
+      </div>
+      <div class="coach-effect-body">
+        <div class="coach-effect-main">
+          <div class="coach-effect-icons">${renderEffectBadges(currentLevel?.effects || [])}</div>
+          ${renderCoachPassiveText(description, summary)}
+        </div>
+        ${detailButton}
+      </div>
+    </section>
+  `;
+}
+
+function renderCoachPassiveText(description, summary = null) {
+  const parts = splitCoachPassiveDescription(description, summary);
+  return `
+    <p class="coach-passive-text">
+      <span class="coach-passive-trigger">${escapeHtml(parts.trigger)}${parts.effects.length ? " :" : ""}</span>
+      ${parts.effects.map((effect) => `<span class="coach-passive-effect">${escapeHtml(effect)}</span>`).join("")}
+      ${parts.end ? `<span class="coach-passive-end">${escapeHtml(parts.end)}</span>` : ""}
+    </p>
+  `;
+}
+
+function splitCoachPassiveDescription(description, summary = null) {
+  if (summary?.trigger || summary?.effects?.length || summary?.end) {
+    return {
+      trigger: summary.trigger || "-",
+      effects: Array.isArray(summary.effects) ? summary.effects.filter(Boolean) : [],
+      end: summary.end || "",
+    };
+  }
+  const text = String(description || "").trim();
+  const [mainText, endText] = text.split(/\s+Condition de fin\s*:\s*/);
+  const [trigger, ...effectParts] = mainText.split(/\s*:\s*/);
+  const effect = effectParts.join(" : ").replace(/\.$/, "");
+  return {
+    trigger: trigger || text || "-",
+    effects: splitCoachPassiveEffectLines(effect),
+    end: endText ? `Condition de fin : ${endText.replace(/\.$/, "")}` : "",
+  };
+}
+
+function splitCoachPassiveEffectLines(effectText) {
+  return String(effectText || "")
+    .split(/\s+et\s+(?=(?:augmente|réduit)\b)/i)
+    .map((line) => line.trim().replace(/\.$/, ""))
+    .filter(Boolean);
 }
 
 function hasTag(player, kind, value) {
@@ -2034,9 +2585,10 @@ function renderPublicEntries(entries, equipment = {}) {
   `;
 }
 
+
 function renderGrid() {
   const count = state.filtered.length;
-  const modeLabel = state.mode === "simulator" ? "personnage" : "joueur";
+  const modeLabel = state.mode === "simulator" ? "personnage" : state.mode === "team" ? "choix" : "joueur";
   els.playableToggle.disabled = false;
   els.resultCount.textContent = `${count} ${modeLabel}${count > 1 ? "s" : ""}${state.filters.playableOnly ? " jouable" + (count > 1 ? "s" : "") : ""}`;
   const showingAll = !state.filters.playableOnly;
@@ -2044,7 +2596,7 @@ function renderGrid() {
     els.playableToggle.disabled = true;
     els.playableToggle.innerHTML = `<span>Jouables</span>`;
     els.playableToggle.setAttribute("aria-pressed", "false");
-    els.playableToggle.setAttribute("aria-label", "Collection limitee aux joueurs jouables");
+    els.playableToggle.setAttribute("aria-label", "Collection limit?e aux joueurs jouables");
   } else {
     els.playableToggle.innerHTML = `<span>Tous</span><span class="toggle-track" aria-hidden="true"><span class="toggle-thumb"></span></span>`;
     els.playableToggle.setAttribute("aria-pressed", String(showingAll));
@@ -2058,7 +2610,10 @@ function renderGrid() {
 
   els.playerGrid.innerHTML = state.filtered
     .map((player) => {
-      const active = player.id === state.selectedId ? " is-active" : "";
+      const active =
+        player.id === state.selectedId || (state.mode === "team" && teamSelectedPlayerIds().includes(String(player.id)))
+          ? " is-active"
+          : "";
       const npcClass = player.playable ? "" : " is-npc";
       const collectionEntry = collectionEntryForPlayer(player.id);
       const collectionClass = state.mode === "collection" && collectionEntry?.owned ? " is-owned" : "";
@@ -2089,7 +2644,11 @@ function renderGrid() {
 
   els.playerGrid.querySelectorAll(".album-card").forEach((button) => {
     button.addEventListener("click", () => {
-      state.selectedId = button.dataset.id;
+      if (state.mode === "team") {
+        assignTeamSlot(button.dataset.id);
+      } else {
+        state.selectedId = button.dataset.id;
+      }
       renderGrid();
       renderDetail();
       saveState();
@@ -2108,6 +2667,10 @@ function renderDetail() {
   }
   if (state.mode === "simulator") {
     renderSimulatorDetail();
+    return;
+  }
+  if (state.mode === "team") {
+    renderTeamBuilderDetail();
     return;
   }
 
@@ -2169,6 +2732,358 @@ function renderDetail() {
   els.playerDetail.querySelectorAll(".skill-card").forEach((button) => {
     button.addEventListener("click", () => {
       openSkillModal(player, button.dataset.skillId);
+    });
+  });
+}
+
+function renderTeamBuilderDetail() {
+  ensureTeamBuilderDefaults();
+  const slots = teamSlots();
+  const selected = slots[state.teamBuilder.selectedSlot] || slots[0];
+  const selectedPlayer = selected?.player || state.players.find((player) => player.id === state.selectedId);
+  const coach = teamCoach();
+  const formation = getCoachFormation(coach);
+  const filledSlots = slots.filter((slot) => slot.player).length;
+  const totals = aggregateTeamStats(slots);
+
+  els.playerDetail.innerHTML = `
+    <section class="team-builder-view">
+      <header class="team-builder-hero">
+        <div>
+          <p class="team-builder-kicker">Build équipe</p>
+          <h2>Composition 5 joueurs</h2>
+          <span>${filledSlots}/${TEAM_SIZE} joueurs sélectionnés</span>
+        </div>
+        <div class="team-power-card">
+          <span>Puissance équipe</span>
+          <strong>${formatNumber(totals.power)}</strong>
+        </div>
+      </header>
+
+      <section class="team-builder-grid">
+        <div class="team-roster" aria-label="Joueurs sélectionnés">
+          ${slots.map(renderTeamSlotCard).join("")}
+        </div>
+
+        <aside class="team-summary-panel">
+          <section class="team-coach-panel">
+            <label>
+              <span>Coach</span>
+              <select id="teamCoachSelect">
+                ${state.coaches
+                  .filter((item) => !item.enemy_only)
+                  .map(
+                    (item) => `<option value="${escapeAttr(item.id)}"${String(item.id) === String(coach?.id) ? " selected" : ""}>${escapeHtml(displayName(item))}</option>`,
+                  )
+                  .join("")}
+              </select>
+            </label>
+            ${coach ? renderTeamCoachCard(coach, formation) : ""}
+          </section>
+
+          <section class="team-total-stats">
+            <h3>Total stats joueurs</h3>
+            ${renderTeamTotals(totals.stats)}
+          </section>
+        </aside>
+      </section>
+
+      <section class="team-lower-grid">
+        <article class="team-equipment-panel">
+          <header>
+            <div>
+              <span>Équipements</span>
+              <strong>${selectedPlayer ? escapeHtml(selectedPlayer.position?.code || "-") : "Slot vide"}</strong>
+            </div>
+            <button id="teamEquipmentConfigButton" class="equipment-config-button" type="button"${selectedPlayer ? "" : " disabled"}>Configurer mes équipements</button>
+          </header>
+          <div class="equipment-controls">
+            ${selectedPlayer ? equipmentSlotsForPlayer(selectedPlayer).map((slot) => renderEquipmentControl(selectedPlayer, slot, selectedPlayer.position?.code)).join("") : ""}
+          </div>
+        </article>
+
+        <article class="team-passives-panel">
+          <header>
+            <span>Passifs joueurs</span>
+            <strong>Débloqués et verrouillés</strong>
+          </header>
+          ${renderTeamSkillSummary(slots)}
+        </article>
+      </section>
+    </section>
+  `;
+
+  bindTeamBuilderControls(slots);
+}
+
+function teamSlots() {
+  ensureTeamBuilderDefaults();
+  return state.teamBuilder.slots.map((slot, index) => {
+    const player = state.players.find((item) => String(item.id) === String(slot.playerId)) || null;
+    const normalizedAwakening = player ? normalizeAwakeningCodeForPlayer(player, slot.awakeningCode) : slot.awakeningCode;
+    if (player && normalizedAwakening !== slot.awakeningCode) {
+      state.teamBuilder.slots[index].awakeningCode = normalizedAwakening;
+    }
+    return {
+      ...slot,
+      index,
+      player,
+      simulated: player
+        ? simulatePlayerWithConfig(player, {
+            level: slot.level,
+            awakeningCode: normalizedAwakening,
+          })
+        : null,
+    };
+  });
+}
+
+function teamCoach() {
+  return state.coaches.find((coach) => String(coach.id) === String(state.teamBuilder.coachId)) || state.coaches.find((coach) => !coach.enemy_only) || null;
+}
+
+function teamSelectedPlayerIds() {
+  return (state.teamBuilder.slots || []).map((slot) => String(slot.playerId || "")).filter(Boolean);
+}
+
+function assignTeamSlot(playerId) {
+  ensureTeamBuilderDefaults();
+  const index = clampNumber(state.teamBuilder.selectedSlot, 0, TEAM_SIZE - 1);
+  const player = state.players.find((item) => String(item.id) === String(playerId));
+  if (!player) {
+    return;
+  }
+  state.teamBuilder.slots[index] = {
+    ...state.teamBuilder.slots[index],
+    playerId: String(player.id),
+    awakeningCode: normalizeAwakeningCodeForPlayer(player, state.teamBuilder.slots[index]?.awakeningCode ?? 9),
+  };
+  state.selectedId = String(player.id);
+}
+
+function updateTeamSlot(index, updates) {
+  ensureTeamBuilderDefaults();
+  const slot = state.teamBuilder.slots[index];
+  if (!slot) {
+    return;
+  }
+  const player = state.players.find((item) => String(item.id) === String(slot.playerId));
+  if (updates.level != null) {
+    slot.level = clampNumber(updates.level, 1, 300);
+  }
+  if (updates.awakeningCode != null) {
+    slot.awakeningCode = player ? normalizeAwakeningCodeForPlayer(player, updates.awakeningCode) : Number(updates.awakeningCode);
+  }
+}
+
+function renderTeamSlotCard(slot) {
+  const player = slot.player;
+  const simulated = slot.simulated;
+  const active = slot.index === state.teamBuilder.selectedSlot ? " is-selected" : "";
+  if (!player || !simulated) {
+    return `
+      <article class="team-slot-card is-empty${active}">
+        <button class="team-slot-pick" type="button" data-team-slot="${escapeAttr(slot.index)}">
+          <span class="team-slot-number">${escapeHtml(slot.index + 1)}</span>
+          <strong>Choisir un joueur</strong>
+          <small>Clique ici puis sélectionne un joueur à gauche</small>
+        </button>
+      </article>
+    `;
+  }
+  const portrait = imageUrl(player, "portrait") || imageUrl(player, "fullbody");
+  const awakening = awakeningTierInfo(simulated.awakening.code);
+  return `
+    <article class="team-slot-card${active}">
+      <button class="team-slot-pick" type="button" data-team-slot="${escapeAttr(slot.index)}">
+        <span class="team-slot-number">${escapeHtml(slot.index + 1)}</span>
+        <span class="portrait-frame">
+          ${portrait ? `<img src="${escapeAttr(portrait)}" alt="" />` : `<span>${escapeHtml(initials(displayName(player)))}</span>`}
+        </span>
+        <span class="team-slot-info">
+          <strong>${escapeHtml(displayName(player))}</strong>
+          <span>${renderTeamLogo(player)} ${renderElementIcon(player.element?.code)} ${renderPositionBadge(player.position, { compact: true })} ${renderStars(player.rarity?.stars)}</span>
+          <em>${formatNumber(simulated.total_power)} pts</em>
+        </span>
+      </button>
+      <div class="team-slot-controls">
+        <label>
+          <span>Lv.</span>
+          <input data-team-level="${escapeAttr(slot.index)}" type="number" min="1" max="300" value="${escapeAttr(simulated.level)}" />
+        </label>
+        <input class="team-level-range" data-team-level-range="${escapeAttr(slot.index)}" type="range" min="1" max="300" value="${escapeAttr(simulated.level)}" />
+        <label class="team-awakening-control">
+          <span>Éveil</span>
+          <span class="team-awakening-select awakening-ribbon-${escapeAttr(awakening.slug)}">
+            <select data-team-awakening="${escapeAttr(slot.index)}">
+              ${awakeningOptionsForPlayer(player)
+                .map((option) => `<option value="${escapeAttr(option.code)}"${Number(option.code) === Number(simulated.awakening.code) ? " selected" : ""}>${escapeHtml(option.label)}</option>`)
+                .join("")}
+            </select>
+          </span>
+        </label>
+      </div>
+    </article>
+  `;
+}
+
+function renderTeamCoachCard(coach, formation) {
+  const portrait = imageUrl(coach, "portrait") || imageUrl(coach, "fullbody");
+  return `
+    <div class="team-coach-card">
+      <div class="team-coach-identity">
+        <span class="portrait-frame coach-portrait-frame">
+          ${portrait ? `<img src="${escapeAttr(portrait)}" alt="" />` : `<span>${escapeHtml(initials(displayName(coach)))}</span>`}
+        </span>
+        <div>
+          <strong>${escapeHtml(displayName(coach))}</strong>
+          <span>${escapeHtml(formation?.name || `Formation ${coach.formation_code || "-"}`)}</span>
+        </div>
+      </div>
+      <div class="team-formation-mini">
+        ${renderFormationPitch(formation)}
+      </div>
+      <div class="team-coach-passives">
+        ${renderCoachSkillSection("Formation", "Actif", formation?.passive, { details: false })}
+        ${renderCoachSkillSection("Coach", "Passif", coach.passive, { details: false })}
+      </div>
+    </div>
+  `;
+}
+
+function aggregateTeamStats(slots) {
+  const stats = { tp: 0, kick: 0, technique: 0, block: 0, catch: 0, speed: 0 };
+  let power = 0;
+  for (const slot of slots) {
+    if (!slot.simulated) {
+      continue;
+    }
+    power += Number(slot.simulated.total_power || 0);
+    for (const key of Object.keys(stats)) {
+      stats[key] += Number(slot.simulated.stats?.[key] || 0);
+    }
+  }
+  const coach = teamCoach();
+  power += Number(coach?.total_power || 0);
+  return { stats, power };
+}
+
+function renderTeamTotals(stats) {
+  return `
+    <div class="team-stat-grid">
+      ${Object.entries(stats)
+        .map(
+          ([key, value]) => `
+            <div class="team-stat-pill">
+              <span>${renderStatIcon(key)}</span>
+              <em>${escapeHtml(labels.stats[key] || key)}</em>
+              <strong>${formatNumber(value)}</strong>
+            </div>
+          `,
+        )
+        .join("")}
+    </div>
+  `;
+}
+
+function renderTeamSkillSummary(slots) {
+  const rows = slots
+    .filter((slot) => slot.simulated)
+    .flatMap((slot) =>
+      (slot.simulated.skills || [])
+        .filter((skill) => skill.kind === "passive")
+        .map((skill) => ({ slot, skill })),
+    );
+  if (!rows.length) {
+    return `<p class="team-empty-note">Aucun passif trouvé.</p>`;
+  }
+  return `
+    <div class="team-skill-list">
+      ${rows
+        .map(({ slot, skill }) => {
+          const locked = skill.locked ? " is-locked" : "";
+          return `
+            <button class="team-skill-row${locked}" type="button" data-team-skill-slot="${escapeAttr(slot.index)}" data-team-skill-id="${escapeAttr(skill.id)}">
+              <span class="skill-kind-badge">P</span>
+              <span>
+                <strong>${escapeHtml(skill.name || "Passif")}</strong>
+                <em>${escapeHtml(displayName(slot.player))} - ${skill.locked ? escapeHtml(skill.locked_reason || "Non débloqué") : `Lv.${escapeHtml(skill.current_level || "-")}`}</em>
+              </span>
+            </button>
+          `;
+        })
+        .join("")}
+    </div>
+  `;
+}
+
+function bindTeamBuilderControls(slots) {
+  els.playerDetail.querySelectorAll("[data-team-slot]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.teamBuilder.selectedSlot = clampNumber(button.dataset.teamSlot, 0, TEAM_SIZE - 1);
+      const slot = state.teamBuilder.slots[state.teamBuilder.selectedSlot];
+      if (slot?.playerId) {
+        state.selectedId = String(slot.playerId);
+      }
+      renderGrid();
+      renderTeamBuilderDetail();
+      saveState();
+    });
+  });
+
+  els.playerDetail.querySelectorAll("[data-team-level]").forEach((input) => {
+    input.addEventListener("change", (event) => {
+      updateTeamSlot(Number(event.target.dataset.teamLevel), { level: event.target.value });
+      renderTeamBuilderDetail();
+      saveState();
+    });
+  });
+
+  els.playerDetail.querySelectorAll("[data-team-level-range]").forEach((input) => {
+    input.addEventListener("input", (event) => {
+      updateTeamSlot(Number(event.target.dataset.teamLevelRange), { level: event.target.value });
+      renderTeamBuilderDetail();
+      saveState();
+    });
+  });
+
+  els.playerDetail.querySelectorAll("[data-team-awakening]").forEach((select) => {
+    select.addEventListener("change", (event) => {
+      updateTeamSlot(Number(event.target.dataset.teamAwakening), { awakeningCode: event.target.value });
+      renderTeamBuilderDetail();
+      saveState();
+    });
+  });
+
+  els.playerDetail.querySelector("#teamCoachSelect")?.addEventListener("change", (event) => {
+    state.teamBuilder.coachId = String(event.target.value);
+    renderTeamBuilderDetail();
+    saveState();
+  });
+
+  els.playerDetail.querySelectorAll("[data-equipment-slot]").forEach((select) => {
+    select.addEventListener("change", (event) => {
+      const position = event.target.dataset.equipmentPosition || "";
+      const slot = event.target.dataset.equipmentSlot || "";
+      setEquipmentLevel(position, slot, event.target.value);
+      renderTeamBuilderDetail();
+      saveState();
+    });
+  });
+
+  els.playerDetail.querySelector("#teamEquipmentConfigButton")?.addEventListener("click", () => {
+    const player = slots[state.teamBuilder.selectedSlot]?.player;
+    if (player) {
+      openEquipmentModal(player);
+    }
+  });
+
+  els.playerDetail.querySelectorAll("[data-team-skill-id]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const slot = slots[Number(button.dataset.teamSkillSlot)];
+      if (slot?.simulated) {
+        openSkillModal(slot.simulated, button.dataset.teamSkillId);
+      }
     });
   });
 }
@@ -2378,11 +3293,18 @@ function renderAwakeningPicker(player, selectedCode) {
 function simulatePlayer(player) {
   const level = clampNumber(state.simulator.level, 1, 300);
   const awakeningCode = normalizeAwakeningCodeForPlayer(player, state.simulator.awakeningCode);
-  const stats = computeSimulatorStats(player, level, awakeningCode, state.simulator.equipmentLevelsByPosition);
+  return simulatePlayerWithConfig(player, { level, awakeningCode });
+}
+
+function simulatePlayerWithConfig(player, config = {}) {
+  const level = clampNumber(config.level ?? 300, 1, 300);
+  const awakeningCode = normalizeAwakeningCodeForPlayer(player, config.awakeningCode ?? 9);
+  const stats = computeSimulatorStats(player, level, awakeningCode, config.equipmentLevelsByPosition ?? state.simulator.equipmentLevelsByPosition);
   const skills = simulateSkills(player.skills || [], level, awakeningCode);
   const rawSkillBonus = skills.reduce((total, skill) => total + (skill.total_power_bonus || 0), 0);
+  const passiveEffectBonus = passiveEffectTotalPowerBonus(skills);
   const awakening = awakeningTierInfo(awakeningCode);
-  const totalPower = stats.stat_total + Math.round(rawSkillBonus * SKILL_POWER_WEIGHT);
+  const totalPower = stats.total_power_stat + rawSkillBonus + passiveEffectBonus;
 
   return {
     ...player,
@@ -2400,9 +3322,15 @@ function simulatePlayer(player) {
     },
     stats,
     skills,
+    total_power_breakdown: {
+      stats: stats.total_power_stat,
+      skills: rawSkillBonus,
+      passive_effects: passiveEffectBonus,
+    },
     total_power: totalPower,
   };
 }
+
 
 function simulateCollectionEntry(entry, equipmentLevelsByPosition = currentCollectionEquipment()) {
   const player = playerById(entry?.playerId || entry?.player?.id);
@@ -2411,30 +3339,7 @@ function simulateCollectionEntry(entry, equipmentLevelsByPosition = currentColle
   }
   const level = clampNumber(entry?.level || 1, 1, 300);
   const awakeningCode = normalizeAwakeningCodeForPlayer(player, entry?.rarity ?? player.awakening?.code ?? 9);
-  const stats = computeSimulatorStats(player, level, awakeningCode, equipmentLevelsByPosition);
-  const skills = simulateSkills(player.skills || [], level, awakeningCode);
-  const rawSkillBonus = skills.reduce((total, skill) => total + (skill.total_power_bonus || 0), 0);
-  const awakening = awakeningTierInfo(awakeningCode);
-  const totalPower = stats.stat_total + Math.round(rawSkillBonus * SKILL_POWER_WEIGHT);
-
-  return {
-    ...player,
-    level,
-    awakening: {
-      code: awakeningCode,
-      label: awakening.label,
-      slug: awakening.slug,
-    },
-    equipment: {
-      position: player.position?.code || "",
-      levels: stats.source.equipment_levels,
-      bonuses: stats.equipment_bonus,
-      slots: stats.equipment_slots,
-    },
-    stats,
-    skills,
-    total_power: totalPower,
-  };
+  return simulatePlayerWithConfig(player, { level, awakeningCode, equipmentLevelsByPosition });
 }
 
 function collectionTotalCapacity(entries = ownedCollectionEntries(), equipmentLevelsByPosition = currentCollectionEquipment()) {
@@ -2460,6 +3365,7 @@ function computeSimulatorStats(player, level, awakeningCode, equipmentLevelsByPo
   }
   stats.tp = Number(growth.tp || 0);
   stats.stat_total = stats.tp + stats.kick + stats.technique + stats.block + stats.catch + stats.speed;
+  stats.total_power_stat = totalPowerStatFromStats(stats);
   stats.equipment_slots = equipment.slots;
   stats.equipment_bonus = equipment.bonuses;
   stats.source = {
@@ -2468,6 +3374,50 @@ function computeSimulatorStats(player, level, awakeningCode, equipmentLevelsByPo
     equipment_levels: equipmentLevelsForPositionFromSource(player.position?.code || "", equipmentLevelsByPosition),
   };
   return stats;
+}
+
+function totalPowerStatFromStats(stats) {
+  return Object.entries(TOTAL_POWER_STAT_COEFFICIENTS).reduce((total, [key, coefficient]) => {
+    return total + Math.floor((Number(stats[key] || 0) * coefficient) / 10000);
+  }, 0);
+}
+
+function passiveEffectTotalPowerBonus(skills) {
+  return (skills || []).reduce((total, skill) => {
+    if (skill.kind !== "passive" || skill.locked) {
+      return total;
+    }
+    return total + (skill.effects || []).reduce((effectTotal, effect) => {
+      return effectTotal + passiveEffectTotalPowerValue(effect);
+    }, 0);
+  }, 0);
+}
+
+function passiveEffectTotalPowerValue(effect) {
+  const amount = Number(effect?.amount || 0);
+  if (!amount) {
+    return 0;
+  }
+  const effectType = effect?.effect_type_jp || "";
+  const statCoefficient = PASSIVE_EFFECT_TOTAL_POWER_COEFFICIENTS[effectType];
+  if (statCoefficient) {
+    return Math.floor((amount * statCoefficient) / 10000);
+  }
+  if (effectType === ALL_MAIN_STATS_EFFECT_TYPE) {
+    return Object.values(TOTAL_POWER_STAT_COEFFICIENTS).reduce((total, coefficient) => {
+      return total + Math.floor((amount * coefficient) / 10000);
+    }, 0);
+  }
+  if (effectType === MOVE_POWER_EFFECT_TYPE) {
+    return amount * MOVE_POWER_EFFECT_TOTAL_POWER_MULTIPLIER;
+  }
+  if (effectType === MOVE_CRITICAL_EFFECT_TYPE) {
+    return Math.floor(amount / MOVE_CRITICAL_EFFECT_TOTAL_POWER_DIVISOR);
+  }
+  if (effectType === MOVE_RANGE_EFFECT_TYPE) {
+    return amount * MOVE_RANGE_EFFECT_TOTAL_POWER_MULTIPLIER;
+  }
+  return 0;
 }
 
 function equipmentBonusForPlayer(player, equipmentLevelsByPosition = state.simulator.equipmentLevelsByPosition) {
@@ -2534,6 +3484,7 @@ function simulateSkills(skills, playerLevel, awakeningCode) {
         ...skill,
         current_level: current.level || skill.current_level || null,
         current_description: current.description || skill.current_description || "",
+        effects: current.effects || [],
         total_power_bonus: Number(current.total_power_bonus || 0),
       };
     })
@@ -2689,7 +3640,6 @@ function equipmentGradeForLevel(level) {
 function openEquipmentModal(player) {
   syncSimulatorEquipmentState();
   els.skillModal.classList.add("is-equipment-modal");
-  els.skillModal.classList.remove("is-privacy-modal");
   els.skillModalBody.innerHTML = `
     <header class="modal-skill-head equipment-modal-head">
       <span class="equipment-modal-icon">${renderPositionBadge(player.position, { compact: true })}</span>
@@ -2756,7 +3706,11 @@ function bindEquipmentModalControls(player) {
       if (slot && image) {
         image.src = equipmentIcon(slot, position, event.target.value);
       }
-      renderSimulatorDetail();
+      if (state.mode === "team") {
+        renderTeamBuilderDetail();
+      } else {
+        renderSimulatorDetail();
+      }
       saveState();
     });
   });
@@ -2802,15 +3756,695 @@ function renderStats(stats) {
     .map((key) => {
       const statKey = key === "block" ? "block" : key;
       const iconKey = key === "block" ? "block" : key;
+      const iconFile = statIconFiles[iconKey] || statIconFiles.kick;
       return `
         <div class="stat-line">
-          <img src="${escapeAttr(assetPath(`assets/stats/${iconKey}.png`))}" alt="" />
+          <img src="${escapeAttr(assetPath(`assets/stats/${iconFile}.png`))}" alt="" />
           <span>${escapeHtml(labels.stats[key])}</span>
           <strong>${formatNumber(stats?.[statKey] || 0)}</strong>
         </div>
       `;
     })
     .join("");
+}
+
+function renderStatIcon(key) {
+  const filename = statIconFiles[key] || statIconFiles.kick;
+  return `<img src="${escapeAttr(assetPath(`assets/stats/${filename}.png`))}" alt="" />`;
+}
+
+function currentSkillLevel(skill) {
+  const levels = skill?.levels || [];
+  if (!levels.length) {
+    return null;
+  }
+  const wanted = Number(skill.current_level || levels[levels.length - 1]?.level || 1);
+  return levels.find((level) => Number(level.level || 0) === wanted) || levels[levels.length - 1];
+}
+
+function renderEffectBadges(effects) {
+  if (!effects?.length) {
+    return `<span class="effect-badge passive-only"><span class="passive-mark">P</span></span>`;
+  }
+  return effects
+    .map((effect) => {
+      const amount = effectAmount(effect);
+      const negative = Number(effect.raw_amount || 0) < 0;
+      const longValue = String(amount).replace(/[^0-9]/g, "").length >= 5;
+      return `
+      <span class="effect-badge${negative ? " is-negative" : ""}${longValue ? " is-long-value" : ""}" title="${escapeAttr(describeCoachEffect(effect))}">
+        ${effectIcon(effect)}
+        <strong>${escapeHtml(amount)}</strong>
+      </span>
+    `;
+    })
+    .join("");
+}
+
+function effectIcon(effect) {
+  const assetName = effectAssetName(effect);
+  if (assetName) {
+    return coachEffectIcon(assetName);
+  }
+  if (isMovePowerEffect(effect?.effect_type || "")) {
+    return coachEffectIcon(effectAmountVariant("PassiveEffectIcon_AddMovePower", effect));
+  }
+  const moveCode = moveTypeCodeFromJp(effect.target_move || "");
+  if (moveCode) {
+    return renderMoveTypeIcon(moveCode);
+  }
+  const elementCode = elementCodeFromJp(effect.target_move || "");
+  if (elementCode) {
+    return renderElementIcon(elementCode);
+  }
+  return coachEffectIcon("PassiveEffectIcon_AddCriticalProbability_01");
+}
+
+function coachEffectIcon(key) {
+  const filename = String(key || "").endsWith(".png") ? key : `${key}.png`;
+  return `<img class="coach-effect-asset" src="${escapeAttr(assetPath(`assets/coaches/effects/${filename}`))}" alt="" />`;
+}
+
+function effectAmountVariant(baseName, effect) {
+  const raw = Number(effect?.raw_amount || 0);
+  return `${baseName}_${raw < 0 ? "00" : "01"}.png`;
+}
+
+function effectAssetName(effect) {
+  const baseName = coachEffectIconBases[effect?.effect_type || ""];
+  return baseName ? effectAmountVariant(baseName, effect) : null;
+}
+
+function isMovePowerEffect(type) {
+  return type === "\u6280\u5a01\u529b\u52a0\u6e1b\u7b97";
+}
+
+function effectStatKey(effect) {
+  return effectAssetName(effect);
+}
+
+function effectAmount(effect) {
+  const raw = Number(effect?.raw_amount || 0);
+  const value = scaledEffectAmount(raw, effect?.effect_type || "");
+  const text = Number.isInteger(value) ? String(Math.abs(value)) : String(Math.abs(value)).replace(".", ",");
+  return effect?.effect_type?.includes("率") ? `${text}%` : text;
+}
+
+function scaledEffectAmount(raw, type) {
+  if (type.includes("率")) {
+    return Math.round((raw / 100) * 100) / 100;
+  }
+  return raw;
+}
+
+function describeSkillLevel(level) {
+  if (level?.description) {
+    return level.description;
+  }
+  const effects = level?.effects || [];
+  if (!effects.length) {
+    return level?.description || "";
+  }
+  const condition = translateConditionCode(effects[0]?.activation_condition);
+  const effectText = effects.map(describeCoachEffect).join(" ; ");
+  const endCode = effects[0]?.end_condition;
+  const endText = endCode ? ` Condition de fin : ${translateConditionCode(endCode)}.` : "";
+  return `${condition} : ${effectText}.${endText}`;
+}
+
+function describeCoachEffect(effect) {
+  const raw = Number(effect?.raw_amount || 0);
+  const sign = raw < 0 ? "-" : "+";
+  const amount = effectAmount(effect);
+  const target = translateEffectTarget(effect?.target_players || "");
+  const type = effect?.effect_type || "";
+
+  if (type === "技威力加減算") {
+    return `${target} : ${translateMovePowerLabel(effect?.target_move || "")} ${sign}${amount}`;
+  }
+
+  return `${target} : ${effectStatLabel(type)} ${sign}${amount}`;
+}
+
+function translateConditionCode(code) {
+  const condition = state.formationConditions?.[String(code || "")];
+  const kind = condition?.kind_jp || "";
+  const map = {
+    "試合開始時": "Au coup d'envoi",
+    "ターン開始時": "Au début du tour",
+    "特定プレイヤーのドリブル技使用後": "Après une technique de dribble réussie",
+    "特定プレイヤーのドリブルブロック技使用後": "Après une technique de dribble ou de blocage réussie",
+    "特定プレイヤーのキーパー技使用後": "Après une technique d'arrêt réussie",
+    "特定エリア内": "Dans une zone précise",
+    "特定エリア外": "Hors d'une zone précise",
+    "試合開始時特定プレイヤー人数": "Au coup d'envoi si assez de joueurs correspondent",
+    "特定プレイヤーのゴール時": "Lorsqu'un joueur marque",
+  };
+  return map[kind] || (code ? `Condition ${code}` : "Condition inconnue");
+}
+
+function translateEffectTarget(raw) {
+  let base = "Cible";
+  if (raw.includes("味方")) {
+    base = "Alliés";
+  } else if (raw.includes("敵")) {
+    base = "Adversaires";
+  } else if (raw.includes("自分")) {
+    base = "Ce joueur";
+  }
+
+  const positions = [...raw.matchAll(/ポジション\[([A-Z]+)\]/g)].map((match) => match[1]);
+  const tags = [...raw.matchAll(/タグ\[([^\]]+)\]/g)].map((match) => translateKnownTag(match[1]));
+  const elements = [...raw.matchAll(/属性\[([^\]]+)\]/g)].map((match) => translateElementJp(match[1]));
+
+  if (base === "Alliés" && positions.length === 1) {
+    base = `Alliés recommandés au poste de ${positionLongName(positions[0])}`;
+  } else if (base === "Alliés" && positions.length > 1) {
+    base = `Alliés recommandés aux postes ${positions.map(positionLongName).join(" / ")}`;
+  }
+
+  const details = [];
+  if (tags.length) {
+    details.push(`tag ${tags.map((tag) => `[${tag}]`).join(" ou ")}`);
+  }
+  if (elements.length) {
+    details.push(`affinité ${elements.join(" ou ")}`);
+  }
+  return details.length ? `${base} (${details.join(", ")})` : base;
+}
+
+function effectStatLabel(type) {
+  const map = {
+    "キック加減算": "Frappe",
+    "テクニック加減算": "Technique",
+    "ブロック加減算": "Blocage",
+    "キャッチ加減算": "Arrêt",
+    "スピード加減算": "Vitesse",
+    "TP加減算": "TP max",
+    "最大TP加減算": "TP max",
+    "クリティカル率加減算": "Taux critique",
+    "ファール率加減算": "Taux de faute",
+  };
+  return map[type] || type || "Effet";
+}
+
+function translateMovePowerLabel(value) {
+  const move = translateMoveJp(value);
+  if (move) {
+    return `Puissance des techniques de ${move}`;
+  }
+  const element = elementCodeFromJp(value);
+  if (element) {
+    return `Puissance des techniques d'affinité ${labels.elements[element]}`;
+  }
+  return "Puissance des techniques";
+}
+
+function translateMoveJp(value) {
+  const content = bracketContent(value);
+  const map = {
+    "シュート": "tir",
+    "ドリブル": "dribble",
+    "ブロック": "blocage",
+    "キャッチ": "arrêt",
+    "キーパー": "arrêt",
+  };
+  return map[content] || "";
+}
+
+function moveTypeCodeFromJp(value) {
+  const content = bracketContent(value);
+  const map = {
+    "シュート": "shot",
+    "ドリブル": "dribble",
+    "ブロック": "block",
+    "キャッチ": "save",
+    "キーパー": "save",
+  };
+  return map[content] || null;
+}
+
+function elementCodeFromJp(value) {
+  const content = bracketContent(value) || value;
+  const map = {
+    "火": "fire",
+    "林": "wood",
+    "風": "wind",
+    "山": "mountain",
+  };
+  return map[content] || null;
+}
+
+function bracketContent(value) {
+  const match = String(value || "").match(/\[([^\]]+)\]/);
+  return match ? match[1] : String(value || "");
+}
+
+function translateElementJp(value) {
+  return labels.elements[elementCodeFromJp(value)] || value || "-";
+}
+
+function translateKnownTag(value) {
+  const map = {
+    "雷門": "Raimon",
+    "イナズマジャパン": "Inazuma Japan",
+    "稲妻KFC": "Inazuma KFC",
+    "帝国": "Royal Academy",
+    "尾刈斗": "Occulte",
+    "野生": "Wild",
+    "御影専農": "Brainwashing",
+    "秋葉名戸": "Otaku",
+    "戦国伊賀": "Shuriken",
+    "木戸川清修": "Kirkwood",
+    "カオス": "Chaos",
+    "ジェミニストーム": "Tempête des Gémeaux",
+    "イプシロン": "Epsilon",
+    "リトルギガント": "Little Gigantes",
+    "日本代表２０２６": "Équipe du Japon 2026",
+    "雷門ＯＢ": "Anciens de Raimon",
+    "ザ・ジェネシス": "The Genesis",
+    "ヤングイナズマ": "Jeunes Inazuma",
+    "ＳＰフィクサーズ": "Secret Service",
+    "ダイヤモンドダスト": "Diamond Dust",
+    "ダイヤモンドダスト カオス": "Diamond Dust Chaos",
+    "海賊": "Pirate",
+    "海王学園": "Pirates Cove",
+    "ラーメン義勇団": "Ramen",
+    "プレイメイカー": "Meneur de jeu",
+    "ストライカー": "Buteur",
+    "ディフェンシブハーフ": "Milieu défensif",
+    "ストッパー": "Stoppeur",
+  };
+  return map[value] || value || "-";
+}
+
+function tagFromJp(value) {
+  const translated = translateKnownTag(value);
+  const found = state.players
+    .flatMap((player) => player.tags || [])
+    .find((tag) => tag.jp === value || tag.fr === translated || tagLabel(tag) === translated || tagLabel(tag) === value);
+  return found || { jp: value, fr: translated, kind: "team" };
+}
+
+function positionLongName(code) {
+  const map = {
+    FW: "Attaquant",
+    MF: "Milieu",
+    DF: "Défenseur",
+    GK: "Gardien",
+  };
+  return map[code] || code || "-";
+}
+
+function describeSkillLevel(level) {
+  if (level?.description) {
+    return level.description;
+  }
+  const effects = level?.effects || [];
+  if (!effects.length) {
+    return level?.description || "";
+  }
+  const condition = translateConditionCode(effects[0]?.activation_condition);
+  const effectText = joinFrench(effects.map(describeCoachEffect));
+  const endCode = effects[0]?.end_condition;
+  const endText = endCode ? ` Condition de fin : ${translateEndConditionCode(endCode)}.` : "";
+  return `${condition} : ${effectText}.${endText}`;
+}
+
+function describeCoachEffect(effect) {
+  const raw = Number(effect?.raw_amount || 0);
+  const amount = effectAmount(effect);
+  const verb = raw < 0 ? "réduit" : "augmente";
+  const target = parseEffectTarget(effect?.target_players || "");
+  const type = effect?.effect_type || "";
+
+  if (type === "技威力加減算") {
+    const move = translateMoveJp(effect?.target_move || "") || "technique";
+    if (target.self) {
+      return `${verb} la puissance de ses techniques de ${move} de ${amount}`;
+    }
+    return `${verb} la puissance des techniques de ${move} ${target.complement} de ${amount}`;
+  }
+
+  const stat = effectStatLabel(type);
+  if (target.self) {
+    return `${verb} sa statistique ${statWithDe(stat)} de ${amount}`;
+  }
+  return `${verb} la statistique ${statWithDe(stat)} ${target.complement} de ${amount}`;
+}
+
+function translateConditionCode(code) {
+  const condition = state.formationConditions?.[String(code || "")];
+  if (!condition) {
+    return code ? `Condition ${code}` : "Condition inconnue";
+  }
+  const kind = condition.kind_jp || "";
+  const setting = condition.setting_1 || "";
+  const count = condition.setting_2 || "";
+
+  if (kind === "試合開始時") {
+    return "Au début du match";
+  }
+  if (kind === "ターン開始時") {
+    return setting ? `Au début du tour ${setting}` : "Au début du tour";
+  }
+  if (kind === "試合開始時特定プレイヤー人数") {
+    return `Au début du match, si au moins ${count || "?"} ${conditionTargetPhrase(setting)} correspondent`;
+  }
+  if (kind === "特定プレイヤーのゴール時") {
+    return goalConditionPhrase(setting);
+  }
+  if (kind === "特定プレイヤーのシュートが止められた時") {
+    return stoppedShotConditionPhrase(setting);
+  }
+  if (kind === "特定プレイヤーのドリブル技使用後") {
+    return techniqueSuccessConditionPhrase(setting, "dribble");
+  }
+  if (kind === "特定プレイヤーのドリブルブロック技使用後") {
+    return techniqueSuccessConditionPhrase(setting, "dribble ou de blocage");
+  }
+  if (kind === "特定プレイヤーのキーパー技使用後") {
+    return techniqueSuccessConditionPhrase(setting, "gardien");
+  }
+  if (kind === "特定プレイヤーのシュートチェイン後") {
+    return shotChainConditionPhrase(setting);
+  }
+  if (kind === "特定エリア内") {
+    return areaInPhrase(setting);
+  }
+  if (kind === "特定エリア外") {
+    return areaOutPhrase(setting);
+  }
+  return kind || `Condition ${code}`;
+}
+
+function translateEndConditionCode(code) {
+  const condition = state.formationConditions?.[String(code || "")];
+  if (!condition) {
+    return translateConditionCode(code);
+  }
+  const kind = condition.kind_jp || "";
+  const setting = condition.setting_1 || "";
+  if (kind === "特定エリア内") {
+    return areaInEndPhrase(setting);
+  }
+  if (kind === "特定エリア外") {
+    return areaOutEndPhrase(setting);
+  }
+  return translateConditionCode(code);
+}
+
+function parseEffectTarget(raw) {
+  const text = String(raw || "");
+  const self = text.includes("自分");
+  const enemy = text.includes("敵") && !self;
+  const positions = [...text.matchAll(/(?:推奨)?ポジション\[([A-Z]+)\]/g)].map((match) => match[1]);
+  const tags = [...text.matchAll(/タグ\[([^\]]+)\]/g)].map((match) => translateKnownTag(match[1]));
+  const elements = [...text.matchAll(/属性\[([^\]]+)\]/g)].map((match) => translateElementJp(match[1]));
+  return {
+    self,
+    enemy,
+    positions,
+    tags,
+    elements,
+    complement: targetComplement({ self, enemy, positions, tags, elements }),
+  };
+}
+
+function targetComplement({ self, enemy, positions, tags, elements }) {
+  if (self) {
+    return "de ce joueur";
+  }
+  const side = enemy ? "adverses" : "alliés";
+  let phrase = groupByPositions(positions, side) || (enemy ? "des adversaires" : "des alliés");
+  if (elements.length) {
+    phrase += ` d'élément ${joinFrench(elements)}`;
+  }
+  if (tags.length) {
+    phrase += ` possédant le tag ${tags.map((tag) => `[${tag}]`).join(" ou ")}`;
+  }
+  return phrase;
+}
+
+function groupByPositions(positions, side) {
+  const unique = [...new Set(positions)];
+  if (!unique.length) {
+    return "";
+  }
+  const names = unique.map((code) => positionGroupName(code));
+  return `des ${joinFrench(names)} ${side}`;
+}
+
+function positionGroupName(code) {
+  const map = {
+    FW: "attaquants",
+    MF: "milieux",
+    DF: "défenseurs",
+    GK: "gardiens",
+  };
+  return map[code] || code;
+}
+
+function conditionTargetPhrase(raw) {
+  const parsed = parseEffectTarget(raw);
+  if (parsed.self) {
+    return parsed.positions.length ? `joueur au poste ${parsed.positions.join("/")}` : "joueur";
+  }
+  return parsed.complement.replace(/^des /, "").replace(/^de /, "");
+}
+
+function goalConditionPhrase(setting) {
+  if (setting.includes("自分")) {
+    return "Lorsque ce joueur marque un but";
+  }
+  if (setting.includes("敵") && setting.includes("味方")) {
+    return "Lorsqu'un joueur marque un but";
+  }
+  if (setting.includes("敵")) {
+    return "Lorsqu'un adversaire marque un but";
+  }
+  if (setting.includes("味方")) {
+    return "Lorsqu'un allié marque un but";
+  }
+  return "Lorsqu'un joueur marque un but";
+}
+
+function stoppedShotConditionPhrase(setting) {
+  if (setting.includes("自分")) {
+    return "Lorsque le tir de ce joueur est arrêté";
+  }
+  if (setting.includes("敵")) {
+    return "Chaque fois qu'un tir adverse est arrêté";
+  }
+  if (setting.includes("味方")) {
+    return "Chaque fois qu'un tir allié est arrêté";
+  }
+  return "Chaque fois qu'un tir est arrêté";
+}
+
+function techniqueSuccessConditionPhrase(setting, moveLabel) {
+  const target = parseEffectTarget(setting);
+  if (target.self) {
+    return `Chaque fois que sa propre technique de ${moveLabel} réussit`;
+  }
+  if (target.enemy || target.positions.length || target.tags.length || target.elements.length) {
+    return `Chaque fois qu'une technique de ${moveLabel} ${target.complement.replace(/^des /, "d'un ")} réussit`;
+  }
+  if (setting.includes("味方")) {
+    return `Chaque fois qu'une technique de ${moveLabel} d'un allié réussit`;
+  }
+  return `Chaque fois qu'une technique de ${moveLabel} réussit`;
+}
+
+function shotChainConditionPhrase(setting) {
+  if (setting.includes("自分")) {
+    return "Chaque fois qu'il déclenche un tir en chaîne";
+  }
+  if (setting.includes("敵")) {
+    return "Chaque fois qu'un adversaire déclenche un tir en chaîne";
+  }
+  return "Chaque fois qu'un allié déclenche un tir en chaîne";
+}
+
+function areaInPhrase(setting) {
+  const area = translateArea(setting);
+  return area ? `Dans ${area}` : "Dans la zone indiquée";
+}
+
+function areaOutPhrase(setting) {
+  const area = translateArea(setting);
+  return area ? `Hors de ${area}` : "Hors de la zone indiquée";
+}
+
+function areaInEndPhrase(setting) {
+  const area = translateArea(setting);
+  return area ? `lorsque ce joueur entre dans ${area}` : "lorsque ce joueur entre dans la zone indiquée";
+}
+
+function areaOutEndPhrase(setting) {
+  const area = translateArea(setting);
+  return area ? `lorsque ce joueur quitte ${area}` : "lorsque ce joueur quitte la zone indiquée";
+}
+
+function translateArea(value) {
+  const map = {
+    "敵ペナルティエリア": "la surface de réparation adverse",
+    "味方ペナルティエリア": "sa propre surface de réparation",
+    "敵陣地": "le camp adverse",
+    "味方陣地": "son propre camp",
+  };
+  return map[value] || "";
+}
+
+function effectStatKey(effect) {
+  return effectAssetName(effect);
+}
+
+function scaledEffectAmount(raw, type) {
+  if (String(type || "").includes("率")) {
+    return Math.round((raw / 100) * 100) / 100;
+  }
+  return raw;
+}
+
+function isCoachStatBoostEffect(type) {
+  return Boolean(type) && type !== "技威力加減算" && !String(type || "").includes("率") && !String(type || "").includes("確率");
+}
+
+function effectStatLabel(type) {
+  const map = {
+    "キック加減算": "Frappe",
+    "テクニック加減算": "Technique",
+    "ブロック加減算": "Blocage",
+    "キャッチ加減算": "Arrêt",
+    "スピード加減算": "Vitesse",
+    "TP加減算": "TP max",
+    "最大TP加減算": "TP max",
+    "クリティカル率加減算": "taux critique",
+    "ファール率加減算": "taux de faute",
+  };
+  return map[type] || type || "Effet";
+}
+
+function statWithDe(stat) {
+  return /^[AaÂÀÁÄÉÈÊIiOoUu]/.test(stat) ? `d'${stat}` : `de ${stat}`;
+}
+
+function translateMovePowerLabel(value) {
+  const move = translateMoveJp(value);
+  if (move) {
+    return `Puissance des techniques de ${move}`;
+  }
+  const element = elementCodeFromJp(value);
+  if (element) {
+    return `Puissance des techniques d'élément ${labels.elements[element]}`;
+  }
+  return "Puissance des techniques";
+}
+
+function translateMoveJp(value) {
+  const content = bracketContent(value);
+  const map = {
+    "シュート": "tir",
+    "ドリブル": "dribble",
+    "ブロック": "blocage",
+    "キャッチ": "arrêt",
+    "キーパー": "gardien",
+  };
+  if (map[content]) {
+    return map[content];
+  }
+  const element = elementCodeFromJp(value);
+  return element ? `élément ${labels.elements[element]}` : "";
+}
+
+function moveTypeCodeFromJp(value) {
+  const content = bracketContent(value);
+  const map = {
+    "シュート": "shot",
+    "ドリブル": "dribble",
+    "ブロック": "block",
+    "キャッチ": "save",
+    "キーパー": "save",
+  };
+  return map[content] || null;
+}
+
+function elementCodeFromJp(value) {
+  const content = bracketContent(value) || value;
+  const map = {
+    "火": "fire",
+    "林": "wood",
+    "風": "wind",
+    "山": "mountain",
+  };
+  return map[content] || null;
+}
+
+function translateElementJp(value) {
+  return labels.elements[elementCodeFromJp(value)] || value || "-";
+}
+
+function translateKnownTag(value) {
+  const map = {
+    "雷門": "Raimon",
+    "新生雷門": "Nouveau Raimon",
+    "イナズマジャパン": "Inazuma Japan",
+    "稲妻KFC": "Inazuma KFC",
+    "稲妻ＫＦＣ": "Inazuma KFC",
+    "帝国": "Royal Academy",
+    "尾刈斗": "Occulte",
+    "野生": "Wild",
+    "御影専農": "Brainwashing",
+    "秋葉名戸": "Otaku",
+    "戦国伊賀": "Shuriken",
+    "木戸川清修": "Kirkwood",
+    "世宇子": "Zeus",
+    "エイリア": "Alius",
+    "カオス": "Chaos",
+    "ジェミニストーム": "Tempête des Gémeaux",
+    "イプシロン": "Epsilon",
+    "リトルギガント": "Little Gigantes",
+    "日本代表２０２６": "Équipe du Japon 2026",
+    "雷門ＯＢ": "Anciens de Raimon",
+    "ザ・ジェネシス": "The Genesis",
+    "ヤングイナズマ": "Jeunes Inazuma",
+    "ＳＰフィクサーズ": "Secret Service",
+    "ダイヤモンドダスト": "Diamond Dust",
+    "ダイヤモンドダスト カオス": "Diamond Dust Chaos",
+    "海賊": "Pirate",
+    "海王学園": "Pirates Cove",
+    "ラーメン義勇団": "Ramen",
+    "プレイメイカー": "Meneur de jeu",
+    "ストライカー": "Buteur",
+    "ディフェンシブハーフ": "Milieu défensif",
+    "ストッパー": "Stoppeur",
+    "セカンドトップ": "Second attaquant",
+    "サイドバック": "Latéral",
+    "ロングシューター": "Tireur longue distance",
+    "シュートブロッカー": "Bloqueur de tir",
+    "キーパー": "Gardien",
+    "モチベーター": "Motivateur",
+  };
+  return map[value] || value || "-";
+}
+
+function positionLongName(code) {
+  const map = {
+    FW: "Attaquant",
+    MF: "Milieu",
+    DF: "Défenseur",
+    GK: "Gardien",
+  };
+  return map[code] || code || "-";
+}
+
+function joinFrench(items) {
+  const values = items.filter(Boolean);
+  if (values.length <= 1) {
+    return values[0] || "";
+  }
+  return `${values.slice(0, -1).join(", ")} et ${values[values.length - 1]}`;
 }
 
 function renderSkills(skills) {
@@ -2917,7 +4551,7 @@ function renderMoveSkillCard(skill) {
             <span class="skill-green-bar"><span></span></span>
           </span>
           <span class="skill-power">
-            <img src="${escapeAttr(assetPath("assets/skill-card/power-white.png"))}" alt="" />
+            <img src="${escapeAttr(assetPath(uiAssets.skillCards.power))}" alt="" />
             <strong>${formatNumber(skill.power || 0)}</strong>
           </span>
         </span>
@@ -2980,7 +4614,7 @@ function openSkillModal(player, skillId) {
     return;
   }
 
-  els.skillModal.classList.remove("is-equipment-modal", "is-privacy-modal");
+  els.skillModal.classList.remove("is-equipment-modal");
   const icon = skill.kind === "move" ? renderMoveTypeIcon(skill.type?.code) : `<span class="passive-mark">P</span>`;
   const kindLabel = skill.kind === "move" ? "Technique" : "Passif";
   const levels = modalSkillLevels(skill)
@@ -3015,13 +4649,60 @@ function openSkillModal(player, skillId) {
   els.skillModalClose.focus();
 }
 
+function openCoachSkillModal(coach, skillId) {
+  const formation = getCoachFormation(coach);
+  const skills = [formation?.passive, ...(coach.skills || [])].filter(Boolean);
+  const skill = skills.find((item, index, items) => item.id === skillId && items.findIndex((other) => other.id === item.id) === index);
+  if (!skill) {
+    return;
+  }
+
+  els.skillModal.classList.remove("is-equipment-modal");
+  els.skillModal.classList.add("is-coach-skill-modal");
+  const currentLevel = currentSkillLevel(skill);
+  const levels = (skill.levels || [])
+    .map((level) => {
+      const active = Number(level.level || 0) === Number(skill.current_level || currentLevel?.level || 0);
+      return `
+        <li class="coach-skill-level-row${active ? " is-current" : ""}">
+          <strong>Niv.${escapeHtml(level.level || "-")}</strong>
+          <span class="coach-skill-level-content">
+            <span class="coach-modal-icons">${renderEffectBadges(level.effects || [])}</span>
+            <div class="skill-level-description">${renderCoachPassiveText(describeSkillLevel(level), level.summary || null)}</div>
+          </span>
+        </li>
+      `;
+    })
+    .join("");
+
+  els.skillModalBody.innerHTML = `
+    <header class="modal-skill-head coach-modal-head">
+      <span class="passive-mark">P</span>
+      <div>
+        <p>Passif - ${escapeHtml(displayName(coach))}</p>
+        <h2 id="skillModalTitle">${escapeHtml(skill.name || "Passif entraîneur")}</h2>
+      </div>
+      <span class="skill-level modal-current-level">Niv.${escapeHtml(skill.current_level || currentLevel?.level || "-")}</span>
+    </header>
+    <div class="skill-detail modal-skill-detail coach-modal-detail">
+      ${renderCoachPassiveText(
+        describeSkillLevel(currentLevel) || skill.current_description || "",
+        currentLevel?.summary || skill.current_summary || null
+      )}
+      <ol>${levels}</ol>
+    </div>
+  `;
+  els.skillModal.hidden = false;
+  document.body.classList.add("modal-open");
+  els.skillModalClose.focus();
+}
+
 function closeSkillModal() {
   els.skillModal.hidden = true;
-  els.skillModal.classList.remove("is-equipment-modal", "is-privacy-modal");
+  els.skillModal.classList.remove("is-equipment-modal");
+  els.skillModal.classList.remove("is-coach-skill-modal");
   els.skillModalBody.innerHTML = "";
-  if (!els.authModal || els.authModal.hidden) {
-    document.body.classList.remove("modal-open");
-  }
+  document.body.classList.remove("modal-open");
 }
 
 function passiveUnlockText(level) {
@@ -3088,7 +4769,8 @@ function renderPositionGrid(areas) {
 
 function renderTagChip(tag) {
   const label = tagLabel(tag);
-  const icon = tag.icon ? `<img src="${escapeAttr(assetPath(tag.icon))}" alt="" />` : `<span>${escapeHtml(initials(label))}</span>`;
+  const iconPath = tagIconPath(tag);
+  const icon = iconPath ? `<img src="${escapeAttr(iconPath)}" alt="" />` : `<span>${escapeHtml(initials(label))}</span>`;
   return `<span class="tag-chip tag-${escapeAttr(tag.kind || "tag")}" title="${escapeAttr(label)}">${icon}</span>`;
 }
 
@@ -3102,21 +4784,22 @@ function renderElementBadge(element) {
 }
 
 function renderElementIcon(code) {
-  const safe = ["fire", "wood", "wind", "mountain"].includes(code) ? code : null;
-  if (!safe) {
+  const icon = uiAssets.elements[code];
+  if (!icon) {
     return `<span class="element-initial">?</span>`;
   }
-  return `<img class="element-icon" src="${assetPath(`assets/elements/${escapeAttr(safe)}.png`)}" alt="" />`;
+  return `<img class="element-icon" src="${assetPath(icon)}" alt="" />`;
 }
 
 function renderPositionBadge(position, options = {}) {
   const code = position?.code || "?";
-  const safe = ["FW", "MF", "DF", "GK"].includes(code) ? code.toLowerCase() : null;
+  const icon = uiAssets.positions[code];
+  const safe = icon ? code.toLowerCase() : null;
   const label = `${code} ${position?.fr || labels.positions[code] || ""}`.trim();
-  if (safe) {
+  if (icon && safe) {
     return `
       <span class="position-badge position-${escapeAttr(safe)}${options.compact ? " is-compact" : ""}" title="${escapeAttr(label)}">
-        <img src="${assetPath(`assets/positions/${escapeAttr(safe)}.png`)}" alt="${escapeAttr(code)}" />
+        <img src="${assetPath(icon)}" alt="${escapeAttr(code)}" />
       </span>
     `;
   }
@@ -3124,8 +4807,8 @@ function renderPositionBadge(position, options = {}) {
 }
 
 function renderMoveTypeIcon(type) {
-  const safe = ["shot", "dribble", "block", "save"].includes(type) ? type : "shot";
-  return `<img class="move-type-icon" src="${assetPath(`assets/skill-card/move-${escapeAttr(safe)}.png`)}" alt="" />`;
+  const icon = uiAssets.skillCards.moveTypes[type] || uiAssets.skillCards.moveTypes.shot;
+  return `<img class="move-type-icon" src="${assetPath(icon)}" alt="" />`;
 }
 
 function renderStars(count) {
@@ -3133,7 +4816,7 @@ function renderStars(count) {
   if (!total) {
     return `<span class="stars">?</span>`;
   }
-  return `<span class="stars">${Array.from({ length: total }, () => `<img src="${assetPath("assets/ui/star.png")}" alt="" />`).join("")}</span>`;
+  return `<span class="stars">${Array.from({ length: total }, () => `<img src="${assetPath(uiAssets.ui.star)}" alt="" />`).join("")}</span>`;
 }
 
 function imageUrl(player, kind) {
@@ -3147,8 +4830,53 @@ function assetPath(value) {
   return String(value).replace(/^\/+/, "");
 }
 
+function createAssetLookup(entries) {
+  return Object.entries(entries).reduce((lookup, [key, value]) => {
+    lookup.set(normalizeAssetLookupKey(key), value);
+    return lookup;
+  }, new Map());
+}
+
+function normalizeAssetLookupKey(value) {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[’'`]/g, "")
+    .replace(/[\s_.\-・]/g, "");
+}
+
+function tagIconPath(tagOrValue, preferredKind) {
+  if (tagOrValue && typeof tagOrValue === "object" && tagOrValue.icon) {
+    return assetPath(tagOrValue.icon);
+  }
+  const fallback = fallbackTagIconPath(tagOrValue, preferredKind);
+  return fallback ? assetPath(fallback) : "";
+}
+
+function fallbackTagIconPath(tagOrValue, preferredKind) {
+  const tag = tagOrValue && typeof tagOrValue === "object" ? tagOrValue : null;
+  const values = tag
+    ? [tag.fr, tag.jp, tag.slug, tag.en, tag.name, tag.label, tagLabel(tag)]
+    : [tagOrValue];
+  const kinds = [preferredKind || tag?.kind, "team", "style", "season"].filter(Boolean);
+  for (const kind of [...new Set(kinds)]) {
+    const lookup = tagIconFallbacks[kind];
+    if (!lookup) {
+      continue;
+    }
+    for (const value of values) {
+      const icon = lookup.get(normalizeAssetLookupKey(value));
+      if (icon) {
+        return icon;
+      }
+    }
+  }
+  return "";
+}
+
 function displayName(player) {
-  return player.names?.fr || player.names?.display_fr || player.names?.romaji || player.names?.jp || `Entrée ${player.code}`;
+  return player.names?.fr || player.names?.display_fr || player.names?.jp || `Personnage ${player.code}`;
 }
 
 function teamLabel(player) {
@@ -3162,10 +4890,11 @@ function teamTag(player) {
 function renderTeamLogo(player) {
   const tag = teamTag(player);
   const label = tagLabel(tag) || player.position?.fr || "";
-  if (tag?.icon) {
+  const icon = tagIconPath(tag, "team");
+  if (icon) {
     return `
       <span class="album-card-team team-logo" title="${escapeAttr(label)}">
-        <img src="${escapeAttr(assetPath(tag.icon))}" alt="${escapeAttr(label)}" />
+        <img src="${escapeAttr(icon)}" alt="${escapeAttr(label)}" />
       </span>
     `;
   }

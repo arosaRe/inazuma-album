@@ -1,0 +1,4603 @@
+{
+  "schema": "inazuma-formations.v1",
+  "source": "masterdata",
+  "count": 22,
+  "conditions": {
+    "1": {
+      "code": "1",
+      "kind_jp": "試合開始時",
+      "setting_1": "",
+      "setting_2": "",
+      "setting_3": ""
+    },
+    "2": {
+      "code": "2",
+      "kind_jp": "ターン開始時",
+      "setting_1": "1",
+      "setting_2": "",
+      "setting_3": ""
+    },
+    "3": {
+      "code": "3",
+      "kind_jp": "特定プレイヤーのドリブル技使用後",
+      "setting_1": "味方",
+      "setting_2": "TRUE",
+      "setting_3": ""
+    },
+    "4": {
+      "code": "4",
+      "kind_jp": "特定プレイヤーのドリブルブロック技使用後",
+      "setting_1": "自分",
+      "setting_2": "TRUE",
+      "setting_3": ""
+    },
+    "5": {
+      "code": "5",
+      "kind_jp": "特定プレイヤーのゴール時",
+      "setting_1": "味方",
+      "setting_2": "",
+      "setting_3": ""
+    },
+    "6": {
+      "code": "6",
+      "kind_jp": "特定プレイヤーのゴール時",
+      "setting_1": "敵",
+      "setting_2": "",
+      "setting_3": ""
+    },
+    "7": {
+      "code": "7",
+      "kind_jp": "特定プレイヤーのキーパー技使用後",
+      "setting_1": "味方 & 選手[1001]",
+      "setting_2": "TRUE",
+      "setting_3": ""
+    },
+    "8": {
+      "code": "8",
+      "kind_jp": "特定プレイヤーのドリブル技使用後",
+      "setting_1": "自分",
+      "setting_2": "TRUE",
+      "setting_3": ""
+    },
+    "9": {
+      "code": "9",
+      "kind_jp": "特定プレイヤーのドリブル技使用後",
+      "setting_1": "自分",
+      "setting_2": "TRUE",
+      "setting_3": ""
+    },
+    "10": {
+      "code": "10",
+      "kind_jp": "試合開始時特定プレイヤー人数",
+      "setting_1": "ポジション[DF]",
+      "setting_2": "3",
+      "setting_3": ""
+    },
+    "11": {
+      "code": "11",
+      "kind_jp": "特定エリア内",
+      "setting_1": "敵ペナルティエリア",
+      "setting_2": "",
+      "setting_3": ""
+    },
+    "12": {
+      "code": "12",
+      "kind_jp": "特定エリア外",
+      "setting_1": "敵ペナルティエリア",
+      "setting_2": "",
+      "setting_3": ""
+    },
+    "13": {
+      "code": "13",
+      "kind_jp": "特定プレイヤーのゴール時",
+      "setting_1": "敵",
+      "setting_2": "",
+      "setting_3": ""
+    },
+    "14": {
+      "code": "14",
+      "kind_jp": "特定プレイヤーのシュートが止められた時",
+      "setting_1": "敵",
+      "setting_2": "",
+      "setting_3": ""
+    },
+    "15": {
+      "code": "15",
+      "kind_jp": "試合開始時特定プレイヤー人数",
+      "setting_1": "タグ[雷門]",
+      "setting_2": "4",
+      "setting_3": ""
+    },
+    "16": {
+      "code": "16",
+      "kind_jp": "試合開始時特定プレイヤー人数",
+      "setting_1": "タグ[帝国]",
+      "setting_2": "4",
+      "setting_3": ""
+    },
+    "17": {
+      "code": "17",
+      "kind_jp": "試合開始時特定プレイヤー人数",
+      "setting_1": "タグ[エイリア]",
+      "setting_2": "4",
+      "setting_3": ""
+    },
+    "18": {
+      "code": "18",
+      "kind_jp": "試合開始時特定プレイヤー人数",
+      "setting_1": "タグ[世宇子]",
+      "setting_2": "4",
+      "setting_3": ""
+    },
+    "101": {
+      "code": "101",
+      "kind_jp": "特定プレイヤーのゴール時",
+      "setting_1": "敵 | 味方",
+      "setting_2": "",
+      "setting_3": ""
+    },
+    "102": {
+      "code": "102",
+      "kind_jp": "試合開始時特定プレイヤー人数",
+      "setting_1": "味方 & タグ[雷門]",
+      "setting_2": "3",
+      "setting_3": ""
+    },
+    "103": {
+      "code": "103",
+      "kind_jp": "試合開始時特定プレイヤー人数",
+      "setting_1": "自分 & ポジション[FW]",
+      "setting_2": "1",
+      "setting_3": ""
+    },
+    "104": {
+      "code": "104",
+      "kind_jp": "試合開始時特定プレイヤー人数",
+      "setting_1": "自分 & ポジション[DF]",
+      "setting_2": "1",
+      "setting_3": ""
+    },
+    "105": {
+      "code": "105",
+      "kind_jp": "キックオフ時スコアリード",
+      "setting_1": "-99",
+      "setting_2": "-1",
+      "setting_3": ""
+    },
+    "106": {
+      "code": "106",
+      "kind_jp": "キックオフ時スコアリード",
+      "setting_1": "0",
+      "setting_2": "0",
+      "setting_3": ""
+    },
+    "107": {
+      "code": "107",
+      "kind_jp": "試合開始時特定プレイヤー人数",
+      "setting_1": "味方 & (タグ[エイリア] | タグ[世宇子])",
+      "setting_2": "3",
+      "setting_3": ""
+    },
+    "108": {
+      "code": "108",
+      "kind_jp": "試合開始時特定プレイヤー人数",
+      "setting_1": "味方 & (タグ[エイリア] | タグ[イナズマジャパン])",
+      "setting_2": "3",
+      "setting_3": ""
+    },
+    "109": {
+      "code": "109",
+      "kind_jp": "試合開始時特定プレイヤー人数",
+      "setting_1": "味方 & (属性[火] | 属性[風])",
+      "setting_2": "3",
+      "setting_3": ""
+    },
+    "110": {
+      "code": "110",
+      "kind_jp": "特定プレイヤーのシュートが止められた時",
+      "setting_1": "自分",
+      "setting_2": "",
+      "setting_3": ""
+    },
+    "111": {
+      "code": "111",
+      "kind_jp": "試合開始時特定プレイヤー人数",
+      "setting_1": "味方 & (タグ[雷門] | タグ[イナズマジャパン])",
+      "setting_2": "3",
+      "setting_3": ""
+    },
+    "112": {
+      "code": "112",
+      "kind_jp": "特定プレイヤーのゴール時",
+      "setting_1": "自分",
+      "setting_2": "",
+      "setting_3": ""
+    },
+    "113": {
+      "code": "113",
+      "kind_jp": "特定エリア内",
+      "setting_1": "敵陣地",
+      "setting_2": "",
+      "setting_3": ""
+    },
+    "114": {
+      "code": "114",
+      "kind_jp": "特定エリア内",
+      "setting_1": "味方陣地",
+      "setting_2": "",
+      "setting_3": ""
+    },
+    "115": {
+      "code": "115",
+      "kind_jp": "特定プレイヤーがパスを受けた後",
+      "setting_1": "自分",
+      "setting_2": "",
+      "setting_3": ""
+    },
+    "116": {
+      "code": "116",
+      "kind_jp": "特定プレイヤーのシュートチェイン後",
+      "setting_1": "味方",
+      "setting_2": "",
+      "setting_3": ""
+    },
+    "117": {
+      "code": "117",
+      "kind_jp": "試合開始時特定プレイヤー人数",
+      "setting_1": "味方 & タグ[新生雷門]",
+      "setting_2": "3",
+      "setting_3": ""
+    },
+    "118": {
+      "code": "118",
+      "kind_jp": "ターン開始時",
+      "setting_1": "16",
+      "setting_2": "",
+      "setting_3": ""
+    },
+    "119": {
+      "code": "119",
+      "kind_jp": "特定プレイヤーのキーパー技使用後",
+      "setting_1": "自分",
+      "setting_2": "TRUE",
+      "setting_3": ""
+    },
+    "120": {
+      "code": "120",
+      "kind_jp": "特定プレイヤーのパス後",
+      "setting_1": "味方",
+      "setting_2": "",
+      "setting_3": ""
+    },
+    "121": {
+      "code": "121",
+      "kind_jp": "特定プレイヤーのシュートブロック技使用後",
+      "setting_1": "自分",
+      "setting_2": "FALSE",
+      "setting_3": ""
+    },
+    "122": {
+      "code": "122",
+      "kind_jp": "特定プレイヤーのシュートブロック技使用後",
+      "setting_1": "自分",
+      "setting_2": "TRUE",
+      "setting_3": ""
+    },
+    "123": {
+      "code": "123",
+      "kind_jp": "キックオフ時スコアリード",
+      "setting_1": "1",
+      "setting_2": "99",
+      "setting_3": ""
+    },
+    "124": {
+      "code": "124",
+      "kind_jp": "特定プレイヤーのドリブル技使用後",
+      "setting_1": "味方 & 属性[風]",
+      "setting_2": "TRUE",
+      "setting_3": ""
+    },
+    "125": {
+      "code": "125",
+      "kind_jp": "試合開始時特定プレイヤー人数",
+      "setting_1": "味方 & 属性[風]",
+      "setting_2": "3",
+      "setting_3": ""
+    },
+    "126": {
+      "code": "126",
+      "kind_jp": "試合開始時特定プレイヤー人数",
+      "setting_1": "味方 & 属性[林]",
+      "setting_2": "3",
+      "setting_3": ""
+    },
+    "127": {
+      "code": "127",
+      "kind_jp": "試合開始時特定プレイヤー人数",
+      "setting_1": "味方 & (属性[風] | 属性[林])",
+      "setting_2": "3",
+      "setting_3": ""
+    },
+    "128": {
+      "code": "128",
+      "kind_jp": "特定技発動後",
+      "setting_1": "自分",
+      "setting_2": "技[64001]",
+      "setting_3": ""
+    },
+    "129": {
+      "code": "129",
+      "kind_jp": "特定技発動後",
+      "setting_1": "自分",
+      "setting_2": "技[31001]",
+      "setting_3": ""
+    },
+    "130": {
+      "code": "130",
+      "kind_jp": "特定技発動後",
+      "setting_1": "自分",
+      "setting_2": "技[11005]",
+      "setting_3": ""
+    },
+    "131": {
+      "code": "131",
+      "kind_jp": "特定技発動後",
+      "setting_1": "自分",
+      "setting_2": "技[42003]",
+      "setting_3": ""
+    },
+    "132": {
+      "code": "132",
+      "kind_jp": "特定技発動後",
+      "setting_1": "自分",
+      "setting_2": "技[13004]",
+      "setting_3": ""
+    },
+    "133": {
+      "code": "133",
+      "kind_jp": "特定技発動後",
+      "setting_1": "自分",
+      "setting_2": "技[32001]",
+      "setting_3": ""
+    },
+    "134": {
+      "code": "134",
+      "kind_jp": "特定技発動後",
+      "setting_1": "自分",
+      "setting_2": "技[12001]",
+      "setting_3": ""
+    },
+    "135": {
+      "code": "135",
+      "kind_jp": "特定技発動後",
+      "setting_1": "自分",
+      "setting_2": "技[62003]",
+      "setting_3": ""
+    },
+    "136": {
+      "code": "136",
+      "kind_jp": "特定技発動後",
+      "setting_1": "自分",
+      "setting_2": "技[54002]",
+      "setting_3": ""
+    },
+    "137": {
+      "code": "137",
+      "kind_jp": "特定技発動後",
+      "setting_1": "自分",
+      "setting_2": "技[21001]",
+      "setting_3": ""
+    },
+    "138": {
+      "code": "138",
+      "kind_jp": "特定技発動後",
+      "setting_1": "自分",
+      "setting_2": "技[51002]",
+      "setting_3": ""
+    },
+    "139": {
+      "code": "139",
+      "kind_jp": "特定技発動後",
+      "setting_1": "自分",
+      "setting_2": "技[43005]",
+      "setting_3": ""
+    },
+    "140": {
+      "code": "140",
+      "kind_jp": "ターン開始時",
+      "setting_1": "21",
+      "setting_2": "",
+      "setting_3": ""
+    },
+    "141": {
+      "code": "141",
+      "kind_jp": "試合開始時特定プレイヤー人数",
+      "setting_1": "味方 & (タグ[雷門] | タグ[帝国])",
+      "setting_2": "3",
+      "setting_3": ""
+    },
+    "142": {
+      "code": "142",
+      "kind_jp": "試合開始時特定プレイヤー人数",
+      "setting_1": "味方 & タグ[帝国]",
+      "setting_2": "3",
+      "setting_3": ""
+    },
+    "143": {
+      "code": "143",
+      "kind_jp": "試合開始時特定プレイヤー人数",
+      "setting_1": "味方 & タグ[イナズマジャパン]",
+      "setting_2": "3",
+      "setting_3": ""
+    },
+    "144": {
+      "code": "144",
+      "kind_jp": "特定プレイヤーのドリブル技使用後",
+      "setting_1": "味方 & ポジション[MF]",
+      "setting_2": "TRUE",
+      "setting_3": ""
+    },
+    "145": {
+      "code": "145",
+      "kind_jp": "特定プレイヤーのドリブルブロック技使用後",
+      "setting_1": "味方",
+      "setting_2": "TRUE",
+      "setting_3": ""
+    },
+    "146": {
+      "code": "146",
+      "kind_jp": "特定プレイヤーのシュートが止められた時",
+      "setting_1": "味方",
+      "setting_2": "",
+      "setting_3": ""
+    },
+    "147": {
+      "code": "147",
+      "kind_jp": "特定プレイヤーのドリブルブロック技使用後",
+      "setting_1": "味方",
+      "setting_2": "TRUE",
+      "setting_3": ""
+    },
+    "148": {
+      "code": "148",
+      "kind_jp": "試合開始時特定プレイヤー人数",
+      "setting_1": "味方 & (タグ[雷門] | タグ[稲妻ＫＦＣ])",
+      "setting_2": "3",
+      "setting_3": ""
+    },
+    "149": {
+      "code": "149",
+      "kind_jp": "特定技発動後",
+      "setting_1": "自分",
+      "setting_2": "13011",
+      "setting_3": ""
+    },
+    "150": {
+      "code": "150",
+      "kind_jp": "試合開始時特定プレイヤー人数",
+      "setting_1": "味方 & 属性[火]",
+      "setting_2": "3",
+      "setting_3": ""
+    },
+    "151": {
+      "code": "151",
+      "kind_jp": "試合開始時特定プレイヤー人数",
+      "setting_1": "味方 & タグ[木戸川清修]",
+      "setting_2": "3",
+      "setting_3": ""
+    },
+    "152": {
+      "code": "152",
+      "kind_jp": "特定プレイヤーのドリブルブロック技使用後",
+      "setting_1": "敵 & ポジション[DF]",
+      "setting_2": "TRUE",
+      "setting_3": ""
+    },
+    "153": {
+      "code": "153",
+      "kind_jp": "特定プレイヤーのドリブル技使用後",
+      "setting_1": "敵 & ポジション[MF]",
+      "setting_2": "TRUE",
+      "setting_3": ""
+    },
+    "154": {
+      "code": "154",
+      "kind_jp": "特定プレイヤーのドリブルブロック技使用後",
+      "setting_1": "敵",
+      "setting_2": "TRUE",
+      "setting_3": ""
+    },
+    "155": {
+      "code": "155",
+      "kind_jp": "特定プレイヤーのドリブル技使用後",
+      "setting_1": "敵",
+      "setting_2": "TRUE",
+      "setting_3": ""
+    },
+    "156": {
+      "code": "156",
+      "kind_jp": "特定プレイヤーのシュートブロック技使用後",
+      "setting_1": "敵",
+      "setting_2": "TRUE",
+      "setting_3": ""
+    },
+    "157": {
+      "code": "157",
+      "kind_jp": "特定プレイヤーのドリブル技使用後",
+      "setting_1": "敵 & ポジション[DF]",
+      "setting_2": "TRUE",
+      "setting_3": ""
+    }
+  },
+  "formations": {
+    "80000": {
+      "code": 80000,
+      "name": "F-Beginner",
+      "name_key": "MD_Formation_Name/80000",
+      "passive_code": 15001,
+      "passive_level": 1,
+      "passive": {
+        "kind": "formation_passive",
+        "id": "formation-passive-15001",
+        "code": 15001,
+        "name": "F-Beginner",
+        "rank": "A",
+        "unlock_level": 1,
+        "current_level": 1,
+        "current_description": "Au début du match\nAlliés : statistique de Frappe +600\nAlliés : statistique de Technique +600",
+        "levels": [
+          {
+            "level": 1,
+            "unlock_coach_level": [],
+            "rank": "A",
+            "description": "Au début du match\nAlliés : statistique de Frappe +600\nAlliés : statistique de Technique +600",
+            "effects": [
+              {
+                "status_effect_code": "1500101",
+                "target_players": "味方",
+                "activation_condition": "1",
+                "end_condition": "",
+                "effect_type": "キック加減算",
+                "target_move": "",
+                "growth_table": "1500101",
+                "raw_amount": 600
+              },
+              {
+                "status_effect_code": "1500102",
+                "target_players": "味方",
+                "activation_condition": "1",
+                "end_condition": "",
+                "effect_type": "テクニック加減算",
+                "target_move": "",
+                "growth_table": "1500102",
+                "raw_amount": 600
+              }
+            ],
+            "summary": {
+              "trigger": "Au début du match",
+              "effects": [
+                "Alliés : statistique de Frappe +600",
+                "Alliés : statistique de Technique +600"
+              ],
+              "end": ""
+            }
+          }
+        ],
+        "current_summary": {
+          "trigger": "Au début du match",
+          "effects": [
+            "Alliés : statistique de Frappe +600",
+            "Alliés : statistique de Technique +600"
+          ],
+          "end": ""
+        }
+      },
+      "slots": [
+        {
+          "slot": 0,
+          "number": 1,
+          "position": "FW",
+          "x": -0.226,
+          "y": 0.836,
+          "field_x": -3,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 1,
+          "number": 2,
+          "position": "FW",
+          "x": 0.32,
+          "y": 0.836,
+          "field_x": 3,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "本職ポジション",
+          "condition_value_jp": "FW"
+        },
+        {
+          "slot": 2,
+          "number": 3,
+          "position": "MF",
+          "x": -0.247,
+          "y": 0.474,
+          "field_x": -4,
+          "field_y": 13,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 3,
+          "number": 4,
+          "position": "MF",
+          "x": 0.299,
+          "y": 0.474,
+          "field_x": 4,
+          "field_y": 13,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 4,
+          "number": 5,
+          "position": "MF",
+          "x": -0.701,
+          "y": 0.634,
+          "field_x": -8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "本職ポジション",
+          "condition_value_jp": "MF"
+        },
+        {
+          "slot": 5,
+          "number": 6,
+          "position": "MF",
+          "x": 0.792,
+          "y": 0.652,
+          "field_x": 8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 6,
+          "number": 7,
+          "position": "DF",
+          "x": -0.804,
+          "y": 0.304,
+          "field_x": -7,
+          "field_y": 8,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 7,
+          "number": 8,
+          "position": "DF",
+          "x": 0.792,
+          "y": 0.315,
+          "field_x": 7,
+          "field_y": 8,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 8,
+          "number": 9,
+          "position": "DF",
+          "x": -0.283,
+          "y": 0.233,
+          "field_x": -2,
+          "field_y": 4,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 9,
+          "number": 10,
+          "position": "DF",
+          "x": 0.263,
+          "y": 0.233,
+          "field_x": 2,
+          "field_y": 4,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 10,
+          "number": 11,
+          "position": "GK",
+          "x": 0,
+          "y": 0,
+          "field_x": 0,
+          "field_y": 0,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "本職ポジション",
+          "condition_value_jp": "GK"
+        }
+      ]
+    },
+    "80001": {
+      "code": 80001,
+      "name": "Onze de Raimon",
+      "name_key": "MD_Formation_Name/80001",
+      "passive_code": 15002,
+      "passive_level": 1,
+      "passive": {
+        "kind": "formation_passive",
+        "id": "formation-passive-15002",
+        "code": 15002,
+        "name": "Onze de Raimon",
+        "rank": "A",
+        "unlock_level": 1,
+        "current_level": 1,
+        "current_description": "Au début du match\nAlliés GK recommandés : puissance des techniques d'arrêt +53\nAlliés DF recommandés : puissance des techniques de blocage +53",
+        "levels": [
+          {
+            "level": 1,
+            "unlock_coach_level": [],
+            "rank": "A",
+            "description": "Au début du match\nAlliés GK recommandés : puissance des techniques d'arrêt +53\nAlliés DF recommandés : puissance des techniques de blocage +53",
+            "effects": [
+              {
+                "status_effect_code": "1500201",
+                "target_players": "味方 & 推奨ポジション[GK]",
+                "activation_condition": "1",
+                "end_condition": "",
+                "effect_type": "技威力加減算",
+                "target_move": "カテゴリ[キーパー]",
+                "growth_table": "1500201",
+                "raw_amount": 53
+              },
+              {
+                "status_effect_code": "1500202",
+                "target_players": "味方 & 推奨ポジション[DF]",
+                "activation_condition": "1",
+                "end_condition": "",
+                "effect_type": "技威力加減算",
+                "target_move": "カテゴリ[ブロック]",
+                "growth_table": "1500202",
+                "raw_amount": 53
+              }
+            ],
+            "summary": {
+              "trigger": "Au début du match",
+              "effects": [
+                "Alliés GK recommandés : puissance des techniques d'arrêt +53",
+                "Alliés DF recommandés : puissance des techniques de blocage +53"
+              ],
+              "end": ""
+            }
+          }
+        ],
+        "current_summary": {
+          "trigger": "Au début du match",
+          "effects": [
+            "Alliés GK recommandés : puissance des techniques d'arrêt +53",
+            "Alliés DF recommandés : puissance des techniques de blocage +53"
+          ],
+          "end": ""
+        }
+      },
+      "slots": [
+        {
+          "slot": 0,
+          "number": 1,
+          "position": "FW",
+          "x": -0.25,
+          "y": 0.836,
+          "field_x": -3,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 1,
+          "number": 2,
+          "position": "FW",
+          "x": 0.295,
+          "y": 0.836,
+          "field_x": 3,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 2,
+          "number": 3,
+          "position": "MF",
+          "x": -0.25,
+          "y": 0.5,
+          "field_x": -4,
+          "field_y": 13,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "タグ",
+          "condition_value_jp": "雷門"
+        },
+        {
+          "slot": 3,
+          "number": 4,
+          "position": "MF",
+          "x": 0.286,
+          "y": 0.5,
+          "field_x": 4,
+          "field_y": 13,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 4,
+          "number": 5,
+          "position": "MF",
+          "x": -0.763,
+          "y": 0.607,
+          "field_x": -8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 5,
+          "number": 6,
+          "position": "MF",
+          "x": 0.798,
+          "y": 0.607,
+          "field_x": 8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 6,
+          "number": 7,
+          "position": "DF",
+          "x": -0.783,
+          "y": 0.324,
+          "field_x": -7,
+          "field_y": 8,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "タグ",
+          "condition_value_jp": "雷門"
+        },
+        {
+          "slot": 7,
+          "number": 8,
+          "position": "DF",
+          "x": 0.798,
+          "y": 0.337,
+          "field_x": 7,
+          "field_y": 8,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 8,
+          "number": 9,
+          "position": "DF",
+          "x": -0.273,
+          "y": 0.235,
+          "field_x": -2,
+          "field_y": 4,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 9,
+          "number": 10,
+          "position": "DF",
+          "x": 0.273,
+          "y": 0.235,
+          "field_x": 2,
+          "field_y": 4,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 10,
+          "number": 11,
+          "position": "GK",
+          "x": 0,
+          "y": 0,
+          "field_x": 0,
+          "field_y": 0,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "タグ",
+          "condition_value_jp": "雷門"
+        }
+      ]
+    },
+    "80002": {
+      "code": 80002,
+      "name": "Formation Zone Mortelle",
+      "name_key": "MD_Formation_Name/80002",
+      "passive_code": 15003,
+      "passive_level": 1,
+      "passive": {
+        "kind": "formation_passive",
+        "id": "formation-passive-15003",
+        "code": 15003,
+        "name": "Formation Zone Mortelle",
+        "rank": "A",
+        "unlock_level": 1,
+        "current_level": 1,
+        "current_description": "Au début du match\nAlliés FW recommandés : statistique de Frappe +600\nAlliés DF recommandés : statistique de Blocage +600",
+        "levels": [
+          {
+            "level": 1,
+            "unlock_coach_level": [],
+            "rank": "A",
+            "description": "Au début du match\nAlliés FW recommandés : statistique de Frappe +600\nAlliés DF recommandés : statistique de Blocage +600",
+            "effects": [
+              {
+                "status_effect_code": "1500301",
+                "target_players": "味方 & 推奨ポジション[FW]",
+                "activation_condition": "1",
+                "end_condition": "",
+                "effect_type": "キック加減算",
+                "target_move": "",
+                "growth_table": "1500301",
+                "raw_amount": 600
+              },
+              {
+                "status_effect_code": "1500302",
+                "target_players": "味方 & 推奨ポジション[DF]",
+                "activation_condition": "1",
+                "end_condition": "",
+                "effect_type": "ブロック加減算",
+                "target_move": "",
+                "growth_table": "1500302",
+                "raw_amount": 600
+              }
+            ],
+            "summary": {
+              "trigger": "Au début du match",
+              "effects": [
+                "Alliés FW recommandés : statistique de Frappe +600",
+                "Alliés DF recommandés : statistique de Blocage +600"
+              ],
+              "end": ""
+            }
+          }
+        ],
+        "current_summary": {
+          "trigger": "Au début du match",
+          "effects": [
+            "Alliés FW recommandés : statistique de Frappe +600",
+            "Alliés DF recommandés : statistique de Blocage +600"
+          ],
+          "end": ""
+        }
+      },
+      "slots": [
+        {
+          "slot": 0,
+          "number": 1,
+          "position": "FW",
+          "x": -0.39,
+          "y": 0.853,
+          "field_x": -4,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 1,
+          "number": 2,
+          "position": "FW",
+          "x": 0.39,
+          "y": 0.853,
+          "field_x": 4,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "タグ",
+          "condition_value_jp": "帝国"
+        },
+        {
+          "slot": 2,
+          "number": 3,
+          "position": "MF",
+          "x": -0.8,
+          "y": 0.647,
+          "field_x": -8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 3,
+          "number": 4,
+          "position": "MF",
+          "x": 0.8,
+          "y": 0.647,
+          "field_x": 8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 4,
+          "number": 5,
+          "position": "MF",
+          "x": 0,
+          "y": 0.647,
+          "field_x": 0,
+          "field_y": 13,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "タグ",
+          "condition_value_jp": "帝国"
+        },
+        {
+          "slot": 5,
+          "number": 6,
+          "position": "DF",
+          "x": -0.7,
+          "y": 0.385,
+          "field_x": -7,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 6,
+          "number": 7,
+          "position": "DF",
+          "x": 0,
+          "y": 0.41,
+          "field_x": 0,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "タグ",
+          "condition_value_jp": "帝国"
+        },
+        {
+          "slot": 7,
+          "number": 8,
+          "position": "DF",
+          "x": 0.7,
+          "y": 0.385,
+          "field_x": 7,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 8,
+          "number": 9,
+          "position": "DF",
+          "x": -0.3,
+          "y": 0.18,
+          "field_x": -2,
+          "field_y": 3,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 9,
+          "number": 10,
+          "position": "DF",
+          "x": 0.3,
+          "y": 0.18,
+          "field_x": 2,
+          "field_y": 3,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 10,
+          "number": 11,
+          "position": "GK",
+          "x": 0,
+          "y": -0.04,
+          "field_x": 0,
+          "field_y": 0,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        }
+      ]
+    },
+    "80004": {
+      "code": 80004,
+      "name": "Formation Inazuma KFC",
+      "name_key": "MD_Formation_Name/80004",
+      "passive_code": 15004,
+      "passive_level": 1,
+      "passive": {
+        "kind": "formation_passive",
+        "id": "formation-passive-15004",
+        "code": 15004,
+        "name": "Formation Inazuma KFC",
+        "rank": "A",
+        "unlock_level": 1,
+        "current_level": 1,
+        "current_description": "Au début du match\nAlliés élément Bois : puissance des techniques de tir +22\nAlliés élément Montagne : puissance des techniques de blocage +20",
+        "levels": [
+          {
+            "level": 1,
+            "unlock_coach_level": [],
+            "rank": "A",
+            "description": "Au début du match\nAlliés élément Bois : puissance des techniques de tir +22\nAlliés élément Montagne : puissance des techniques de blocage +20",
+            "effects": [
+              {
+                "status_effect_code": "1500401",
+                "target_players": "味方 & 属性[林]",
+                "activation_condition": "1",
+                "end_condition": "",
+                "effect_type": "技威力加減算",
+                "target_move": "カテゴリ[シュート] ",
+                "growth_table": "1500401",
+                "raw_amount": 22
+              },
+              {
+                "status_effect_code": "1500402",
+                "target_players": "味方 & 属性[山]",
+                "activation_condition": "1",
+                "end_condition": "",
+                "effect_type": "技威力加減算",
+                "target_move": "カテゴリ[ブロック] ",
+                "growth_table": "1500402",
+                "raw_amount": 20
+              }
+            ],
+            "summary": {
+              "trigger": "Au début du match",
+              "effects": [
+                "Alliés élément Bois : puissance des techniques de tir +22",
+                "Alliés élément Montagne : puissance des techniques de blocage +20"
+              ],
+              "end": ""
+            }
+          }
+        ],
+        "current_summary": {
+          "trigger": "Au début du match",
+          "effects": [
+            "Alliés élément Bois : puissance des techniques de tir +22",
+            "Alliés élément Montagne : puissance des techniques de blocage +20"
+          ],
+          "end": ""
+        }
+      },
+      "slots": [
+        {
+          "slot": 0,
+          "number": 1,
+          "position": "FW",
+          "x": -0.322,
+          "y": 0.855,
+          "field_x": -4,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 1,
+          "number": 2,
+          "position": "FW",
+          "x": 0.428,
+          "y": 0.855,
+          "field_x": 4,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "タグ",
+          "condition_value_jp": "稲妻KFC"
+        },
+        {
+          "slot": 2,
+          "number": 3,
+          "position": "MF",
+          "x": -0.75,
+          "y": 0.62,
+          "field_x": -8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 3,
+          "number": 4,
+          "position": "MF",
+          "x": 0.75,
+          "y": 0.62,
+          "field_x": 8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 4,
+          "number": 5,
+          "position": "MF",
+          "x": 0,
+          "y": 0.6,
+          "field_x": 0,
+          "field_y": 13,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 5,
+          "number": 6,
+          "position": "DF",
+          "x": -0.639,
+          "y": 0.34,
+          "field_x": -7,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 6,
+          "number": 7,
+          "position": "DF",
+          "x": 0,
+          "y": 0.366,
+          "field_x": 0,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "タグ",
+          "condition_value_jp": "稲妻KFC,雷門"
+        },
+        {
+          "slot": 7,
+          "number": 8,
+          "position": "DF",
+          "x": 0.639,
+          "y": 0.34,
+          "field_x": 7,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 8,
+          "number": 9,
+          "position": "DF",
+          "x": -0.54,
+          "y": 0.1,
+          "field_x": -2,
+          "field_y": 4,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 9,
+          "number": 10,
+          "position": "DF",
+          "x": 0.549,
+          "y": 0.1,
+          "field_x": 2,
+          "field_y": 4,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 10,
+          "number": 11,
+          "position": "GK",
+          "x": 0,
+          "y": -0.04,
+          "field_x": 0,
+          "field_y": 0,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "タグ",
+          "condition_value_jp": "稲妻KFC,雷門"
+        }
+      ]
+    },
+    "80005": {
+      "code": 80005,
+      "name": "Formation Occulte",
+      "name_key": "MD_Formation_Name/80005",
+      "passive_code": 15005,
+      "passive_level": 1,
+      "passive": {
+        "kind": "formation_passive",
+        "id": "formation-passive-15005",
+        "code": 15005,
+        "name": "Formation Occulte",
+        "rank": "A",
+        "unlock_level": 1,
+        "current_level": 1,
+        "current_description": "Au début du match\nAlliés MF recommandés : statistique de Technique +2000\nAlliés DF recommandés : statistique de Blocage +1200",
+        "levels": [
+          {
+            "level": 1,
+            "unlock_coach_level": [],
+            "rank": "A",
+            "description": "Au début du match\nAlliés MF recommandés : statistique de Technique +2000\nAlliés DF recommandés : statistique de Blocage +1200",
+            "effects": [
+              {
+                "status_effect_code": "1500501",
+                "target_players": "味方 & 推奨ポジション[MF]",
+                "activation_condition": "1",
+                "end_condition": "",
+                "effect_type": "テクニック加減算",
+                "target_move": "",
+                "growth_table": "1500501",
+                "raw_amount": 2000
+              },
+              {
+                "status_effect_code": "1500502",
+                "target_players": "味方 & 推奨ポジション[DF]",
+                "activation_condition": "1",
+                "end_condition": "",
+                "effect_type": "ブロック加減算",
+                "target_move": "",
+                "growth_table": "1500502",
+                "raw_amount": 1200
+              }
+            ],
+            "summary": {
+              "trigger": "Au début du match",
+              "effects": [
+                "Alliés MF recommandés : statistique de Technique +2000",
+                "Alliés DF recommandés : statistique de Blocage +1200"
+              ],
+              "end": ""
+            }
+          }
+        ],
+        "current_summary": {
+          "trigger": "Au début du match",
+          "effects": [
+            "Alliés MF recommandés : statistique de Technique +2000",
+            "Alliés DF recommandés : statistique de Blocage +1200"
+          ],
+          "end": ""
+        }
+      },
+      "slots": [
+        {
+          "slot": 0,
+          "number": 1,
+          "position": "FW",
+          "x": -0.001,
+          "y": 0.862,
+          "field_x": -4,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "属性",
+          "condition_value_jp": "林"
+        },
+        {
+          "slot": 1,
+          "number": 2,
+          "position": "MF",
+          "x": 0.431,
+          "y": 0.688,
+          "field_x": 4,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "本職ポジション",
+          "condition_value_jp": "MF"
+        },
+        {
+          "slot": 2,
+          "number": 3,
+          "position": "MF",
+          "x": -0.485,
+          "y": 0.688,
+          "field_x": -8,
+          "field_y": 14,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "本職ポジション",
+          "condition_value_jp": "MF"
+        },
+        {
+          "slot": 3,
+          "number": 4,
+          "position": "MF",
+          "x": 0.651,
+          "y": 0.456,
+          "field_x": 8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 4,
+          "number": 5,
+          "position": "MF",
+          "x": 0.001,
+          "y": 0.456,
+          "field_x": 0,
+          "field_y": 13,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 5,
+          "number": 6,
+          "position": "MF",
+          "x": -0.617,
+          "y": 0.456,
+          "field_x": -7,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 6,
+          "number": 7,
+          "position": "DF",
+          "x": -0.85,
+          "y": 0.18,
+          "field_x": 0,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 7,
+          "number": 8,
+          "position": "DF",
+          "x": 0.822,
+          "y": 0.18,
+          "field_x": 7,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 8,
+          "number": 9,
+          "position": "DF",
+          "x": -0.3,
+          "y": 0.18,
+          "field_x": -2,
+          "field_y": 3,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 9,
+          "number": 10,
+          "position": "DF",
+          "x": 0.3,
+          "y": 0.18,
+          "field_x": 2,
+          "field_y": 3,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 10,
+          "number": 11,
+          "position": "GK",
+          "x": 0,
+          "y": -0.04,
+          "field_x": 0,
+          "field_y": 0,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        }
+      ]
+    },
+    "80006": {
+      "code": 80006,
+      "name": "Formation Wild",
+      "name_key": "MD_Formation_Name/80006",
+      "passive_code": 15006,
+      "passive_level": 1,
+      "passive": {
+        "kind": "formation_passive",
+        "id": "formation-passive-15006",
+        "code": 15006,
+        "name": "Formation Wild",
+        "rank": "A",
+        "unlock_level": 1,
+        "current_level": 1,
+        "current_description": "Au début du match\nAlliés élément Vent : statistique de Frappe +900\nAlliés élément Vent : statistique de Technique +900",
+        "levels": [
+          {
+            "level": 1,
+            "unlock_coach_level": [],
+            "rank": "A",
+            "description": "Au début du match\nAlliés élément Vent : statistique de Frappe +900\nAlliés élément Vent : statistique de Technique +900",
+            "effects": [
+              {
+                "status_effect_code": "1500601",
+                "target_players": "味方 & 属性[風]",
+                "activation_condition": "1",
+                "end_condition": "",
+                "effect_type": "キック加減算",
+                "target_move": "",
+                "growth_table": "1500601",
+                "raw_amount": 900
+              },
+              {
+                "status_effect_code": "1500602",
+                "target_players": "味方 & 属性[風]",
+                "activation_condition": "1",
+                "end_condition": "",
+                "effect_type": "テクニック加減算",
+                "target_move": "",
+                "growth_table": "1500602",
+                "raw_amount": 900
+              }
+            ],
+            "summary": {
+              "trigger": "Au début du match",
+              "effects": [
+                "Alliés élément Vent : statistique de Frappe +900",
+                "Alliés élément Vent : statistique de Technique +900"
+              ],
+              "end": ""
+            }
+          }
+        ],
+        "current_summary": {
+          "trigger": "Au début du match",
+          "effects": [
+            "Alliés élément Vent : statistique de Frappe +900",
+            "Alliés élément Vent : statistique de Technique +900"
+          ],
+          "end": ""
+        }
+      },
+      "slots": [
+        {
+          "slot": 0,
+          "number": 1,
+          "position": "FW",
+          "x": 0.027,
+          "y": 0.853,
+          "field_x": -4,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 1,
+          "number": 2,
+          "position": "FW",
+          "x": 0.596,
+          "y": 0.853,
+          "field_x": 4,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 2,
+          "number": 3,
+          "position": "FW",
+          "x": -0.55,
+          "y": 0.853,
+          "field_x": -8,
+          "field_y": 14,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "属性",
+          "condition_value_jp": "風"
+        },
+        {
+          "slot": 3,
+          "number": 4,
+          "position": "MF",
+          "x": 0.343,
+          "y": 0.622,
+          "field_x": 8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 4,
+          "number": 5,
+          "position": "MF",
+          "x": -0.34,
+          "y": 0.622,
+          "field_x": 0,
+          "field_y": 13,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 5,
+          "number": 6,
+          "position": "MF",
+          "x": -0.78,
+          "y": 0.39,
+          "field_x": -7,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "属性",
+          "condition_value_jp": "風"
+        },
+        {
+          "slot": 6,
+          "number": 7,
+          "position": "MF",
+          "x": 0.725,
+          "y": 0.39,
+          "field_x": 0,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "属性",
+          "condition_value_jp": "風"
+        },
+        {
+          "slot": 7,
+          "number": 8,
+          "position": "DF",
+          "x": 0.047,
+          "y": 0.305,
+          "field_x": 7,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 8,
+          "number": 9,
+          "position": "DF",
+          "x": -0.55,
+          "y": 0.159,
+          "field_x": -2,
+          "field_y": 3,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 9,
+          "number": 10,
+          "position": "DF",
+          "x": 0.636,
+          "y": 0.159,
+          "field_x": 2,
+          "field_y": 3,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 10,
+          "number": 11,
+          "position": "GK",
+          "x": 0,
+          "y": -0.04,
+          "field_x": 0,
+          "field_y": 0,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        }
+      ]
+    },
+    "80007": {
+      "code": 80007,
+      "name": "Formation Cybertech",
+      "name_key": "MD_Formation_Name/80007",
+      "passive_code": 15007,
+      "passive_level": 1,
+      "passive": {
+        "kind": "formation_passive",
+        "id": "formation-passive-15007",
+        "code": 15007,
+        "name": "Formation Cybertech",
+        "rank": "A",
+        "unlock_level": 1,
+        "current_level": 1,
+        "current_description": "Au début du match\nAlliés élément Feu : puissance des techniques de technique +30\nAlliés élément Bois : puissance des techniques de technique +30",
+        "levels": [
+          {
+            "level": 1,
+            "unlock_coach_level": [],
+            "rank": "A",
+            "description": "Au début du match\nAlliés élément Feu : puissance des techniques de technique +30\nAlliés élément Bois : puissance des techniques de technique +30",
+            "effects": [
+              {
+                "status_effect_code": "1500701",
+                "target_players": "味方 & 属性[火]",
+                "activation_condition": "1",
+                "end_condition": "",
+                "effect_type": "技威力加減算",
+                "target_move": "何でも",
+                "growth_table": "1500701",
+                "raw_amount": 30
+              },
+              {
+                "status_effect_code": "1500702",
+                "target_players": "味方 & 属性[林]",
+                "activation_condition": "1",
+                "end_condition": "",
+                "effect_type": "技威力加減算",
+                "target_move": "何でも",
+                "growth_table": "1500702",
+                "raw_amount": 30
+              }
+            ],
+            "summary": {
+              "trigger": "Au début du match",
+              "effects": [
+                "Alliés élément Feu : puissance des techniques de technique +30",
+                "Alliés élément Bois : puissance des techniques de technique +30"
+              ],
+              "end": ""
+            }
+          }
+        ],
+        "current_summary": {
+          "trigger": "Au début du match",
+          "effects": [
+            "Alliés élément Feu : puissance des techniques de technique +30",
+            "Alliés élément Bois : puissance des techniques de technique +30"
+          ],
+          "end": ""
+        }
+      },
+      "slots": [
+        {
+          "slot": 0,
+          "number": 1,
+          "position": "FW",
+          "x": -0.226,
+          "y": 0.836,
+          "field_x": -4,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 1,
+          "number": 2,
+          "position": "FW",
+          "x": 0.32,
+          "y": 0.836,
+          "field_x": 4,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "属性",
+          "condition_value_jp": "火"
+        },
+        {
+          "slot": 2,
+          "number": 3,
+          "position": "MF",
+          "x": -0.247,
+          "y": 0.474,
+          "field_x": -8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 3,
+          "number": 4,
+          "position": "MF",
+          "x": 0.299,
+          "y": 0.474,
+          "field_x": 8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 4,
+          "number": 5,
+          "position": "MF",
+          "x": -0.701,
+          "y": 0.634,
+          "field_x": 0,
+          "field_y": 13,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 5,
+          "number": 6,
+          "position": "MF",
+          "x": 0.792,
+          "y": 0.652,
+          "field_x": -7,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "本職ポジション",
+          "condition_value_jp": "MF"
+        },
+        {
+          "slot": 6,
+          "number": 7,
+          "position": "DF",
+          "x": -0.804,
+          "y": 0.304,
+          "field_x": 0,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 7,
+          "number": 8,
+          "position": "DF",
+          "x": 0.792,
+          "y": 0.315,
+          "field_x": 7,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 8,
+          "number": 9,
+          "position": "DF",
+          "x": -0.283,
+          "y": 0.233,
+          "field_x": -2,
+          "field_y": 3,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 9,
+          "number": 10,
+          "position": "DF",
+          "x": 0.263,
+          "y": 0.233,
+          "field_x": 2,
+          "field_y": 3,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 10,
+          "number": 11,
+          "position": "GK",
+          "x": 0,
+          "y": 0,
+          "field_x": 0,
+          "field_y": 0,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "属性",
+          "condition_value_jp": "林"
+        }
+      ]
+    },
+    "80008": {
+      "code": 80008,
+      "name": "Formation Shuyo Meito",
+      "name_key": "MD_Formation_Name/80008",
+      "passive_code": 15008,
+      "passive_level": 1,
+      "passive": {
+        "kind": "formation_passive",
+        "id": "formation-passive-15008",
+        "code": 15008,
+        "name": "Formation Shuyo Meito",
+        "rank": "A",
+        "unlock_level": 1,
+        "current_level": 1,
+        "current_description": "Au début du tour 21\nAlliés DF recommandés : statistique de Blocage +2700\nAlliés GK recommandés : statistique d'Arrêt +2700",
+        "levels": [
+          {
+            "level": 1,
+            "unlock_coach_level": [],
+            "rank": "A",
+            "description": "Au début du tour 21\nAlliés DF recommandés : statistique de Blocage +2700\nAlliés GK recommandés : statistique d'Arrêt +2700",
+            "effects": [
+              {
+                "status_effect_code": "1500801",
+                "target_players": "味方 & 推奨ポジション[DF]",
+                "activation_condition": "140",
+                "end_condition": "",
+                "effect_type": "ブロック加減算",
+                "target_move": "",
+                "growth_table": "1500801",
+                "raw_amount": 2700
+              },
+              {
+                "status_effect_code": "1500802",
+                "target_players": "味方 & 推奨ポジション[GK]",
+                "activation_condition": "140",
+                "end_condition": "",
+                "effect_type": "キャッチ加減算",
+                "target_move": "",
+                "growth_table": "1500802",
+                "raw_amount": 2700
+              }
+            ],
+            "summary": {
+              "trigger": "Au début du tour 21",
+              "effects": [
+                "Alliés DF recommandés : statistique de Blocage +2700",
+                "Alliés GK recommandés : statistique d'Arrêt +2700"
+              ],
+              "end": ""
+            }
+          }
+        ],
+        "current_summary": {
+          "trigger": "Au début du tour 21",
+          "effects": [
+            "Alliés DF recommandés : statistique de Blocage +2700",
+            "Alliés GK recommandés : statistique d'Arrêt +2700"
+          ],
+          "end": ""
+        }
+      },
+      "slots": [
+        {
+          "slot": 0,
+          "number": 1,
+          "position": "FW",
+          "x": -0.608,
+          "y": 0.812,
+          "field_x": -4,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 1,
+          "number": 2,
+          "position": "FW",
+          "x": 0.001,
+          "y": 0.849,
+          "field_x": 4,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "タグ",
+          "condition_value_jp": "秋葉名戸"
+        },
+        {
+          "slot": 2,
+          "number": 3,
+          "position": "FW",
+          "x": 0.648,
+          "y": 0.808,
+          "field_x": -8,
+          "field_y": 14,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 3,
+          "number": 4,
+          "position": "FW",
+          "x": 0.337,
+          "y": 0.584,
+          "field_x": 8,
+          "field_y": 14,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "タグ",
+          "condition_value_jp": "セカンドトップ"
+        },
+        {
+          "slot": 4,
+          "number": 5,
+          "position": "FW",
+          "x": -0.266,
+          "y": 0.584,
+          "field_x": 0,
+          "field_y": 13,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "タグ",
+          "condition_value_jp": "セカンドトップ"
+        },
+        {
+          "slot": 5,
+          "number": 6,
+          "position": "MF",
+          "x": 0.045,
+          "y": 0.336,
+          "field_x": -7,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 6,
+          "number": 7,
+          "position": "MF",
+          "x": -0.611,
+          "y": 0.336,
+          "field_x": 0,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 7,
+          "number": 8,
+          "position": "MF",
+          "x": 0.746,
+          "y": 0.336,
+          "field_x": 7,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 8,
+          "number": 9,
+          "position": "DF",
+          "x": 0.53,
+          "y": 0.109,
+          "field_x": -2,
+          "field_y": 3,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 9,
+          "number": 10,
+          "position": "DF",
+          "x": -0.501,
+          "y": 0.1,
+          "field_x": 2,
+          "field_y": 3,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 10,
+          "number": 11,
+          "position": "GK",
+          "x": 0,
+          "y": -0.04,
+          "field_x": 0,
+          "field_y": 0,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        }
+      ]
+    },
+    "80009": {
+      "code": 80009,
+      "name": "Formation Shuriken",
+      "name_key": "MD_Formation_Name/80009",
+      "passive_code": 15009,
+      "passive_level": 1,
+      "passive": {
+        "kind": "formation_passive",
+        "id": "formation-passive-15009",
+        "code": 15009,
+        "name": "Formation Shuriken",
+        "rank": "A",
+        "unlock_level": 1,
+        "current_level": 1,
+        "current_description": "Chaque fois qu'une technique de dribble ou de blocage d'un allié réussit\nAlliés : statistique de Technique +250\nAlliés : statistique de Frappe +250\nCondition de fin : lorsqu'un allié marque un but",
+        "levels": [
+          {
+            "level": 1,
+            "unlock_coach_level": [],
+            "rank": "A",
+            "description": "Chaque fois qu'une technique de dribble ou de blocage d'un allié réussit\nAlliés : statistique de Technique +250\nAlliés : statistique de Frappe +250\nCondition de fin : lorsqu'un allié marque un but",
+            "effects": [
+              {
+                "status_effect_code": "1500901",
+                "target_players": "味方 ",
+                "activation_condition": "145",
+                "end_condition": "5",
+                "effect_type": "テクニック加減算",
+                "target_move": "",
+                "growth_table": "1500901",
+                "raw_amount": 250
+              },
+              {
+                "status_effect_code": "1500902",
+                "target_players": "味方 ",
+                "activation_condition": "145",
+                "end_condition": "5",
+                "effect_type": "キック加減算",
+                "target_move": "",
+                "growth_table": "1500902",
+                "raw_amount": 250
+              }
+            ],
+            "summary": {
+              "trigger": "Chaque fois qu'une technique de dribble ou de blocage d'un allié réussit",
+              "effects": [
+                "Alliés : statistique de Technique +250",
+                "Alliés : statistique de Frappe +250"
+              ],
+              "end": "Condition de fin : lorsqu'un allié marque un but"
+            }
+          }
+        ],
+        "current_summary": {
+          "trigger": "Chaque fois qu'une technique de dribble ou de blocage d'un allié réussit",
+          "effects": [
+            "Alliés : statistique de Technique +250",
+            "Alliés : statistique de Frappe +250"
+          ],
+          "end": "Condition de fin : lorsqu'un allié marque un but"
+        }
+      },
+      "slots": [
+        {
+          "slot": 0,
+          "number": 1,
+          "position": "FW",
+          "x": 0.684,
+          "y": 0.831,
+          "field_x": -4,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "タグ",
+          "condition_value_jp": "戦国伊賀"
+        },
+        {
+          "slot": 1,
+          "number": 2,
+          "position": "FW",
+          "x": -0.584,
+          "y": 0.831,
+          "field_x": 4,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 2,
+          "number": 3,
+          "position": "MF",
+          "x": 0.633,
+          "y": 0.617,
+          "field_x": -8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 3,
+          "number": 4,
+          "position": "MF",
+          "x": -0.551,
+          "y": 0.617,
+          "field_x": 8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 4,
+          "number": 5,
+          "position": "MF",
+          "x": 0.633,
+          "y": 0.401,
+          "field_x": 0,
+          "field_y": 13,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "タグ",
+          "condition_value_jp": "ディフェンシブハーフ"
+        },
+        {
+          "slot": 5,
+          "number": 6,
+          "position": "MF",
+          "x": -0.526,
+          "y": 0.401,
+          "field_x": -7,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 6,
+          "number": 7,
+          "position": "DF",
+          "x": -0.66,
+          "y": 0.148,
+          "field_x": 0,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 7,
+          "number": 8,
+          "position": "DF",
+          "x": 0.717,
+          "y": 0.148,
+          "field_x": 7,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 8,
+          "number": 9,
+          "position": "DF",
+          "x": 0.048,
+          "y": 0.389,
+          "field_x": -2,
+          "field_y": 3,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 9,
+          "number": 10,
+          "position": "DF",
+          "x": 0.03,
+          "y": 0.166,
+          "field_x": 2,
+          "field_y": 3,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "タグ",
+          "condition_value_jp": "ストッパー"
+        },
+        {
+          "slot": 10,
+          "number": 11,
+          "position": "GK",
+          "x": 0,
+          "y": -0.063,
+          "field_x": 0,
+          "field_y": 0,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        }
+      ]
+    },
+    "80010": {
+      "code": 80010,
+      "name": "Formation Kirkwood",
+      "name_key": "MD_Formation_Name/80010",
+      "passive_code": 15010,
+      "passive_level": 1,
+      "passive": {
+        "kind": "formation_passive",
+        "id": "formation-passive-15010",
+        "code": 15010,
+        "name": "Formation Kirkwood",
+        "rank": "A",
+        "unlock_level": 1,
+        "current_level": 1,
+        "current_description": "特定プレイヤーのシュートが止められた時\nAlliés : statistique de Frappe +400\nCondition de fin : lorsqu'un allié marque un but",
+        "levels": [
+          {
+            "level": 1,
+            "unlock_coach_level": [],
+            "rank": "A",
+            "description": "特定プレイヤーのシュートが止められた時\nAlliés : statistique de Frappe +400\nCondition de fin : lorsqu'un allié marque un but",
+            "effects": [
+              {
+                "status_effect_code": "1501001",
+                "target_players": "味方 ",
+                "activation_condition": "146",
+                "end_condition": "5",
+                "effect_type": "キック加減算",
+                "target_move": "",
+                "growth_table": "1501001",
+                "raw_amount": 400
+              }
+            ],
+            "summary": {
+              "trigger": "特定プレイヤーのシュートが止められた時",
+              "effects": [
+                "Alliés : statistique de Frappe +400"
+              ],
+              "end": "Condition de fin : lorsqu'un allié marque un but"
+            }
+          }
+        ],
+        "current_summary": {
+          "trigger": "特定プレイヤーのシュートが止められた時",
+          "effects": [
+            "Alliés : statistique de Frappe +400"
+          ],
+          "end": "Condition de fin : lorsqu'un allié marque un but"
+        }
+      },
+      "slots": [
+        {
+          "slot": 0,
+          "number": 1,
+          "position": "FW",
+          "x": 0.663,
+          "y": 0.827,
+          "field_x": -4,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "属性",
+          "condition_value_jp": "山"
+        },
+        {
+          "slot": 1,
+          "number": 2,
+          "position": "FW",
+          "x": 0.039,
+          "y": 0.827,
+          "field_x": 4,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "属性",
+          "condition_value_jp": "火"
+        },
+        {
+          "slot": 2,
+          "number": 3,
+          "position": "FW",
+          "x": -0.572,
+          "y": 0.827,
+          "field_x": -8,
+          "field_y": 14,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "属性",
+          "condition_value_jp": "風"
+        },
+        {
+          "slot": 3,
+          "number": 4,
+          "position": "MF",
+          "x": 0.596,
+          "y": 0.506,
+          "field_x": 8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 4,
+          "number": 5,
+          "position": "MF",
+          "x": 0.003,
+          "y": 0.518,
+          "field_x": 0,
+          "field_y": 13,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 5,
+          "number": 6,
+          "position": "MF",
+          "x": -0.6,
+          "y": 0.518,
+          "field_x": -7,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 6,
+          "number": 7,
+          "position": "DF",
+          "x": -0.75,
+          "y": 0.21,
+          "field_x": 0,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 7,
+          "number": 8,
+          "position": "DF",
+          "x": 0.932,
+          "y": 0.21,
+          "field_x": 7,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 8,
+          "number": 9,
+          "position": "DF",
+          "x": -0.2,
+          "y": 0.21,
+          "field_x": -2,
+          "field_y": 3,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 9,
+          "number": 10,
+          "position": "DF",
+          "x": 0.383,
+          "y": 0.21,
+          "field_x": 2,
+          "field_y": 3,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 10,
+          "number": 11,
+          "position": "GK",
+          "x": 0,
+          "y": -0.063,
+          "field_x": 0,
+          "field_y": 0,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        }
+      ]
+    },
+    "80085": {
+      "code": 80085,
+      "name": "Formation Inazuma Japan",
+      "name_key": "MD_Formation_Name/80085",
+      "passive_code": 15023,
+      "passive_level": 1,
+      "passive": {
+        "kind": "formation_passive",
+        "id": "formation-passive-15023",
+        "code": 15023,
+        "name": "Formation Inazuma Japan",
+        "rank": "A",
+        "unlock_level": 1,
+        "current_level": 1,
+        "current_description": "Au début du match\nAlliés FW recommandés : puissance des techniques de tir +40\nAlliés DF recommandés : puissance des techniques de blocage +40",
+        "levels": [
+          {
+            "level": 1,
+            "unlock_coach_level": [],
+            "rank": "A",
+            "description": "Au début du match\nAlliés FW recommandés : puissance des techniques de tir +40\nAlliés DF recommandés : puissance des techniques de blocage +40",
+            "effects": [
+              {
+                "status_effect_code": "1502301",
+                "target_players": "味方 & 推奨ポジション[FW]",
+                "activation_condition": "1",
+                "end_condition": "",
+                "effect_type": "技威力加減算",
+                "target_move": "カテゴリ[シュート]",
+                "growth_table": "1502301",
+                "raw_amount": 40
+              },
+              {
+                "status_effect_code": "1502302",
+                "target_players": "味方 & 推奨ポジション[DF]",
+                "activation_condition": "1",
+                "end_condition": "",
+                "effect_type": "技威力加減算",
+                "target_move": "カテゴリ[ブロック]",
+                "growth_table": "1502302",
+                "raw_amount": 40
+              }
+            ],
+            "summary": {
+              "trigger": "Au début du match",
+              "effects": [
+                "Alliés FW recommandés : puissance des techniques de tir +40",
+                "Alliés DF recommandés : puissance des techniques de blocage +40"
+              ],
+              "end": ""
+            }
+          }
+        ],
+        "current_summary": {
+          "trigger": "Au début du match",
+          "effects": [
+            "Alliés FW recommandés : puissance des techniques de tir +40",
+            "Alliés DF recommandés : puissance des techniques de blocage +40"
+          ],
+          "end": ""
+        }
+      },
+      "slots": [
+        {
+          "slot": 0,
+          "number": 1,
+          "position": "FW",
+          "x": -0.232,
+          "y": 0.833,
+          "field_x": -3,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "タグ",
+          "condition_value_jp": "イナズマジャパン"
+        },
+        {
+          "slot": 1,
+          "number": 2,
+          "position": "FW",
+          "x": 0.313,
+          "y": 0.833,
+          "field_x": 3,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 2,
+          "number": 3,
+          "position": "MF",
+          "x": -0.241,
+          "y": 0.507,
+          "field_x": -4,
+          "field_y": 13,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 3,
+          "number": 4,
+          "position": "MF",
+          "x": 0.309,
+          "y": 0.507,
+          "field_x": 4,
+          "field_y": 13,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "タグ",
+          "condition_value_jp": "イナズマジャパン"
+        },
+        {
+          "slot": 4,
+          "number": 5,
+          "position": "MF",
+          "x": -0.717,
+          "y": 0.617,
+          "field_x": -8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 5,
+          "number": 6,
+          "position": "MF",
+          "x": 0.819,
+          "y": 0.606,
+          "field_x": 8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 6,
+          "number": 7,
+          "position": "DF",
+          "x": -0.809,
+          "y": 0.327,
+          "field_x": -7,
+          "field_y": 8,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 7,
+          "number": 8,
+          "position": "DF",
+          "x": 0.823,
+          "y": 0.327,
+          "field_x": 7,
+          "field_y": 8,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 8,
+          "number": 9,
+          "position": "DF",
+          "x": -0.262,
+          "y": 0.247,
+          "field_x": -2,
+          "field_y": 4,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "タグ",
+          "condition_value_jp": "イナズマジャパン"
+        },
+        {
+          "slot": 9,
+          "number": 10,
+          "position": "DF",
+          "x": 0.283,
+          "y": 0.247,
+          "field_x": 2,
+          "field_y": 4,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 10,
+          "number": 11,
+          "position": "GK",
+          "x": 0,
+          "y": 0,
+          "field_x": 0,
+          "field_y": 0,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        }
+      ]
+    },
+    "81001": {
+      "code": 81001,
+      "name": "Formation 81001",
+      "name_key": "MD_Formation_Name/81001",
+      "passive_code": 0,
+      "passive_level": 1,
+      "passive": {
+        "kind": "formation_passive",
+        "id": "formation-passive-",
+        "code": 0,
+        "name": "Effet formation 81001",
+        "rank": "",
+        "unlock_level": 1,
+        "current_level": null,
+        "current_description": "",
+        "levels": []
+      },
+      "slots": [
+        {
+          "slot": 0,
+          "number": 1,
+          "position": "FW",
+          "x": -0.37,
+          "y": 0.858,
+          "field_x": -4,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 1,
+          "number": 2,
+          "position": "FW",
+          "x": 0.41,
+          "y": 0.858,
+          "field_x": 4,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 2,
+          "number": 3,
+          "position": "MF",
+          "x": -0.672,
+          "y": 0.627,
+          "field_x": -8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 3,
+          "number": 4,
+          "position": "MF",
+          "x": 0.762,
+          "y": 0.627,
+          "field_x": 8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 4,
+          "number": 5,
+          "position": "MF",
+          "x": 0.03,
+          "y": 0.601,
+          "field_x": 0,
+          "field_y": 13,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 5,
+          "number": 6,
+          "position": "DF",
+          "x": -0.725,
+          "y": 0.381,
+          "field_x": -7,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 6,
+          "number": 7,
+          "position": "DF",
+          "x": 0.03,
+          "y": 0.37,
+          "field_x": 0,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 7,
+          "number": 8,
+          "position": "DF",
+          "x": 0.725,
+          "y": 0.381,
+          "field_x": 7,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 8,
+          "number": 9,
+          "position": "DF",
+          "x": -0.55,
+          "y": 0.116,
+          "field_x": -2,
+          "field_y": 3,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 9,
+          "number": 10,
+          "position": "DF",
+          "x": 0.587,
+          "y": 0.116,
+          "field_x": 2,
+          "field_y": 3,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 10,
+          "number": 11,
+          "position": "GK",
+          "x": 0,
+          "y": -0.04,
+          "field_x": 0,
+          "field_y": 0,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        }
+      ]
+    },
+    "81002": {
+      "code": 81002,
+      "name": "Formation 81002",
+      "name_key": "MD_Formation_Name/81002",
+      "passive_code": 0,
+      "passive_level": 1,
+      "passive": {
+        "kind": "formation_passive",
+        "id": "formation-passive-",
+        "code": 0,
+        "name": "Effet formation 81002",
+        "rank": "",
+        "unlock_level": 1,
+        "current_level": null,
+        "current_description": "",
+        "levels": []
+      },
+      "slots": [
+        {
+          "slot": 0,
+          "number": 1,
+          "position": "FW",
+          "x": 0,
+          "y": 0.865,
+          "field_x": 0,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 1,
+          "number": 2,
+          "position": "MF",
+          "x": 0.76,
+          "y": 0.743,
+          "field_x": -8,
+          "field_y": 16,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 2,
+          "number": 3,
+          "position": "MF",
+          "x": -0.777,
+          "y": 0.743,
+          "field_x": -4,
+          "field_y": 12,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 3,
+          "number": 4,
+          "position": "MF",
+          "x": 0.482,
+          "y": 0.512,
+          "field_x": 0,
+          "field_y": 13,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 4,
+          "number": 5,
+          "position": "MF",
+          "x": 0,
+          "y": 0.647,
+          "field_x": 4,
+          "field_y": 12,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 5,
+          "number": 6,
+          "position": "MF",
+          "x": -0.524,
+          "y": 0.512,
+          "field_x": 8,
+          "field_y": 16,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 6,
+          "number": 7,
+          "position": "DF",
+          "x": -0.77,
+          "y": 0.304,
+          "field_x": -7,
+          "field_y": 8,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 7,
+          "number": 8,
+          "position": "DF",
+          "x": 0.79,
+          "y": 0.315,
+          "field_x": 7,
+          "field_y": 8,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 8,
+          "number": 9,
+          "position": "DF",
+          "x": -0.3,
+          "y": 0.145,
+          "field_x": -2,
+          "field_y": 4,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 9,
+          "number": 10,
+          "position": "DF",
+          "x": 0.3,
+          "y": 0.145,
+          "field_x": 2,
+          "field_y": 4,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 10,
+          "number": 11,
+          "position": "GK",
+          "x": 0,
+          "y": -0.06,
+          "field_x": 0,
+          "field_y": 0,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        }
+      ]
+    },
+    "81003": {
+      "code": 81003,
+      "name": "Formation 81003",
+      "name_key": "MD_Formation_Name/81003",
+      "passive_code": 0,
+      "passive_level": 1,
+      "passive": {
+        "kind": "formation_passive",
+        "id": "formation-passive-",
+        "code": 0,
+        "name": "Effet formation 81003",
+        "rank": "",
+        "unlock_level": 1,
+        "current_level": null,
+        "current_description": "",
+        "levels": []
+      },
+      "slots": [
+        {
+          "slot": 0,
+          "number": 1,
+          "position": "FW",
+          "x": -0.3,
+          "y": 0.867,
+          "field_x": -4,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 1,
+          "number": 2,
+          "position": "FW",
+          "x": 0.3,
+          "y": 0.867,
+          "field_x": 4,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 2,
+          "number": 3,
+          "position": "MF",
+          "x": -0.696,
+          "y": 0.636,
+          "field_x": -8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 3,
+          "number": 4,
+          "position": "MF",
+          "x": 0.693,
+          "y": 0.636,
+          "field_x": 8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 4,
+          "number": 5,
+          "position": "MF",
+          "x": 0.031,
+          "y": 0.574,
+          "field_x": 0,
+          "field_y": 13,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 5,
+          "number": 6,
+          "position": "DF",
+          "x": -0.669,
+          "y": 0.318,
+          "field_x": -7,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 6,
+          "number": 7,
+          "position": "DF",
+          "x": 0.031,
+          "y": 0.343,
+          "field_x": 0,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 7,
+          "number": 8,
+          "position": "DF",
+          "x": 0.693,
+          "y": 0.318,
+          "field_x": 7,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 8,
+          "number": 9,
+          "position": "DF",
+          "x": -0.524,
+          "y": 0.085,
+          "field_x": -2,
+          "field_y": 3,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 9,
+          "number": 10,
+          "position": "DF",
+          "x": 0.549,
+          "y": 0.085,
+          "field_x": 2,
+          "field_y": 3,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 10,
+          "number": 11,
+          "position": "GK",
+          "x": 0,
+          "y": -0.04,
+          "field_x": 0,
+          "field_y": 0,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        }
+      ]
+    },
+    "81004": {
+      "code": 81004,
+      "name": "Formation 81004",
+      "name_key": "MD_Formation_Name/81004",
+      "passive_code": 0,
+      "passive_level": 1,
+      "passive": {
+        "kind": "formation_passive",
+        "id": "formation-passive-",
+        "code": 0,
+        "name": "Effet formation 81004",
+        "rank": "",
+        "unlock_level": 1,
+        "current_level": null,
+        "current_description": "",
+        "levels": []
+      },
+      "slots": [
+        {
+          "slot": 0,
+          "number": 1,
+          "position": "FW",
+          "x": -0.3,
+          "y": 0.867,
+          "field_x": -4,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 1,
+          "number": 2,
+          "position": "FW",
+          "x": 0.3,
+          "y": 0.867,
+          "field_x": 4,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 2,
+          "number": 3,
+          "position": "MF",
+          "x": -0.8,
+          "y": 0.647,
+          "field_x": -8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 3,
+          "number": 4,
+          "position": "MF",
+          "x": 0.8,
+          "y": 0.647,
+          "field_x": 8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 4,
+          "number": 5,
+          "position": "MF",
+          "x": 0.031,
+          "y": 0.574,
+          "field_x": 0,
+          "field_y": 13,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 5,
+          "number": 6,
+          "position": "DF",
+          "x": -0.669,
+          "y": 0.318,
+          "field_x": -7,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 6,
+          "number": 7,
+          "position": "DF",
+          "x": 0.031,
+          "y": 0.343,
+          "field_x": 0,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 7,
+          "number": 8,
+          "position": "DF",
+          "x": 0.731,
+          "y": 0.318,
+          "field_x": 7,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 8,
+          "number": 9,
+          "position": "DF",
+          "x": -0.524,
+          "y": 0.085,
+          "field_x": -2,
+          "field_y": 3,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 9,
+          "number": 10,
+          "position": "DF",
+          "x": 0.549,
+          "y": 0.085,
+          "field_x": 2,
+          "field_y": 3,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 10,
+          "number": 11,
+          "position": "GK",
+          "x": 0,
+          "y": -0.04,
+          "field_x": 0,
+          "field_y": 0,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        }
+      ]
+    },
+    "81005": {
+      "code": 81005,
+      "name": "Formation 81005",
+      "name_key": "MD_Formation_Name/81005",
+      "passive_code": 0,
+      "passive_level": 1,
+      "passive": {
+        "kind": "formation_passive",
+        "id": "formation-passive-",
+        "code": 0,
+        "name": "Effet formation 81005",
+        "rank": "",
+        "unlock_level": 1,
+        "current_level": null,
+        "current_description": "",
+        "levels": []
+      },
+      "slots": [
+        {
+          "slot": 0,
+          "number": 1,
+          "position": "FW",
+          "x": -0.238,
+          "y": 0.83,
+          "field_x": -3,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 1,
+          "number": 2,
+          "position": "FW",
+          "x": 0.307,
+          "y": 0.83,
+          "field_x": 3,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 2,
+          "number": 3,
+          "position": "MF",
+          "x": -0.277,
+          "y": 0.485,
+          "field_x": -4,
+          "field_y": 13,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 3,
+          "number": 4,
+          "position": "MF",
+          "x": 0.273,
+          "y": 0.485,
+          "field_x": 4,
+          "field_y": 13,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 4,
+          "number": 5,
+          "position": "MF",
+          "x": -0.753,
+          "y": 0.595,
+          "field_x": -8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 5,
+          "number": 6,
+          "position": "MF",
+          "x": 0.783,
+          "y": 0.584,
+          "field_x": 8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 6,
+          "number": 7,
+          "position": "DF",
+          "x": -0.809,
+          "y": 0.292,
+          "field_x": -7,
+          "field_y": 8,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 7,
+          "number": 8,
+          "position": "DF",
+          "x": 0.783,
+          "y": 0.292,
+          "field_x": 7,
+          "field_y": 8,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 8,
+          "number": 9,
+          "position": "DF",
+          "x": -0.286,
+          "y": 0.248,
+          "field_x": -2,
+          "field_y": 4,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 9,
+          "number": 10,
+          "position": "DF",
+          "x": 0.259,
+          "y": 0.248,
+          "field_x": 2,
+          "field_y": 4,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 10,
+          "number": 11,
+          "position": "GK",
+          "x": 0,
+          "y": 0,
+          "field_x": 0,
+          "field_y": 0,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        }
+      ]
+    },
+    "81006": {
+      "code": 81006,
+      "name": "Formation 81006",
+      "name_key": "MD_Formation_Name/81006",
+      "passive_code": 0,
+      "passive_level": 1,
+      "passive": {
+        "kind": "formation_passive",
+        "id": "formation-passive-",
+        "code": 0,
+        "name": "Effet formation 81006",
+        "rank": "",
+        "unlock_level": 1,
+        "current_level": null,
+        "current_description": "",
+        "levels": []
+      },
+      "slots": [
+        {
+          "slot": 0,
+          "number": 1,
+          "position": "FW",
+          "x": -0.256,
+          "y": 0.828,
+          "field_x": -3,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 1,
+          "number": 2,
+          "position": "FW",
+          "x": 0.29,
+          "y": 0.828,
+          "field_x": 3,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 2,
+          "number": 3,
+          "position": "MF",
+          "x": -0.244,
+          "y": 0.481,
+          "field_x": -4,
+          "field_y": 13,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 3,
+          "number": 4,
+          "position": "MF",
+          "x": 0.302,
+          "y": 0.481,
+          "field_x": 4,
+          "field_y": 13,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 4,
+          "number": 5,
+          "position": "MF",
+          "x": -0.725,
+          "y": 0.61,
+          "field_x": -8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 5,
+          "number": 6,
+          "position": "MF",
+          "x": 0.823,
+          "y": 0.624,
+          "field_x": 8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 6,
+          "number": 7,
+          "position": "DF",
+          "x": -0.792,
+          "y": 0.294,
+          "field_x": -7,
+          "field_y": 8,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 7,
+          "number": 8,
+          "position": "DF",
+          "x": 0.801,
+          "y": 0.312,
+          "field_x": 7,
+          "field_y": 8,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 8,
+          "number": 9,
+          "position": "DF",
+          "x": -0.273,
+          "y": 0.239,
+          "field_x": -2,
+          "field_y": 4,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 9,
+          "number": 10,
+          "position": "DF",
+          "x": 0.273,
+          "y": 0.239,
+          "field_x": 2,
+          "field_y": 4,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 10,
+          "number": 11,
+          "position": "GK",
+          "x": 0,
+          "y": 0,
+          "field_x": 0,
+          "field_y": 0,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        }
+      ]
+    },
+    "81007": {
+      "code": 81007,
+      "name": "Formation 81007",
+      "name_key": "MD_Formation_Name/81007",
+      "passive_code": 0,
+      "passive_level": 1,
+      "passive": {
+        "kind": "formation_passive",
+        "id": "formation-passive-",
+        "code": 0,
+        "name": "Effet formation 81007",
+        "rank": "",
+        "unlock_level": 1,
+        "current_level": null,
+        "current_description": "",
+        "levels": []
+      },
+      "slots": [
+        {
+          "slot": 0,
+          "number": 1,
+          "position": "FW",
+          "x": -0.244,
+          "y": 0.843,
+          "field_x": -3,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 1,
+          "number": 2,
+          "position": "FW",
+          "x": 0.288,
+          "y": 0.843,
+          "field_x": 3,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 2,
+          "number": 3,
+          "position": "MF",
+          "x": -0.238,
+          "y": 0.494,
+          "field_x": -4,
+          "field_y": 13,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 3,
+          "number": 4,
+          "position": "MF",
+          "x": 0.279,
+          "y": 0.494,
+          "field_x": 4,
+          "field_y": 13,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 4,
+          "number": 5,
+          "position": "MF",
+          "x": -0.725,
+          "y": 0.604,
+          "field_x": -8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 5,
+          "number": 6,
+          "position": "MF",
+          "x": 0.786,
+          "y": 0.622,
+          "field_x": 8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 6,
+          "number": 7,
+          "position": "DF",
+          "x": -0.753,
+          "y": 0.29,
+          "field_x": -7,
+          "field_y": 8,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 7,
+          "number": 8,
+          "position": "DF",
+          "x": 0.802,
+          "y": 0.305,
+          "field_x": 7,
+          "field_y": 8,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 8,
+          "number": 9,
+          "position": "DF",
+          "x": -0.238,
+          "y": 0.224,
+          "field_x": -2,
+          "field_y": 4,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 9,
+          "number": 10,
+          "position": "DF",
+          "x": 0.279,
+          "y": 0.224,
+          "field_x": 2,
+          "field_y": 4,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 10,
+          "number": 11,
+          "position": "GK",
+          "x": 0,
+          "y": 0,
+          "field_x": 0,
+          "field_y": 0,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        }
+      ]
+    },
+    "81008": {
+      "code": 81008,
+      "name": "Formation 81008",
+      "name_key": "MD_Formation_Name/81008",
+      "passive_code": 0,
+      "passive_level": 1,
+      "passive": {
+        "kind": "formation_passive",
+        "id": "formation-passive-",
+        "code": 0,
+        "name": "Effet formation 81008",
+        "rank": "",
+        "unlock_level": 1,
+        "current_level": null,
+        "current_description": "",
+        "levels": []
+      },
+      "slots": [
+        {
+          "slot": 0,
+          "number": 1,
+          "position": "FW",
+          "x": -0.241,
+          "y": 0.845,
+          "field_x": -3,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 1,
+          "number": 2,
+          "position": "FW",
+          "x": 0.297,
+          "y": 0.845,
+          "field_x": 3,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 2,
+          "number": 3,
+          "position": "MF",
+          "x": -0.27,
+          "y": 0.515,
+          "field_x": -4,
+          "field_y": 13,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 3,
+          "number": 4,
+          "position": "MF",
+          "x": 0.808,
+          "y": 0.652,
+          "field_x": 4,
+          "field_y": 13,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 4,
+          "number": 5,
+          "position": "MF",
+          "x": 0.28,
+          "y": 0.515,
+          "field_x": -8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 5,
+          "number": 6,
+          "position": "MF",
+          "x": -0.765,
+          "y": 0.635,
+          "field_x": 8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 6,
+          "number": 7,
+          "position": "DF",
+          "x": -0.788,
+          "y": 0.302,
+          "field_x": -7,
+          "field_y": 8,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 7,
+          "number": 8,
+          "position": "DF",
+          "x": -0.275,
+          "y": 0.247,
+          "field_x": 7,
+          "field_y": 8,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 8,
+          "number": 9,
+          "position": "DF",
+          "x": 0.808,
+          "y": 0.311,
+          "field_x": -2,
+          "field_y": 4,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 9,
+          "number": 10,
+          "position": "DF",
+          "x": 0.258,
+          "y": 0.247,
+          "field_x": 2,
+          "field_y": 4,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 10,
+          "number": 11,
+          "position": "GK",
+          "x": 0,
+          "y": 0,
+          "field_x": 0,
+          "field_y": 0,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        }
+      ]
+    },
+    "81009": {
+      "code": 81009,
+      "name": "Formation 81009",
+      "name_key": "MD_Formation_Name/81009",
+      "passive_code": 0,
+      "passive_level": 1,
+      "passive": {
+        "kind": "formation_passive",
+        "id": "formation-passive-",
+        "code": 0,
+        "name": "Effet formation 81009",
+        "rank": "",
+        "unlock_level": 1,
+        "current_level": null,
+        "current_description": "",
+        "levels": []
+      },
+      "slots": [
+        {
+          "slot": 0,
+          "number": 1,
+          "position": "FW",
+          "x": -0.3,
+          "y": 0.867,
+          "field_x": -3,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 1,
+          "number": 2,
+          "position": "FW",
+          "x": 0.3,
+          "y": 0.867,
+          "field_x": 3,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 2,
+          "number": 3,
+          "position": "MF",
+          "x": -0.8,
+          "y": 0.647,
+          "field_x": -4,
+          "field_y": 13,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 3,
+          "number": 4,
+          "position": "MF",
+          "x": 0.8,
+          "y": 0.647,
+          "field_x": 4,
+          "field_y": 13,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 4,
+          "number": 5,
+          "position": "MF",
+          "x": 0.031,
+          "y": 0.574,
+          "field_x": -8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 5,
+          "number": 6,
+          "position": "MF",
+          "x": -0.669,
+          "y": 0.318,
+          "field_x": 8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 6,
+          "number": 7,
+          "position": "DF",
+          "x": 0.031,
+          "y": 0.343,
+          "field_x": -7,
+          "field_y": 8,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 7,
+          "number": 8,
+          "position": "DF",
+          "x": 0.731,
+          "y": 0.318,
+          "field_x": 7,
+          "field_y": 8,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 8,
+          "number": 9,
+          "position": "DF",
+          "x": -0.524,
+          "y": 0.085,
+          "field_x": -2,
+          "field_y": 4,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 9,
+          "number": 10,
+          "position": "DF",
+          "x": 0.549,
+          "y": 0.085,
+          "field_x": 2,
+          "field_y": 4,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 10,
+          "number": 11,
+          "position": "GK",
+          "x": 0,
+          "y": -0.04,
+          "field_x": 0,
+          "field_y": 0,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        }
+      ]
+    },
+    "81010": {
+      "code": 81010,
+      "name": "Formation 81010",
+      "name_key": "MD_Formation_Name/81010",
+      "passive_code": 0,
+      "passive_level": 1,
+      "passive": {
+        "kind": "formation_passive",
+        "id": "formation-passive-",
+        "code": 0,
+        "name": "Effet formation 81010",
+        "rank": "",
+        "unlock_level": 1,
+        "current_level": null,
+        "current_description": "",
+        "levels": []
+      },
+      "slots": [
+        {
+          "slot": 0,
+          "number": 1,
+          "position": "FW",
+          "x": -0.232,
+          "y": 0.833,
+          "field_x": -3,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 1,
+          "number": 2,
+          "position": "FW",
+          "x": 0.313,
+          "y": 0.833,
+          "field_x": 3,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 2,
+          "number": 3,
+          "position": "MF",
+          "x": -0.241,
+          "y": 0.507,
+          "field_x": -4,
+          "field_y": 13,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 3,
+          "number": 4,
+          "position": "MF",
+          "x": 0.309,
+          "y": 0.507,
+          "field_x": 4,
+          "field_y": 13,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 4,
+          "number": 5,
+          "position": "MF",
+          "x": -0.717,
+          "y": 0.617,
+          "field_x": -8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 5,
+          "number": 6,
+          "position": "MF",
+          "x": 0.819,
+          "y": 0.606,
+          "field_x": 8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 6,
+          "number": 7,
+          "position": "DF",
+          "x": -0.809,
+          "y": 0.327,
+          "field_x": -7,
+          "field_y": 8,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 7,
+          "number": 8,
+          "position": "DF",
+          "x": 0.823,
+          "y": 0.327,
+          "field_x": 7,
+          "field_y": 8,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 8,
+          "number": 9,
+          "position": "DF",
+          "x": -0.262,
+          "y": 0.247,
+          "field_x": -2,
+          "field_y": 4,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 9,
+          "number": 10,
+          "position": "DF",
+          "x": 0.283,
+          "y": 0.247,
+          "field_x": 2,
+          "field_y": 4,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 10,
+          "number": 11,
+          "position": "GK",
+          "x": 0,
+          "y": 0,
+          "field_x": 0,
+          "field_y": 0,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        }
+      ]
+    },
+    "81011": {
+      "code": 81011,
+      "name": "Formation 81011",
+      "name_key": "MD_Formation_Name/81011",
+      "passive_code": 0,
+      "passive_level": 1,
+      "passive": {
+        "kind": "formation_passive",
+        "id": "formation-passive-",
+        "code": 0,
+        "name": "Effet formation 81011",
+        "rank": "",
+        "unlock_level": 1,
+        "current_level": null,
+        "current_description": "",
+        "levels": []
+      },
+      "slots": [
+        {
+          "slot": 0,
+          "number": 1,
+          "position": "FW",
+          "x": -0.39,
+          "y": 0.853,
+          "field_x": -4,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 1,
+          "number": 2,
+          "position": "FW",
+          "x": 0.39,
+          "y": 0.853,
+          "field_x": 4,
+          "field_y": 18,
+          "kickoff": true,
+          "pass_receiver": true,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 2,
+          "number": 3,
+          "position": "MF",
+          "x": -0.8,
+          "y": 0.647,
+          "field_x": -8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 3,
+          "number": 4,
+          "position": "MF",
+          "x": 0.8,
+          "y": 0.647,
+          "field_x": 8,
+          "field_y": 14,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 4,
+          "number": 5,
+          "position": "MF",
+          "x": 0,
+          "y": 0.647,
+          "field_x": 0,
+          "field_y": 13,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 5,
+          "number": 6,
+          "position": "DF",
+          "x": -0.7,
+          "y": 0.385,
+          "field_x": -7,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 6,
+          "number": 7,
+          "position": "DF",
+          "x": 0,
+          "y": 0.41,
+          "field_x": 0,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 7,
+          "number": 8,
+          "position": "DF",
+          "x": 0.7,
+          "y": 0.385,
+          "field_x": 7,
+          "field_y": 10,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 8,
+          "number": 9,
+          "position": "DF",
+          "x": -0.3,
+          "y": 0.18,
+          "field_x": -2,
+          "field_y": 3,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 9,
+          "number": 10,
+          "position": "DF",
+          "x": 0.3,
+          "y": 0.18,
+          "field_x": 2,
+          "field_y": 3,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        },
+        {
+          "slot": 10,
+          "number": 11,
+          "position": "GK",
+          "x": 0,
+          "y": -0.04,
+          "field_x": 0,
+          "field_y": 0,
+          "kickoff": false,
+          "pass_receiver": false,
+          "condition_type_jp": "",
+          "condition_value_jp": ""
+        }
+      ]
+    }
+  }
+}
