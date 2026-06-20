@@ -1,4 +1,4 @@
-const state = {
+﻿const state = {
   mode: "players",
   players: [],
   statTables: {},
@@ -29,6 +29,15 @@ const state = {
     awakeningCode: 9,
     equipmentLevels: {},
     equipmentLevelsByPosition: {},
+  },
+  comparison: {
+    level: 300,
+    leftPlayerId: null,
+    rightPlayerId: null,
+    leftAwakeningCode: 9,
+    rightAwakeningCode: 9,
+    equipmentSource: "base",
+    selectedSide: "left",
   },
   teamBuilder: {
     selectedSlot: 0,
@@ -290,7 +299,7 @@ const DEFAULT_EQUIPMENT_LEVEL = 1;
 const MAIN_COLLECTION_SLOT_COUNT = 5;
 const STORAGE_KEY = "inazuma-album-state-v2";
 const LANGUAGE_STORAGE_KEY = "inazuma-album-language";
-const AVAILABLE_MODES = ["players", "coaches", "simulator", "team", "collection", "publicProfile"];
+const AVAILABLE_MODES = ["players", "coaches", "simulator", "comparison", "team", "collection", "publicProfile"];
 const API_BASE_URL = String(window.INAZUMA_CONFIG?.apiBaseUrl || "http://localhost:4000").replace(/\/+$/, "");
 const TEAM_SIZE = 5;
 const EQUIPMENT_POSITIONS = ["FW", "MF", "DF", "GK"];
@@ -352,6 +361,7 @@ async function init() {
     state.selectedCoachId = state.coaches.find((coach) => !coach.enemy_only)?.id || state.coaches[0]?.id || null;
     restoreSavedState();
     ensureTeamBuilderDefaults();
+    ensureComparisonDefaults();
     els.dbMeta.textContent = `${db.playable_count || 0} joueurs jouables / ${state.coaches.filter((coach) => !coach.enemy_only).length} entraîneurs - MAJ ${db.updated_at || "inconnue"}`;
     await bootstrapAccount();
     const publicUsername = publicProfileUsernameFromUrl();
@@ -469,6 +479,29 @@ function restoreSavedState() {
     state.simulator.equipmentLevels = normalizeSavedEquipmentLevels(state.simulator.equipmentLevels);
     state.simulator.equipmentLevelsByPosition = normalizeSavedEquipmentByPosition(state.simulator.equipmentLevelsByPosition);
   }
+  if (saved.comparison && typeof saved.comparison === "object") {
+    state.comparison = {
+      ...state.comparison,
+      ...pickObject(saved.comparison, [
+        "level",
+        "leftPlayerId",
+        "rightPlayerId",
+        "leftAwakeningCode",
+        "rightAwakeningCode",
+        "equipmentSource",
+        "selectedSide",
+      ]),
+    };
+    state.comparison.level = clampNumber(state.comparison.level, 1, 300);
+    state.comparison.leftPlayerId = state.comparison.leftPlayerId == null ? null : String(state.comparison.leftPlayerId);
+    state.comparison.rightPlayerId = state.comparison.rightPlayerId == null ? null : String(state.comparison.rightPlayerId);
+    state.comparison.leftAwakeningCode = Number.isFinite(Number(state.comparison.leftAwakeningCode)) ? Number(state.comparison.leftAwakeningCode) : 9;
+    state.comparison.rightAwakeningCode = Number.isFinite(Number(state.comparison.rightAwakeningCode)) ? Number(state.comparison.rightAwakeningCode) : 9;
+    state.comparison.equipmentSource = ["base", "simulator", "collection"].includes(state.comparison.equipmentSource)
+      ? state.comparison.equipmentSource
+      : "base";
+    state.comparison.selectedSide = state.comparison.selectedSide === "right" ? "right" : "left";
+  }
   if (saved.teamBuilder && typeof saved.teamBuilder === "object") {
     state.teamBuilder = {
       ...state.teamBuilder,
@@ -506,6 +539,7 @@ function saveState() {
         filters: state.filters,
         coachFilters: state.coachFilters,
         simulator: state.simulator,
+        comparison: state.comparison,
         teamBuilder: state.teamBuilder,
       }),
     );
@@ -565,6 +599,60 @@ function ensureTeamBuilderDefaults() {
       awakeningCode: finalPlayer ? normalizeAwakeningCodeForPlayer(finalPlayer, slot.awakeningCode) : slot.awakeningCode,
     };
   });
+}
+
+function ensureComparisonDefaults() {
+  state.comparison ||= {};
+  state.comparison.equipmentSource = ["base", "simulator", "collection"].includes(state.comparison.equipmentSource)
+    ? state.comparison.equipmentSource
+    : "base";
+  if (state.comparison.equipmentSource === "collection" && !ownedCollectionEntries().length) {
+    state.comparison.equipmentSource = "base";
+  }
+  const selectablePlayers = comparisonSelectablePlayers();
+  const selectableIds = new Set(selectablePlayers.map((player) => String(player.id)));
+  const savedLeft = playerById(state.comparison.leftPlayerId);
+  const savedRight = playerById(state.comparison.rightPlayerId);
+  const selectedPlayer = playerById(state.selectedId);
+  const selectedFallback =
+    selectedPlayer && (state.comparison.equipmentSource !== "collection" || selectableIds.has(String(selectedPlayer.id)))
+      ? selectedPlayer
+      : null;
+  const fallbackLeft =
+    (savedLeft && (state.comparison.equipmentSource !== "collection" || selectableIds.has(String(savedLeft.id))) ? savedLeft : null) ||
+    selectedFallback ||
+    selectablePlayers[0] ||
+    state.players[0] ||
+    null;
+  const fallbackRight =
+    (savedRight && (state.comparison.equipmentSource !== "collection" || selectableIds.has(String(savedRight.id))) ? savedRight : null) ||
+    selectablePlayers.find((player) => String(player.id) !== String(fallbackLeft?.id)) ||
+    state.players.find((player) => String(player.id) !== String(fallbackLeft?.id)) ||
+    fallbackLeft;
+
+  state.comparison.level = clampNumber(state.comparison.level ?? state.simulator.level ?? 300, 1, 300);
+  state.comparison.leftPlayerId = fallbackLeft ? String(fallbackLeft.id) : null;
+  state.comparison.rightPlayerId = fallbackRight ? String(fallbackRight.id) : null;
+  state.comparison.leftAwakeningCode = fallbackLeft
+    ? normalizeAwakeningCodeForPlayer(fallbackLeft, state.comparison.leftAwakeningCode ?? comparisonDefaultAwakeningCode(fallbackLeft))
+    : 9;
+  state.comparison.rightAwakeningCode = fallbackRight
+    ? normalizeAwakeningCodeForPlayer(fallbackRight, state.comparison.rightAwakeningCode ?? comparisonDefaultAwakeningCode(fallbackRight))
+    : 9;
+  state.comparison.selectedSide = state.comparison.selectedSide === "right" ? "right" : "left";
+}
+
+function comparisonLaunchSourceForCurrentMode() {
+  if (state.mode === "comparison") {
+    return state.comparison?.equipmentSource || "base";
+  }
+  if (state.mode === "collection") {
+    return "collection";
+  }
+  if (state.mode === "simulator") {
+    return "simulator";
+  }
+  return "base";
 }
 
 function bindEvents() {
@@ -1168,7 +1256,7 @@ function setMode(mode) {
     els.sectionEyebrow.textContent = "Ma collection";
     els.searchInput.placeholder = "Ajouter un joueur jouable...";
     els.searchInput.value = state.filters.query;
-    els.albumSubhead.textContent = "Gestion du profil, des 5 principaux et des équipements";
+    els.albumSubhead.textContent = "Gestion du profil, des 5 principaux et des equipements";
     setSortOptions([
       ["name_asc", "Nom"],
       ["power_desc", "Puissance"],
@@ -1190,11 +1278,23 @@ function setMode(mode) {
     els.sectionEyebrow.textContent = "Simulateur joueur";
     els.searchInput.placeholder = "Choisir un joueur, équipe, technique...";
     els.searchInput.value = state.filters.query;
-    els.albumSubhead.textContent = "Stats selon niveau / éveil / équipements";
+    els.albumSubhead.textContent = "Stats selon niveau / eveil / equipements";
     setSortOptions([
       ["name_asc", "Nom"],
       ["power_desc", "Puissance"],
       ["rarity_desc", "Étoiles"],
+    ]);
+    els.sortSelect.value = state.filters.sort;
+  } else if (state.mode === "comparison") {
+    ensureComparisonDefaults();
+    els.sectionEyebrow.textContent = "Comparaison joueurs";
+    els.searchInput.placeholder = "Chercher un joueur a comparer...";
+    els.searchInput.value = state.filters.query;
+    els.albumSubhead.textContent = "Deux joueurs, niveau commun, eveil separe";
+    setSortOptions([
+      ["name_asc", "Nom"],
+      ["power_desc", "Puissance"],
+      ["rarity_desc", "Etoiles"],
     ]);
     els.sortSelect.value = state.filters.sort;
   } else if (state.mode === "team") {
@@ -2048,7 +2148,10 @@ function renderSelectedCollectionEditor(player, entry, mainSlots = collectionMai
       <div class="collection-form-grid">
         <label class="awakening-editor"><span>Éveil</span>${renderCollectionAwakeningSelect(player, "rarity", rarity)}</label>
       </div>
-      <button class="primary-action" type="submit">${entry?.owned ? "Mettre a jour" : "Ajouter"}</button>
+      <div class="collection-form-actions">
+        <button class="primary-action" type="submit">${entry?.owned ? "Mettre a jour" : "Ajouter"}</button>
+        <button class="compare-player-button secondary" type="button" data-collection-compare-player="${escapeAttr(player.id)}">Comparer collection</button>
+      </div>
     </form>
   `;
 }
@@ -2134,6 +2237,7 @@ function renderCollectionRows(entries, mainSlots = collectionMainSlots()) {
                 <label class="awakening-editor"><span>Éveil</span>${renderCollectionAwakeningSelect(player || summarizeLocalPlayer(entry.playerId), "rarity", entry.rarity)}</label>
                 <span class="collection-level"><small>Niveau</small><strong data-collection-level>${escapeHtml(`Lv.${effectiveEntry.level}`)}</strong><small data-collection-level-source>${escapeHtml(mainSlot ? `Principal #${mainSlot.slot + 1}` : "Commun")}</small></span>
                 <span class="collection-capacity"><small>Capacité</small><strong data-collection-capacity>${escapeHtml(capacity)}</strong></span>
+                <button class="compare-player-button secondary" type="button" data-collection-compare-player="${escapeAttr(entry.playerId)}">Comparer</button>
               </article>
             `;
           })
@@ -2240,6 +2344,28 @@ function bindCollectionControls() {
   els.playerDetail.querySelector("#selectedCollectionForm")?.addEventListener("submit", handleSelectedCollectionSave);
   els.playerDetail.querySelector("#collectionBulkForm")?.addEventListener("submit", handleCollectionBulkSave);
   els.playerDetail.querySelector("#profileEquipmentForm")?.addEventListener("submit", handleEquipmentSave);
+  els.playerDetail.querySelectorAll("[data-collection-compare-player]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const playerId = button.dataset.collectionComparePlayer;
+      const row = button.closest(".collection-row");
+      const selectedForm = button.closest("#selectedCollectionForm");
+      const mainSlots = collectionMainSlotsFromDom();
+      const entry = row
+        ? collectionEntryFromRow(row, mainSlots)
+        : effectiveCollectionEntry(
+            {
+              playerId,
+              owned: true,
+              rarity: selectedForm?.querySelector("select[name='rarity']")?.value ?? collectionEntryForPlayer(playerId)?.rarity,
+            },
+            mainSlots,
+          );
+      launchComparisonForPlayer(playerId, "collection", {
+        level: entry.level,
+        awakeningCode: entry.rarity,
+      });
+    });
+  });
   els.playerDetail.querySelectorAll(".collection-awakening-select").forEach((select) => {
     select.addEventListener("change", () => {
       const chip = select.closest(".collection-awakening-field")?.querySelector(".collection-awakening-chip");
@@ -2589,6 +2715,10 @@ function renderPublicEntries(entries, equipment = {}) {
 function renderGrid() {
   const count = state.filtered.length;
   const modeLabel = state.mode === "simulator" ? "personnage" : state.mode === "team" ? "choix" : "joueur";
+  const comparisonIds =
+    state.mode === "comparison"
+      ? new Set([state.comparison.leftPlayerId, state.comparison.rightPlayerId].filter(Boolean).map(String))
+      : new Set();
   els.playableToggle.disabled = false;
   els.resultCount.textContent = `${count} ${modeLabel}${count > 1 ? "s" : ""}${state.filters.playableOnly ? " jouable" + (count > 1 ? "s" : "") : ""}`;
   const showingAll = !state.filters.playableOnly;
@@ -2611,41 +2741,58 @@ function renderGrid() {
   els.playerGrid.innerHTML = state.filtered
     .map((player) => {
       const active =
-        player.id === state.selectedId || (state.mode === "team" && teamSelectedPlayerIds().includes(String(player.id)))
+        player.id === state.selectedId ||
+        (state.mode === "team" && teamSelectedPlayerIds().includes(String(player.id))) ||
+        (state.mode === "comparison" && comparisonIds.has(String(player.id)))
           ? " is-active"
           : "";
       const npcClass = player.playable ? "" : " is-npc";
       const collectionEntry = collectionEntryForPlayer(player.id);
       const collectionClass = state.mode === "collection" && collectionEntry?.owned ? " is-owned" : "";
       const portrait = imageUrl(player, "portrait") || imageUrl(player, "fullbody");
+      const compareSource = comparisonLaunchSourceForCurrentMode();
       return `
-        <button class="album-card${active}${npcClass}${collectionClass}" type="button" data-id="${escapeAttr(player.id)}">
-          <span class="portrait-frame">
-            ${portrait ? `<img src="${escapeAttr(portrait)}" alt="" />` : `<span>${escapeHtml(initials(displayName(player)))}</span>`}
-          </span>
-          <span class="album-card-body">
-            <span class="album-card-title-row">
-              <strong>${escapeHtml(displayName(player))}</strong>
-              ${state.mode === "collection" && collectionEntry?.owned ? `<span class="non-playable-badge owned-badge">OK</span>` : player.playable ? "" : `<span class="non-playable-badge">NPC</span>`}
+        <article class="album-card album-player-card${active}${npcClass}${collectionClass}">
+          <button class="album-card-main" type="button" data-id="${escapeAttr(player.id)}">
+            <span class="portrait-frame">
+              ${portrait ? `<img src="${escapeAttr(portrait)}" alt="" />` : `<span>${escapeHtml(initials(displayName(player)))}</span>`}
             </span>
-            <span class="mini-meta">
-              ${renderTeamLogo(player)}
-              <span class="card-badges">
-                ${renderElementIcon(player.element?.code)}
-                ${renderPositionBadge(player.position, { compact: true })}
+            <span class="album-card-body">
+              <span class="album-card-title-row">
+                <strong>${escapeHtml(displayName(player))}</strong>
+                ${state.mode === "collection" && collectionEntry?.owned ? `<span class="non-playable-badge owned-badge">OK</span>` : player.playable ? "" : `<span class="non-playable-badge">NPC</span>`}
               </span>
-              <span class="card-stars">${renderStars(player.rarity?.stars)}</span>
+              <span class="mini-meta">
+                ${renderTeamLogo(player)}
+                <span class="card-badges">
+                  ${renderElementIcon(player.element?.code)}
+                  ${renderPositionBadge(player.position, { compact: true })}
+                </span>
+                <span class="card-stars">${renderStars(player.rarity?.stars)}</span>
+              </span>
             </span>
-          </span>
-        </button>
+          </button>
+          <button class="album-compare-pill" type="button" data-grid-compare-player="${escapeAttr(player.id)}" data-grid-compare-source="${escapeAttr(compareSource)}" title="Comparer">VS</button>
+        </article>
       `;
     })
     .join("");
 
-  els.playerGrid.querySelectorAll(".album-card").forEach((button) => {
+  els.playerGrid.querySelectorAll("[data-grid-compare-player]").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.stopPropagation();
+      launchComparisonForPlayer(button.dataset.gridComparePlayer, button.dataset.gridCompareSource || "base", {
+        keepLevel: state.mode === "comparison",
+      });
+    });
+  });
+
+  els.playerGrid.querySelectorAll(".album-card-main").forEach((button) => {
     button.addEventListener("click", () => {
       if (state.mode === "team") {
         assignTeamSlot(button.dataset.id);
+      } else if (state.mode === "comparison") {
+        assignComparisonSide(button.dataset.id);
       } else {
         state.selectedId = button.dataset.id;
       }
@@ -2667,6 +2814,10 @@ function renderDetail() {
   }
   if (state.mode === "simulator") {
     renderSimulatorDetail();
+    return;
+  }
+  if (state.mode === "comparison") {
+    renderComparisonDetail();
     return;
   }
   if (state.mode === "team") {
@@ -2712,6 +2863,11 @@ function renderDetail() {
         <div class="skills-panel">
           ${renderSkills(player.skills || [])}
         </div>
+
+        <div class="detail-action-row">
+          <button class="compare-player-button" type="button" data-compare-player="${escapeAttr(player.id)}" data-compare-source="base">Comparer ce joueur</button>
+          ${ownedCollectionEntries().length ? `<button class="compare-player-button secondary" type="button" data-compare-player="${escapeAttr(player.id)}" data-compare-source="collection">Comparer collection</button>` : ""}
+        </div>
       </div>
 
       <div class="model-side">
@@ -2724,7 +2880,7 @@ function renderDetail() {
         </div>
         <div class="level-readout">Lv.300</div>
         <div class="awakening-ribbon">${escapeHtml(player.awakening?.label || "LEGENDARY PLAYER+")}</div>
-        <div class="equipment-chip">Équipement Lv.${escapeHtml(player.equipment?.level || 1)}</div>
+        <div class="equipment-chip">Equipement Lv.${escapeHtml(player.equipment?.level || 1)}</div>
       </div>
     </section>
   `;
@@ -2734,6 +2890,7 @@ function renderDetail() {
       openSkillModal(player, button.dataset.skillId);
     });
   });
+  bindCompareButtons();
 }
 
 function renderTeamBuilderDetail() {
@@ -2792,10 +2949,10 @@ function renderTeamBuilderDetail() {
         <article class="team-equipment-panel">
           <header>
             <div>
-              <span>Équipements</span>
+              <span>Equipements</span>
               <strong>${selectedPlayer ? escapeHtml(selectedPlayer.position?.code || "-") : "Slot vide"}</strong>
             </div>
-            <button id="teamEquipmentConfigButton" class="equipment-config-button" type="button"${selectedPlayer ? "" : " disabled"}>Configurer mes équipements</button>
+            <button id="teamEquipmentConfigButton" class="equipment-config-button" type="button"${selectedPlayer ? "" : " disabled"}>Configurer mes equipements</button>
           </header>
           <div class="equipment-controls">
             ${selectedPlayer ? equipmentSlotsForPlayer(selectedPlayer).map((slot) => renderEquipmentControl(selectedPlayer, slot, selectedPlayer.position?.code)).join("") : ""}
@@ -2859,6 +3016,77 @@ function assignTeamSlot(playerId) {
     awakeningCode: normalizeAwakeningCodeForPlayer(player, state.teamBuilder.slots[index]?.awakeningCode ?? 9),
   };
   state.selectedId = String(player.id);
+}
+
+function setComparisonPlayer(side, playerId) {
+  ensureComparisonDefaults();
+  const player = playerById(playerId);
+  if (!player) {
+    return;
+  }
+  const prefix = side === "right" ? "right" : "left";
+  state.comparison[`${prefix}PlayerId`] = String(player.id);
+  state.comparison[`${prefix}AwakeningCode`] = normalizeAwakeningCodeForPlayer(
+    player,
+    comparisonDefaultAwakeningCode(player),
+  );
+  state.comparison.selectedSide = prefix;
+}
+
+function assignComparisonSide(playerId) {
+  const side = state.comparison.selectedSide === "right" ? "right" : "left";
+  setComparisonPlayer(side, playerId);
+  state.selectedId = String(playerId);
+  state.comparison.selectedSide = side === "left" ? "right" : "left";
+}
+
+function launchComparisonForPlayer(playerId, source = "base", options = {}) {
+  const player = playerById(playerId);
+  if (!player) {
+    return;
+  }
+  state.comparison.equipmentSource = ["base", "simulator", "collection"].includes(source) ? source : "base";
+  if (state.comparison.equipmentSource === "collection" && !ownedCollectionEntries().length) {
+    state.comparison.equipmentSource = "base";
+  }
+  const collectionEntry = state.comparison.equipmentSource === "collection" ? collectionEntryForPlayer(player.id) : null;
+  const launchPlayer = collectionEntry || state.comparison.equipmentSource !== "collection"
+    ? player
+    : comparisonSelectablePlayers()[0] || player;
+  const launchLevel =
+    options.level ??
+    (options.keepLevel ? state.comparison.level : null) ??
+    (state.comparison.equipmentSource === "base" ? 300 : comparisonDefaultLevel(launchPlayer));
+  state.comparison.level = clampNumber(launchLevel, 1, 300);
+  state.comparison.leftPlayerId = String(launchPlayer.id);
+  state.comparison.leftAwakeningCode = normalizeAwakeningCodeForPlayer(
+    launchPlayer,
+    options.awakeningCode ?? comparisonDefaultAwakeningCode(launchPlayer),
+  );
+
+  const selectable = comparisonSelectablePlayers();
+  const currentRight = playerById(state.comparison.rightPlayerId);
+  const fallbackRight =
+    currentRight && String(currentRight.id) !== String(launchPlayer.id) && (state.comparison.equipmentSource !== "collection" || collectionEntryForPlayer(currentRight.id))
+      ? currentRight
+      : selectable.find((item) => String(item.id) !== String(launchPlayer.id)) || launchPlayer;
+  state.comparison.rightPlayerId = fallbackRight ? String(fallbackRight.id) : String(launchPlayer.id);
+  state.comparison.rightAwakeningCode = fallbackRight
+    ? normalizeAwakeningCodeForPlayer(fallbackRight, comparisonDefaultAwakeningCode(fallbackRight))
+    : state.comparison.leftAwakeningCode;
+  state.comparison.selectedSide = "right";
+  state.selectedId = String(launchPlayer.id);
+  setMode("comparison");
+  saveState();
+}
+
+function bindCompareButtons() {
+  els.playerDetail.querySelectorAll("[data-compare-player]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const source = button.dataset.compareSource || "base";
+      launchComparisonForPlayer(button.dataset.comparePlayer, source);
+    });
+  });
 }
 
 function updateTeamSlot(index, updates) {
@@ -3088,6 +3316,462 @@ function bindTeamBuilderControls(slots) {
   });
 }
 
+function comparisonEquipmentLevelsByPosition() {
+  if (state.comparison.equipmentSource === "collection") {
+    return currentCollectionEquipment();
+  }
+  if (state.comparison.equipmentSource === "simulator") {
+    syncSimulatorEquipmentState();
+    return state.simulator.equipmentLevelsByPosition;
+  }
+  return {};
+}
+
+function comparisonEquipmentSourceLabel() {
+  if (state.comparison.equipmentSource === "collection") {
+    return "Equipements collection";
+  }
+  if (state.comparison.equipmentSource === "simulator") {
+    return "Equipements simulateur";
+  }
+  return "Equipements Lv.1";
+}
+
+function comparisonEquipmentToolbarLabel(left, right) {
+  if (state.comparison.equipmentSource === "simulator") {
+    return "Equipements du simulateur actifs";
+  }
+  if (state.comparison.equipmentSource === "collection") {
+    return "Equipements de collection actifs";
+  }
+  const leftSummary = equipmentSummary(left?.equipment || {});
+  const rightSummary = equipmentSummary(right?.equipment || {});
+  return leftSummary === rightSummary ? leftSummary : `${leftSummary} / ${rightSummary}`;
+}
+
+function comparisonDefaultLevel(player) {
+  if (state.comparison.equipmentSource === "simulator" && String(player?.id) === String(state.selectedId)) {
+    return state.simulator.level;
+  }
+  if (state.comparison.equipmentSource === "collection") {
+    const entry = collectionEntryForPlayer(player?.id);
+    if (entry) {
+      return effectiveCollectionEntry(entry).level;
+    }
+  }
+  return state.comparison.level || 300;
+}
+
+function comparisonDefaultAwakeningCode(player) {
+  if (state.comparison.equipmentSource === "simulator" && String(player?.id) === String(state.selectedId)) {
+    return state.simulator.awakeningCode;
+  }
+  if (state.comparison.equipmentSource === "collection") {
+    const entry = collectionEntryForPlayer(player?.id);
+    if (entry?.rarity != null) {
+      return Number(entry.rarity);
+    }
+  }
+  return player?.awakening?.code ?? 9;
+}
+
+function renderComparisonDetail() {
+  ensureComparisonDefaults();
+  const leftPlayer = playerById(state.comparison.leftPlayerId);
+  const rightPlayer = playerById(state.comparison.rightPlayerId);
+  if (!leftPlayer || !rightPlayer) {
+    els.playerDetail.innerHTML = els.emptyTemplate.innerHTML;
+    return;
+  }
+
+  const leftAwakeningCode = normalizeAwakeningCodeForPlayer(leftPlayer, state.comparison.leftAwakeningCode);
+  const rightAwakeningCode = normalizeAwakeningCodeForPlayer(rightPlayer, state.comparison.rightAwakeningCode);
+  state.comparison.leftAwakeningCode = leftAwakeningCode;
+  state.comparison.rightAwakeningCode = rightAwakeningCode;
+
+  const config = {
+    level: state.comparison.level,
+    equipmentLevelsByPosition: comparisonEquipmentLevelsByPosition(),
+  };
+  const left = simulatePlayerWithConfig(leftPlayer, { ...config, awakeningCode: leftAwakeningCode });
+  const right = simulatePlayerWithConfig(rightPlayer, { ...config, awakeningCode: rightAwakeningCode });
+
+  els.playerDetail.innerHTML = `
+    <section class="comparison-view">
+      <div class="comparison-toolbar">
+        <div>
+          <p class="comparison-kicker">Comparaison joueurs</p>
+          <h2>Lv.${escapeHtml(state.comparison.level)} commun</h2>
+          <span>${escapeHtml(comparisonEquipmentToolbarLabel(left, right))}</span>
+        </div>
+        <label class="comparison-level-control">
+          <span>Niveau commun</span>
+          <div class="sim-level-control">
+            <input id="comparisonLevelInput" type="number" min="1" max="300" step="1" value="${escapeAttr(state.comparison.level)}" />
+            <input id="comparisonLevelRange" type="range" min="1" max="300" step="1" value="${escapeAttr(state.comparison.level)}" />
+          </div>
+        </label>
+      </div>
+
+      <div class="comparison-source-tabs" aria-label="Source des equipements">
+        ${renderComparisonSourceButton("base", "Equipements Lv.1")}
+        ${renderComparisonSourceButton("simulator", "Equipements simulateur")}
+        ${ownedCollectionEntries().length ? renderComparisonSourceButton("collection", "Collection") : ""}
+        ${
+          state.comparison.equipmentSource === "simulator"
+            ? `<button id="comparisonEquipmentConfigButton" class="comparison-config-button" type="button">Configurer mes equipements</button>`
+            : ""
+        }
+      </div>
+
+      <div class="comparison-control-grid">
+        ${renderComparisonControls("left", left)}
+        ${renderComparisonControls("right", right)}
+      </div>
+
+      <div class="comparison-player-grid">
+        ${renderComparisonPlayerCard("left", left, right)}
+        ${renderComparisonPlayerCard("right", right, left)}
+      </div>
+    </section>
+  `;
+
+  bindComparisonControls({ left, right });
+}
+
+function renderComparisonControls(side, simulated) {
+  const sideLabel = side === "right" ? "Droite" : "Gauche";
+  const selected = state.comparison.selectedSide === side ? " is-selected" : "";
+  return `
+    <article class="comparison-control-card${selected}">
+      <header>
+        <strong>${escapeHtml(sideLabel)}</strong>
+        <button type="button" data-comparison-side-button="${escapeAttr(side)}">Changer ce joueur</button>
+      </header>
+      <label>
+        <span>Joueur</span>
+        <select data-comparison-player="${escapeAttr(side)}">
+          ${renderComparisonPlayerOptions(simulated.id)}
+        </select>
+      </label>
+      <label>
+        <span>Eveil</span>
+        ${renderComparisonAwakeningPicker(side, simulated, simulated.awakening.code)}
+      </label>
+    </article>
+  `;
+}
+
+function renderComparisonSourceButton(source, label) {
+  return `
+    <button
+      class="${state.comparison.equipmentSource === source ? "is-active" : ""}"
+      type="button"
+      data-comparison-source="${escapeAttr(source)}"
+    >${escapeHtml(label)}</button>
+  `;
+}
+
+function renderComparisonPlayerOptions(selectedId) {
+  const players = comparisonSelectablePlayers();
+  return players
+    .map((player) => {
+      const label = `${displayName(player)}${teamLabel(player) ? ` - ${teamLabel(player)}` : ""}`;
+      return `<option value="${escapeAttr(player.id)}"${String(player.id) === String(selectedId) ? " selected" : ""}>${escapeHtml(label)}</option>`;
+    })
+    .join("");
+}
+
+function comparisonSelectablePlayers() {
+  if (state.comparison?.equipmentSource === "collection") {
+    const owned = ownedCollectionEntries()
+      .map((entry) => playerById(entry.playerId))
+      .filter(Boolean);
+    if (owned.length) {
+      return owned.slice().sort((a, b) => displayName(a).localeCompare(displayName(b), "fr"));
+    }
+  }
+  const playable = state.players.filter((player) => player.playable);
+  return (playable.length ? playable : state.players).slice().sort((a, b) => displayName(a).localeCompare(displayName(b), "fr"));
+}
+
+function renderComparisonAwakeningPicker(side, player, selectedCode) {
+  const options = awakeningOptionsForPlayer(player);
+  const selected = options.find((option) => Number(option.code) === Number(selectedCode)) || options[0] || awakeningTierInfo(selectedCode);
+  return `
+    <div class="awakening-picker comparison-awakening-picker">
+      <button
+        class="awakening-picker-button awakening-ribbon-${escapeAttr(selected.slug)}"
+        type="button"
+        aria-haspopup="listbox"
+        aria-expanded="false"
+        data-comparison-awakening-button="${escapeAttr(side)}"
+      >
+        <span class="awakening-picker-chip awakening-ribbon-${escapeAttr(selected.slug)}"></span>
+        <span>${escapeHtml(selected.label)}</span>
+      </button>
+      <div class="awakening-menu" role="listbox" hidden data-comparison-awakening-menu="${escapeAttr(side)}">
+        ${options
+          .map(
+            (option) => `
+              <button
+                class="awakening-choice${Number(option.code) === Number(selectedCode) ? " is-selected" : ""}"
+                type="button"
+                role="option"
+                aria-selected="${Number(option.code) === Number(selectedCode) ? "true" : "false"}"
+                data-comparison-awakening-code="${escapeAttr(option.code)}"
+                data-comparison-awakening-side="${escapeAttr(side)}"
+              >
+                <span class="awakening-choice-chip awakening-ribbon-${escapeAttr(option.slug)}"></span>
+                <span>${escapeHtml(option.label)}</span>
+              </button>
+            `,
+          )
+          .join("")}
+      </div>
+    </div>
+  `;
+}
+
+function renderComparisonPlayerCard(side, simulated, other) {
+  const player = playerById(simulated.id) || simulated;
+  const portrait = imageUrl(player, "portrait") || imageUrl(player, "fullbody");
+  const totalDelta = comparisonDelta(simulated.total_power, other?.total_power);
+  return `
+    <article class="comparison-player-card comparison-${escapeAttr(side)}">
+      <header class="comparison-player-head">
+        <span class="portrait-frame">
+          ${portrait ? `<img src="${escapeAttr(portrait)}" alt="" />` : `<span>${escapeHtml(initials(displayName(player)))}</span>`}
+        </span>
+        <div>
+          <p>${escapeHtml(player.card_title?.fr || player.names?.jp || "")}</p>
+          <h3>${escapeHtml(displayName(player))}</h3>
+          <div class="comparison-identity">
+            ${renderTeamLogo(player)}
+            ${renderElementIcon(player.element?.code)}
+            ${renderPositionBadge(player.position, { compact: true })}
+            ${renderStars(player.rarity?.stars)}
+          </div>
+        </div>
+      </header>
+
+      <div class="comparison-hero-row">
+        <div class="comparison-art">${renderModel(player)}</div>
+        <div class="comparison-total-card">
+          <span>Capacite totale</span>
+          <strong>${formatNumber(simulated.total_power)}</strong>
+          ${renderComparisonDelta(totalDelta)}
+          <em class="awakening-ribbon-${escapeAttr(simulated.awakening.slug)}">${escapeHtml(simulated.awakening.label)}</em>
+        </div>
+      </div>
+
+      <section class="comparison-block">
+        <h4>Stats</h4>
+        <div class="comparison-stat-list">
+          ${renderComparisonStats(simulated, other)}
+        </div>
+      </section>
+
+      <section class="comparison-block">
+        <h4>Capacites</h4>
+        <div class="comparison-skill-list">
+          ${renderComparisonSkillRows(simulated, side)}
+        </div>
+      </section>
+    </article>
+  `;
+}
+
+function renderComparisonStats(simulated, other) {
+  return ["tp", "kick", "technique", "block", "catch", "speed"]
+    .map((key) => {
+      const current = Number(simulated.stats?.[key] || 0);
+      const delta = comparisonDelta(current, other?.stats?.[key]);
+      return `
+        <div class="comparison-stat-row">
+          <span>${renderStatIcon(key)} ${escapeHtml(labels.stats[key] || key)}</span>
+          <strong>${formatNumber(current)}</strong>
+          ${renderComparisonDelta(delta)}
+        </div>
+      `;
+    })
+    .join("");
+}
+
+function renderComparisonSkillRows(simulated, side) {
+  const ordered = orderedSkillsForComparison(simulated.skills || []);
+  if (!ordered.length) {
+    return `<p class="empty-line">Aucune capacite.</p>`;
+  }
+  return ordered
+    .map((skill) => {
+      const icon = skill.kind === "move" ? renderMoveTypeIcon(skill.type?.code) : `<span class="passive-mark">P</span>`;
+      const typeLabel = skill.kind === "move" ? "Technique" : "Passif";
+      const locked = skill.locked ? " is-locked" : "";
+      return `
+        <button class="comparison-skill-row${locked}" type="button" data-comparison-skill-side="${escapeAttr(side)}" data-comparison-skill-id="${escapeAttr(skill.id)}">
+          <span class="comparison-skill-icon">${icon}</span>
+          <span class="comparison-skill-main">
+            <strong>${escapeHtml(skill.name || typeLabel)}</strong>
+            <em>${escapeHtml(skill.locked ? skill.locked_reason || "Non debloque" : `Lv.${skill.current_level || "-"}`)}</em>
+          </span>
+          <small>${escapeHtml(skill.kind === "move" ? `${typeLabel} / TP ${formatNumber(skill.tp_cost || 0)} / ${formatNumber(skill.power || 0)}` : typeLabel)}</small>
+        </button>
+      `;
+    })
+    .join("");
+}
+
+function orderedSkillsForComparison(skills) {
+  const awakeningPassives = [];
+  const levelPassives = [];
+  const moves = [];
+
+  skills.forEach((skill, index) => {
+    if (skill.kind === "move") {
+      moves.push({ skill, index });
+    } else if (isAwakeningPassive(skill)) {
+      awakeningPassives.push({ skill, index });
+    } else {
+      levelPassives.push({ skill, index });
+    }
+  });
+
+  awakeningPassives.sort((a, b) => currentAwakeningCode(a.skill) - currentAwakeningCode(b.skill) || a.index - b.index);
+  levelPassives.sort((a, b) => firstPlayerUnlockLevel(a.skill) - firstPlayerUnlockLevel(b.skill) || a.index - b.index);
+  moves.sort((a, b) => firstPlayerUnlockLevel(a.skill) - firstPlayerUnlockLevel(b.skill) || a.index - b.index);
+  return [...awakeningPassives, ...levelPassives, ...moves].map(({ skill }) => skill);
+}
+
+function comparisonDelta(current, other) {
+  if (other == null || !Number.isFinite(Number(other))) {
+    return null;
+  }
+  return Number(current || 0) - Number(other || 0);
+}
+
+function renderComparisonDelta(delta) {
+  if (delta == null || !Number.isFinite(Number(delta))) {
+    return `<span class="comparison-delta is-even">=</span>`;
+  }
+  const value = Number(delta);
+  const className = value > 0 ? "is-positive" : value < 0 ? "is-negative" : "is-even";
+  const prefix = value > 0 ? "+" : "";
+  return `<span class="comparison-delta ${className}">${escapeHtml(prefix + formatNumber(value))}</span>`;
+}
+
+function bindComparisonControls(simulatedBySide) {
+  const updateLevel = (value) => {
+    state.comparison.level = clampNumber(value, 1, 300);
+    renderComparisonDetail();
+    saveState();
+  };
+
+  els.playerDetail.querySelector("#comparisonLevelInput")?.addEventListener("change", (event) => updateLevel(event.target.value));
+  els.playerDetail.querySelector("#comparisonLevelInput")?.addEventListener("input", (event) => updateLevel(event.target.value));
+  els.playerDetail.querySelector("#comparisonLevelRange")?.addEventListener("input", (event) => updateLevel(event.target.value));
+
+  els.playerDetail.querySelectorAll("[data-comparison-side-button]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.comparison.selectedSide = button.dataset.comparisonSideButton === "right" ? "right" : "left";
+      renderComparisonDetail();
+      saveState();
+    });
+  });
+
+  els.playerDetail.querySelectorAll("[data-comparison-source]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.comparison.equipmentSource = button.dataset.comparisonSource || "base";
+      if (state.comparison.equipmentSource === "collection") {
+        for (const side of ["left", "right"]) {
+          const player = playerById(state.comparison[`${side}PlayerId`]);
+          const collectionEntry = collectionEntryForPlayer(player?.id);
+          if (player && collectionEntry) {
+            state.comparison[`${side}AwakeningCode`] = normalizeAwakeningCodeForPlayer(player, collectionEntry.rarity);
+          }
+          if (side === "left" && collectionEntry) {
+            state.comparison.level = effectiveCollectionEntry(collectionEntry).level;
+          }
+        }
+      }
+      renderComparisonDetail();
+      renderGrid();
+      saveState();
+    });
+  });
+
+  els.playerDetail.querySelector("#comparisonEquipmentConfigButton")?.addEventListener("click", () => {
+    const player = playerById(state.comparison.leftPlayerId) || playerById(state.comparison.rightPlayerId) || playerById(state.selectedId);
+    if (player) {
+      openEquipmentModal(player);
+    }
+  });
+
+  els.playerDetail.querySelectorAll("[data-comparison-player]").forEach((select) => {
+    select.addEventListener("change", (event) => {
+      const side = event.target.dataset.comparisonPlayer === "right" ? "right" : "left";
+      setComparisonPlayer(side, event.target.value);
+      state.selectedId = String(event.target.value);
+      renderGrid();
+      renderComparisonDetail();
+      saveState();
+    });
+  });
+
+  els.playerDetail.querySelectorAll("[data-comparison-awakening-button]").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const side = button.dataset.comparisonAwakeningButton === "right" ? "right" : "left";
+      const menu = els.playerDetail.querySelector(`[data-comparison-awakening-menu="${side}"]`);
+      if (!menu) {
+        return;
+      }
+      const isOpen = !menu.hidden;
+      els.playerDetail.querySelectorAll("[data-comparison-awakening-menu]").forEach((item) => {
+        item.hidden = true;
+      });
+      els.playerDetail.querySelectorAll("[data-comparison-awakening-button]").forEach((item) => item.setAttribute("aria-expanded", "false"));
+      menu.hidden = isOpen;
+      button.setAttribute("aria-expanded", String(!isOpen));
+    });
+  });
+
+  els.playerDetail.querySelectorAll("[data-comparison-awakening-menu]").forEach((menu) => {
+    menu.addEventListener("click", (event) => event.stopPropagation());
+  });
+
+  els.playerDetail.querySelectorAll("[data-comparison-awakening-code]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const side = button.dataset.comparisonAwakeningSide === "right" ? "right" : "left";
+      const player = playerById(state.comparison[`${side}PlayerId`]);
+      state.comparison[`${side}AwakeningCode`] = player ? normalizeAwakeningCodeForPlayer(player, button.dataset.comparisonAwakeningCode) : Number(button.dataset.comparisonAwakeningCode);
+      renderComparisonDetail();
+      saveState();
+    });
+  });
+
+  document.addEventListener(
+    "click",
+    () => {
+      els.playerDetail.querySelectorAll("[data-comparison-awakening-menu]").forEach((item) => {
+        item.hidden = true;
+      });
+      els.playerDetail.querySelectorAll("[data-comparison-awakening-button]").forEach((item) => item.setAttribute("aria-expanded", "false"));
+    },
+    { once: true },
+  );
+
+  els.playerDetail.querySelectorAll("[data-comparison-skill-id]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const side = button.dataset.comparisonSkillSide === "right" ? "right" : "left";
+      const simulated = simulatedBySide[side];
+      if (simulated) {
+        openSkillModal(simulated, button.dataset.comparisonSkillId);
+      }
+    });
+  });
+}
+
 function renderSimulatorDetail() {
   const player = state.players.find((item) => item.id === state.selectedId);
   if (!player) {
@@ -3118,7 +3802,8 @@ function renderSimulatorDetail() {
         ${equipmentSlots.map((slot) => renderEquipmentControl(player, slot, player.position?.code)).join("")}
       </div>
       <div class="simulator-actions">
-        <button id="equipmentConfigButton" class="equipment-config-button" type="button">Configurer mes équipements</button>
+        <button class="compare-player-button" type="button" data-compare-player="${escapeAttr(player.id)}" data-compare-source="simulator">Comparer ce joueur</button>
+        <button id="equipmentConfigButton" class="equipment-config-button" type="button">Configurer mes equipements</button>
       </div>
     </section>
 
@@ -3176,6 +3861,7 @@ function renderSimulatorDetail() {
       openSkillModal(simulated, button.dataset.skillId);
     });
   });
+  bindCompareButtons();
 }
 
 function bindSimulatorControls(player) {
@@ -3618,10 +4304,10 @@ function selectedEquipmentLevelFromSource(position, slot, levelsByPosition = {})
 function equipmentSummary(equipment) {
   const levels = Object.values(equipment.levels || {}).map(Number).filter(Boolean);
   if (!levels.length) {
-    return "Équipement -";
+    return "Equipement -";
   }
   const allSame = levels.every((level) => level === levels[0]);
-  return allSame ? `Équipement Lv.${levels[0]}` : `Équipement ${levels.map((level) => `Lv.${level}`).join(" / ")}`;
+  return allSame ? `Equipement Lv.${levels[0]}` : `Equipement ${levels.map((level) => `Lv.${level}`).join(" / ")}`;
 }
 
 function equipmentIcon(slot, position, level = DEFAULT_EQUIPMENT_LEVEL) {
@@ -3645,7 +4331,7 @@ function openEquipmentModal(player) {
       <span class="equipment-modal-icon">${renderPositionBadge(player.position, { compact: true })}</span>
       <div>
         <p>Simulation</p>
-        <h2 id="skillModalTitle">Configurer mes équipements</h2>
+        <h2 id="skillModalTitle">Configurer mes equipements</h2>
       </div>
     </header>
     <div class="equipment-modal-body">
@@ -3708,6 +4394,8 @@ function bindEquipmentModalControls(player) {
       }
       if (state.mode === "team") {
         renderTeamBuilderDetail();
+      } else if (state.mode === "comparison") {
+        renderComparisonDetail();
       } else {
         renderSimulatorDetail();
       }

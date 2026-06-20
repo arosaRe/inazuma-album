@@ -11,7 +11,7 @@
       (() => {
         try {
           const saved = JSON.parse(localStorage.getItem("inazuma-album-state-v2") || "null");
-          if (saved && ["players", "coaches", "simulator", "team", "collection"].includes(saved.mode)) {
+          if (saved && ["players", "coaches", "simulator", "comparison", "team", "collection"].includes(saved.mode)) {
             document.body.dataset.mode = saved.mode;
           }
         } catch {
@@ -29,6 +29,7 @@
           <button class="mode-tab is-active" type="button" data-mode="players">Joueurs</button>
           <button class="mode-tab" type="button" data-mode="coaches">Entraîneurs</button>
           <button class="mode-tab" type="button" data-mode="simulator">Simulateur</button>
+          <button class="mode-tab" type="button" data-mode="comparison">Comparaison</button>
           <button class="mode-tab" type="button" data-mode="team" hidden>Build équipe</button>
           <button class="mode-tab" type="button" data-mode="collection">Collection</button>
         </div>
